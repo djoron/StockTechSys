@@ -30,7 +30,7 @@ public class ChartDaoImpl implements ChartDao {
     @Override
     public int saveChartListToDb(List<Chart> chartList, String symbol) {
 
-	SqliteDao sqliteDao = new SqliteDaoImpl();
+	StkDbDao sqliteDao = new StkDbDaoImpl();
 	Statement stmt = null;
 	PreparedStatement prepStmt = null;
 	int count = 0;
@@ -87,7 +87,7 @@ public class ChartDaoImpl implements ChartDao {
 
     public String getLastSavedDownloadChartDate(String symbol) {
 
-	SqliteDao sqliteDao = new SqliteDaoImpl();
+	StkDbDao sqliteDao = new StkDbDaoImpl();
 	Statement stmt = null;
 	PreparedStatement prepStmt = null;
 	int count = 0;

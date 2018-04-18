@@ -40,7 +40,7 @@ public class SymbolDaoImpl implements SymbolDao {
     @Override
     public boolean saveSymbolList(List<Symbol> symbolList, TypeListDownload val) throws Exception{
     
-        SqliteDao sqliteDao = new SqliteDaoImpl();
+        StkDbDao sqliteDao = new StkDbDaoImpl();
         Statement stmt = null;
         PreparedStatement prepStmt = null;
         
@@ -105,7 +105,7 @@ public class SymbolDaoImpl implements SymbolDao {
 
         List<Symbol> symbolList = new ArrayList<Symbol>();
         
-        SqliteDao sqliteDao = new SqliteDaoImpl();
+        StkDbDao sqliteDao = new StkDbDaoImpl();
         Statement stmt = null;
         PreparedStatement prepStmt = null;
         int count=0;

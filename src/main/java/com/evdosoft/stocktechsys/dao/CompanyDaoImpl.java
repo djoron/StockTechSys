@@ -39,7 +39,7 @@ public class CompanyDaoImpl implements CompanyDao {
     @Override
     public boolean saveCompanyList(List<Company> companyList) throws Exception {
 
-	SqliteDao sqliteDao = new SqliteDaoImpl();
+	StkDbDao sqliteDao = new StkDbDaoImpl();
 	Statement stmt = null;
 	PreparedStatement prepStmt = null;
 
@@ -103,7 +103,7 @@ public class CompanyDaoImpl implements CompanyDao {
 
 	List<Company> companyList = new ArrayList<Company>();
 
-	SqliteDao sqliteDao = new SqliteDaoImpl();
+	StkDbDao sqliteDao = new StkDbDaoImpl();
 	Statement stmt = null;
 	PreparedStatement prepStmt = null;
 	int count = 0;
@@ -161,7 +161,7 @@ public class CompanyDaoImpl implements CompanyDao {
 	 * .collect(Collectors.toList());
 	 * 
 	 */
-	SqliteDao sqliteDao = new SqliteDaoImpl();
+	StkDbDao sqliteDao = new StkDbDaoImpl();
 	Statement stmt = null;
 	PreparedStatement prepStmt = null;
 
