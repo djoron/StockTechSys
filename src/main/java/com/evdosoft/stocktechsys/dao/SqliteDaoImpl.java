@@ -217,14 +217,14 @@ public class SqliteDaoImpl implements SqliteDao {
 
         logger.info("createSymbolTable Symbol starting"); 
         String query = // FOR NOW delete table if already exists
-                        "CREATE TABLE SYMBOL " +
+                        "CREATE TABLE symbol " +
                         "(symbolID INTEGER PRIMARY KEY," +
-                        " SYMBOL             VARCHAR(10) NOT NULL," +                        
-                        " NAME               TEXT NOT NULL, " +
-                        " DATE               TEXT, " +
-                        " ISENABLED          TEXT, " + 
-                        " TYPE               TEXT, " +
-                        " IEXID              TEXT, " +
+                        " symbol             VARCHAR(10) NOT NULL," +                        
+                        " name               TEXT NOT NULL, " +
+                        " date               TEXT, " +
+                        " isenabled          TEXT, " + 
+                        " type               TEXT, " +
+                        " iexid              TEXT, " +
                         " UNIQUE (SYMBOL) ON CONFLICT REPLACE " +
                         ");" +
                         "CREATE UNIQUE INDEX SYMBOL_IDX_SYMBOLTABLE ON SYMBOL(SYMBOL);"

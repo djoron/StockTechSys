@@ -109,13 +109,13 @@ public class StkDbDaoImpl implements StkDbDao {
 	logger.info("createSymbolTable Symbol starting");
 	jdbcTemplate.execute("DROP TABLE SYMBOL IF EXISTS");
 	String query = "CREATE TABLE SYMBOL   (symbolID INTEGER PRIMARY KEY,   " + 
-		"			  SYMBOL             VARCHAR(10) NOT NULL," + 
-		"			  NAME               VARCHAR(255) NOT NULL,    " + 
-		"              DATE               DATE, " + 
-		"			  ISENABLED          BIT,    " + 
-		"              TYPE               VARCHAR(4),    " + 
-		"              IEXID              INTEGER, " + 
-		"			  UNIQUE KEY (SYMBOL) );";
+		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
+		"  NAME               VARCHAR(255) NOT NULL, " + 
+		"  DATE               DATE, "    + 
+		"  ISENABLED          BIT, "  + 
+		"  TYPE               VARCHAR(4), " + 
+		"  IEXID              INTEGER, " + 
+		"  UNIQUE KEY (SYMBOL) );";
 	try {
 
 	    if (execStatement(query) == true) {
