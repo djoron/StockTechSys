@@ -5,16 +5,15 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.evdosoft.stocktechsys.StockTechSysConstants.TypeListDownload;
@@ -29,6 +28,12 @@ public class SymbolDaoImpl implements SymbolDao {
     
     private static final Logger logger = LoggerFactory.getLogger(SymbolDaoImpl.class);
     
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private StkDbDao sqliteDao;       
+    
     /**
      * Save Company Downloaded from internet into DB. Method downloads temporary
      * or first time symbol list. Temporary is for comparison and update purposes.
@@ -38,55 +43,38 @@ public class SymbolDaoImpl implements SymbolDao {
      * @throws Exception
      */
     @Override
-    public boolean saveSymbolList(List<Symbol> symbolList, TypeListDownload val) throws Exception{
-    
-        StkDbDao sqliteDao = new StkDbDaoImpl();
-        Statement stmt = null;
-        PreparedStatement prepStmt = null;
-        
-        Connection c = sqliteDao.openSqlDatabase();
-       // Delete old Temp table
-        sqliteDao.createSymbolTemporaryTable();
-        
-        if (symbolList.size() > 0) {
-            stmt = null;
-            stmt = c.createStatement();
-            c.setAutoCommit(false);
+    public boolean saveSymbolList(List<Symbol> symbolList, TypeListDownload val) throws Exception{           
                 
-            if (val == TypeListDownload.TEMPORARY) {
-            prepStmt = c.prepareStatement("INSERT INTO SYMBOLTEMPORARY (SYMBOL, NAME, "
-                    + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?);");
-            } else {
-                prepStmt = c.prepareStatement("INSERT INTO SYMBOL  (SYMBOL, NAME, "
-                    + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?);");
-            }
-            for (Symbol s: symbolList) {
-                prepStmt.setString(1,s.getSymbol());
-                prepStmt.setString(2,s.getName());
-                prepStmt.setString(3,s.getDate());
-                prepStmt.setString(4,s.getIsEnabled());
-                prepStmt.setString(5,s.getType());
-                prepStmt.setString(6,s.getIexId());
-
-                prepStmt.addBatch();
-            }
-
-            try  {
-                prepStmt.executeBatch();
-                c.commit(); 
-            } catch ( Exception e ) {
-                logger.error("{} : {}",e.getClass().getName(),e.getMessage() );
-                return false;
-            } 
-            prepStmt.close();
-            c.setAutoCommit(true);          
+       // Delete old Temp table
+        sqliteDao.createSymbolTable();
+        
+        if (symbolList.size() > 0) {                          
+            String sql = "INSERT INTO SYMBOL  (SYMBOL, NAME, "
+                    + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?);";
+           
+            jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+	        
+	        @Override
+	        public void setValues(PreparedStatement ps, int i) throws SQLException {
+	    		Symbol symbol = symbolList.get(i);
+	    		ps.setString(1,symbol.getSymbol());
+	                ps.setString(2,symbol.getName());
+	                ps.setString(3,symbol.getDate());
+	                ps.setString(4,symbol.getIsEnabled());
+	                ps.setString(5,symbol.getType());
+	                ps.setString(6,symbol.getIexId());	    	
+	        }
+	        
+	        @Override
+	        public int getBatchSize() {
+	    		return symbolList.size();
+	        }
+	    });            
             logger.info("saveSymbolList: SymbolList saved in SqlDB...done");
         } else {
             logger.error("saveSymbolList: SymbolList save FAILED in SqlDB");
-            sqliteDao.closeSqlDatabase(c);
             return false;
         }
-        sqliteDao.closeSqlDatabase(c);
         return true;          
     }
     
@@ -101,41 +89,12 @@ public class SymbolDaoImpl implements SymbolDao {
      */
     public List<Symbol> loadSymbolListFromDb () throws SQLException {
 
-        logger.info("loadSymbolListFromDb - Loading list from DB ... Standby");
-
-        List<Symbol> symbolList = new ArrayList<Symbol>();
+        logger.info("loadSymbolListFromDb - Loading list from DB ... Standby");                       
         
-        StkDbDao sqliteDao = new StkDbDaoImpl();
-        Statement stmt = null;
-        PreparedStatement prepStmt = null;
-        int count=0;
-        
-        Connection c = sqliteDao.openSqlDatabase();
+        String query = "SELECT * FROM SYMBOL";
+        List<Symbol> symbolList = jdbcTemplate.query(query, new SymbolRowMapper());
 
-        c.setAutoCommit(false);
-        prepStmt = c.prepareStatement("SELECT * FROM SYMBOL");
-                       
-        ResultSet rs = prepStmt.executeQuery();
-        try {
-            while ( rs.next() ) {
-                Symbol symbol = new Symbol();
-                symbol.setSymbol  (rs.getString("SYMBOL"));
-                symbol.setName(rs.getString("NAME"));
-                // company.setDayLastUpdate (rs.getString("DAYLASTUPDATE"));
-                symbolList.add(symbol);
-                count++;
-            }
-        prepStmt.close();
-        c.setAutoCommit(true);          
-
-        } catch ( Exception e ) {
-          logger.error("{} : {}",e.getClass().getName(),e.getMessage() );
-          c.close();
-          return null;
-          // System.exit(0);
-        }
         logger.info("Loaded SymbolList from DB ... Done");
-        sqliteDao.closeSqlDatabase(c);
         return symbolList;
     }
 
