@@ -5,6 +5,7 @@
  */
 package com.evdosoft.stocktechsys.models;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -14,12 +15,12 @@ import java.util.Objects;
 public class Symbol {
 
  // xxxx a verifier les types. DOuble pour entiers, Big decimal pour float
-    protected String symbol;
-    protected String name;
-    protected String date;
-    protected String isEnabled;
-    protected String type;
-    protected String iexId;
+    private String symbol;
+    private String name;
+    private Date date;
+    private boolean isEnabled;
+    private String type;
+    private String iexId;
 
     public String getSymbol() {
         return symbol;
@@ -37,19 +38,19 @@ public class Symbol {
         this.name = name;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public String getIsEnabled() {
+    public boolean getIsEnabled() {
         return isEnabled;
     }
 
-    public void setIsEnabled(String isEnabled) {
+    public void setIsEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
     }
 
