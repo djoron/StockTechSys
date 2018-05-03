@@ -6,6 +6,7 @@
 package com.evdosoft.stocktechsys.models;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Model to download last day price History from IEX
@@ -34,8 +35,8 @@ import java.math.BigDecimal;
 
 public class ChartOneDay {
    
-        protected String date;
-    protected String minute;
+    protected Date date;
+    protected Date minute;
     protected String label;
     protected BigDecimal high;
     protected BigDecimal low;
