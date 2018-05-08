@@ -27,7 +27,7 @@ import com.evdosoft.stocktechsys.models.Symbol;
 @Repository
 public class SymbolDaoImpl implements SymbolDao {
     
-    private static final Logger logger = LoggerFactory.getLogger(SymbolDaoImpl.class);
+    private Logger logger = LoggerFactory.getLogger(SymbolDaoImpl.class);
     
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -7,14 +7,15 @@ package com.evdosoft.stocktechsys.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.evdosoft.stocktechsys.models.Company;
@@ -26,8 +27,12 @@ import com.evdosoft.stocktechsys.models.Company;
 @Repository
 public class CompanyDaoImpl implements CompanyDao {
 
-    Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
+    private Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
 
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
     /**
      * Save Company Downloaded from internet into DB.
      * 
@@ -39,52 +44,42 @@ public class CompanyDaoImpl implements CompanyDao {
     @Override
     public boolean saveCompanyList(List<Company> companyList) throws Exception {
 
-	StkDbDao sqliteDao = new StkDbDaoImpl();
-	Statement stmt = null;
-	PreparedStatement prepStmt = null;
-
-	Connection c = sqliteDao.openSqlDatabase();
-
 	if (companyList.size() > 0) {
-	    stmt = null;
-	    stmt = c.createStatement();
-	    c.setAutoCommit(false);
 	    // Just insert, not replace here.
-	    prepStmt = c.prepareStatement("INSERT INTO COMPANY (SYMBOL, COMPANYNAME, "
+	    String sql = ("INSERT INTO COMPANY (SYMBOL, COMPANYNAME, "
 		    + "EXCHANGE, INDUSTRY, WEBSITE, DESCRIPTION, CEO, ISSUETYPE, "
 		    + "SECTOR) VALUES (?,?,?,?,?,?,?,?,?);");
 
-	    for (Company s : companyList) {
-		prepStmt.setString(1, s.getSymbol());
-		prepStmt.setString(2, s.getCompanyName());
-		prepStmt.setString(3, s.getExchange());
-		prepStmt.setString(4, s.getIndustry());
-		prepStmt.setString(5, s.getWebsite());
-		prepStmt.setString(6, s.getDescription());
-		prepStmt.setString(7, s.getCeo());
-		prepStmt.setString(8, s.getIssueType());
-		prepStmt.setString(9, s.getSector());
-
-		prepStmt.addBatch();
-	    }
-
-	    try {
-		prepStmt.executeBatch();
-		c.commit();
-	    } catch (Exception e) {
-		logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-		return false;
-	    }
-	    prepStmt.close();
-	    c.setAutoCommit(true);
-	    logger.info("saveCompanyList: CompanyList saved in SqlDB...done");
-	} else {
-	    logger.error("saveCompanyList: CompanyList save FAILED in SqlDB");
-	    sqliteDao.closeSqlDatabase(c);
-	    return false;
-	}
-	sqliteDao.closeSqlDatabase(c);
-	return true;
+	    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+	    
+        	@Override
+	        public void setValues(PreparedStatement ps, int i) throws SQLException {
+        	    Company company = companyList.get(i);
+        	    ps.setString(1, company.getSymbol());
+        	    ps.setString(2, company.getCompanyName());
+        	    ps.setString(3, company.getExchange());
+        	    ps.setString(4, company.getIndustry());
+        	    ps.setString(5, company.getWebsite());
+        	    ps.setString(6, company.getDescription());
+        	    ps.setString(7, company.getCeo());
+        	    ps.setString(8, company.getIssueType());
+        	    ps.setString(9, company.getSector());
+        
+        	}
+	    
+	    
+	        @Override
+	        public int getBatchSize() {
+	    		return companyList.size();
+	        }
+	    });            
+        logger.info("saveCompanyList: CompanylList saved in SqlDB...done");
+    } else {
+        logger.error("saveCompanyList: CompanyList save FAILED in SqlDB");
+        return false;
+    }
+    return true; 
+    
     }
 
     /**
@@ -101,42 +96,9 @@ public class CompanyDaoImpl implements CompanyDao {
 
 	logger.info("loadCompanyListFromDb - Loading list from DB ... Standby");
 
-	List<Company> companyList = new ArrayList<Company>();
+        String query = "SELECT * FROM COMPANY";
+        List<Company> companyList = jdbcTemplate.query(query, new CompanyRowMapper());
 
-	StkDbDao sqliteDao = new StkDbDaoImpl();
-	Statement stmt = null;
-	PreparedStatement prepStmt = null;
-	int count = 0;
-
-	Connection c = sqliteDao.openSqlDatabase();
-
-	c.setAutoCommit(false);
-	prepStmt = c.prepareStatement("SELECT * FROM COMPANY");
-
-	ResultSet rs = prepStmt.executeQuery();
-	try {
-	    while (rs.next()) {
-		Company company = new Company();
-		company.setSymbol(rs.getString("SYMBOL"));
-		company.setCompanyName(rs.getString("COMPANYNAME"));
-		company.setExchange(rs.getString("EXCHANGE"));
-		company.setSector(rs.getString("SECTOR"));
-		company.setIndustry(rs.getString("INDUSTRY"));
-		// company.setDayLastUpdate (rs.getString("DAYLASTUPDATE"));
-		companyList.add(company);
-		count++;
-	    }
-	    prepStmt.close();
-	    c.setAutoCommit(true);
-
-	} catch (Exception e) {
-	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-	    c.close();
-	    return null;
-	    // System.exit(0);
-	}
-	logger.info("Loaded Stocklist from DB ... Done");
-	sqliteDao.closeSqlDatabase(c);
 	return companyList;
     }
 
