@@ -11,26 +11,26 @@ package com.evdosoft.stocktechsys.models;
  */
 public class Stock {
 
- // xxxx a verifier les types. DOuble pour entiers, Big decimal pour float
-    protected String name;
-    protected String symbol;
-    protected String exchange;
-    protected String exchangeName;
-    protected String sector;
-    protected String industry;
-    protected String namecorrected;
-    protected String symbolcorrected;
-    protected String ipo;
-    protected float  bookvalue;
-    protected float  shortratio;
-    protected String dividendPayDate;
-    protected String exDividendDate;
-    protected float pricebook;
-    protected float marketcap;
-    protected float dividendPerShare;
-    protected String dayLastUpdate; // Day software was last run to update price of stock
-    protected Integer obsolete;
-    protected char priceSource; // Default Price Source. Y=Yahoo. G = Google (by default)
+ // xxxx a verifier les types. DOuble pour entiers, Big decimal pour double
+    private String name;
+    private String symbol;
+    private String exchange;
+    private String exchangeName;
+    private String sector;
+    private String industry;
+    private String namecorrected;
+    private String symbolcorrected;
+    private String ipo;
+    private double  bookvalue;
+    private double  shortratio;
+    private String dividendPayDate;
+    private String exDividendDate;
+    private double pricebook;
+    private double marketcap;
+    private double dividendPerShare;
+    private String dayLastUpdate; // Day software was last run to update price of stock
+    private Integer obsolete;
+    private char priceSource; // Default Price Source. Y=Yahoo. G = Google (by default)
 
     
     /*    AAPL,Apple Inc.,NMS,119.4,117.34,119.73,117.75,32482528,11/23/2015,9.22,21.4,4:00pm - <b>117.75</b>,1.46,11/12/2015,11/05/2015,5.58,656.50B.9.22,2.08
@@ -115,19 +115,19 @@ public class Stock {
         this.ipo = ipo;
     }    
     
-    public float getBookvalue() {
+    public double getBookvalue() {
         return bookvalue;
     }
 
-    public void setBookvalue(float bookvalue) {
+    public void setBookvalue(double bookvalue) {
         this.bookvalue = bookvalue;
     }
 
-    public float getShortratio() {
+    public double getShortratio() {
         return shortratio;
     }
 
-    public void setShortratio(float shortratio) {
+    public void setShortratio(double shortratio) {
         this.shortratio = shortratio;
     }
 
@@ -147,27 +147,27 @@ public class Stock {
         this.exDividendDate = exDividendDate;
     }
 
-    public float getPricebook() {
+    public double getPricebook() {
         return pricebook;
     }
 
-    public void setPricebook(float pricebook) {
+    public void setPricebook(double pricebook) {
         this.pricebook = pricebook;
     }
 
-    public float getMarketcap() {
+    public double getMarketcap() {
         return marketcap;
     }
 
-    public void setMarketcap(float marketcap) {
+    public void setMarketcap(double marketcap) {
         this.marketcap = marketcap;
     }
     
-    public float getDividendPerShare() {
+    public double getDividendPerShare() {
         return dividendPerShare;
     }
 
-    public void setDividendPerShare(float dividendpershare) {
+    public void setDividendPerShare(double dividendpershare) {
         this.dividendPerShare = dividendpershare;
     }
 

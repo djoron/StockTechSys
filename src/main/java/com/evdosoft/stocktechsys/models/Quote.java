@@ -52,40 +52,41 @@ import java.util.Date;
  */
 public class Quote {
     
-    protected String symbol; 
-    protected String companyName;
-    protected String primaryExchange;
-    protected String sector;
-    protected String calculationPrice;
-    protected BigDecimal open;
-    protected Date openTime;
-    protected BigDecimal close;
-    protected Date closeTime;
-    protected BigDecimal latestPrice;
-    protected String latestSource;
-    protected Date latestTime;
-    protected Date latestUpdate; 
-    protected int latestVolume;
-    protected BigDecimal iexRealtimePrice;
-    protected int iexRealtimeSize;
-    protected Date iexLastUpdated;
-    protected BigDecimal delayedPrice;
-    protected Date delayedPriceTime;
-    protected BigDecimal previousClose;
-    protected float change;
-    protected float changePercent;
-    protected float iexMarketPercent;
-    protected int iexVolume;
-    protected int avgTotalVolume;
-    protected BigDecimal iexBidPrice;
-    protected int iexBidSize;
-    protected BigDecimal iexAskPrice;
-    protected int iexAskSize;
-    protected int marketCap;
-    protected float peRatio;
-    protected BigDecimal week52High;
-    protected BigDecimal week52Low;
-    protected float ytdChange;
+    private String symbol; 
+    private String companyName;
+    private String primaryExchange;
+    private String sector;
+    private String calculationPrice;
+    private BigDecimal open;
+    private Date openTime;
+    private BigDecimal close;
+    private Date closeTime;
+    private BigDecimal latestPrice;
+    private String latestSource;
+    private Date latestTime;
+    private Date latestUpdate; 
+    private int latestVolume;
+    private BigDecimal iexRealtimePrice;
+    private int iexRealtimeSize;
+    private Date iexLastUpdated;
+    private BigDecimal delayedPrice;
+    private Date delayedPriceTime;
+    private BigDecimal previousClose;
+    private double change;
+    private double changePercent;
+    private double iexMarketPercent;
+    private int iexVolume;
+    private int avgTotalVolume;
+    private BigDecimal iexBidPrice;
+    private int iexBidSize;
+    private BigDecimal iexAskPrice;
+    private int iexAskSize;
+    private int marketCap;
+    private double peRatio;
+    private BigDecimal week52High;
+    private BigDecimal week52Low;
+    
+    private double ytdChange;
     public String getSymbol() {
         return symbol;
     }
@@ -206,22 +207,22 @@ public class Quote {
     public void setPreviousClose(BigDecimal previousClose) {
         this.previousClose = previousClose;
     }
-    public float getChange() {
+    public double getChange() {
         return change;
     }
-    public void setChange(float change) {
+    public void setChange(double change) {
         this.change = change;
     }
-    public float getChangePercent() {
+    public double getChangePercent() {
         return changePercent;
     }
-    public void setChangePercent(float changePercent) {
+    public void setChangePercent(double changePercent) {
         this.changePercent = changePercent;
     }
-    public float getIexMarketPercent() {
+    public double getIexMarketPercent() {
         return iexMarketPercent;
     }
-    public void setIexMarketPercent(float iexMarketPercent) {
+    public void setIexMarketPercent(double iexMarketPercent) {
         this.iexMarketPercent = iexMarketPercent;
     }
     public int getIexVolume() {
@@ -266,10 +267,10 @@ public class Quote {
     public void setMarketCap(int marketCap) {
         this.marketCap = marketCap;
     }
-    public float getPeRatio() {
+    public double getPeRatio() {
         return peRatio;
     }
-    public void setPeRatio(float peRatio) {
+    public void setPeRatio(double peRatio) {
         this.peRatio = peRatio;
     }
     public BigDecimal getWeek52High() {
@@ -284,10 +285,10 @@ public class Quote {
     public void setWeek52Low(BigDecimal week52Low) {
         this.week52Low = week52Low;
     }
-    public float getYtdChange() {
+    public double getYtdChange() {
         return ytdChange;
     }
-    public void setYtdChange(float ytdChange) {
+    public void setYtdChange(double ytdChange) {
         this.ytdChange = ytdChange;
     }
 

@@ -5,6 +5,8 @@
  */
 package com.evdosoft.stocktechsys.models;
 
+import java.util.Date;
+
 /**
  * Model for earnings data from IEX
  * https://iextrading.com/developer/docs/#earnings
@@ -29,53 +31,53 @@ package com.evdosoft.stocktechsys.models;
  */
 public class Earnings {
 
-    protected float  actualEPS;
-    protected float  consensusEPS;
-    protected float  estimatedEPS;
-    protected float  announceTime;
-    protected float  numberOfEstimates;
-    protected float  EPSSurpriseDollar;
-    protected Date   EPSReportDate;
-    protected String fiscalPeriod;
-    protected float  fiscalEndDate;
-    protected float  yearAgo;
-    protected float  yearAgoChangePercent;
-    protected float  estimatedChangePercent;
-    protected int    symbolId;
-    public float getActualEPS() {
+    private double  actualEPS;
+    private double  consensusEPS;
+    private double  estimatedEPS;
+    private double  announceTime;
+    private double  numberOfEstimates;
+    private double  EPSSurpriseDollar;
+    private Date    EPSReportDate;
+    private String fiscalPeriod;
+    private Date  fiscalEndDate;
+    private double  yearAgo;
+    private double  yearAgoChangePercent;
+    private double  estimatedChangePercent;
+    private int    symbolId;
+    public double getActualEPS() {
         return actualEPS;
     }
-    public void setActualEPS(float actualEPS) {
+    public void setActualEPS(double actualEPS) {
         this.actualEPS = actualEPS;
     }
-    public float getConsensusEPS() {
+    public double getConsensusEPS() {
         return consensusEPS;
     }
-    public void setConsensusEPS(float consensusEPS) {
+    public void setConsensusEPS(double consensusEPS) {
         this.consensusEPS = consensusEPS;
     }
-    public float getEstimatedEPS() {
+    public double getEstimatedEPS() {
         return estimatedEPS;
     }
-    public void setEstimatedEPS(float estimatedEPS) {
+    public void setEstimatedEPS(double estimatedEPS) {
         this.estimatedEPS = estimatedEPS;
     }
-    public float getAnnounceTime() {
+    public double getAnnounceTime() {
         return announceTime;
     }
-    public void setAnnounceTime(float announceTime) {
+    public void setAnnounceTime(double announceTime) {
         this.announceTime = announceTime;
     }
-    public float getNumberOfEstimates() {
+    public double getNumberOfEstimates() {
         return numberOfEstimates;
     }
-    public void setNumberOfEstimates(float numberOfEstimates) {
+    public void setNumberOfEstimates(double numberOfEstimates) {
         this.numberOfEstimates = numberOfEstimates;
     }
-    public float getEPSSurpriseDollar() {
+    public double getEPSSurpriseDollar() {
         return EPSSurpriseDollar;
     }
-    public void setEPSSurpriseDollar(float ePSSurpriseDollar) {
+    public void setEPSSurpriseDollar(double ePSSurpriseDollar) {
         EPSSurpriseDollar = ePSSurpriseDollar;
     }
     public Date getEPSReportDate() {
@@ -90,28 +92,28 @@ public class Earnings {
     public void setFiscalPeriod(String fiscalPeriod) {
         this.fiscalPeriod = fiscalPeriod;
     }
-    public float getFiscalEndDate() {
+    public Date getFiscalEndDate() {
         return fiscalEndDate;
     }
-    public void setFiscalEndDate(float fiscalEndDate) {
+    public void setFiscalEndDate(Date fiscalEndDate) {
         this.fiscalEndDate = fiscalEndDate;
     }
-    public float getYearAgo() {
+    public double getYearAgo() {
         return yearAgo;
     }
-    public void setYearAgo(float yearAgo) {
+    public void setYearAgo(double yearAgo) {
         this.yearAgo = yearAgo;
     }
-    public float getYearAgoChangePercent() {
+    public double getYearAgoChangePercent() {
         return yearAgoChangePercent;
     }
-    public void setYearAgoChangePercent(float yearAgoChangePercent) {
+    public void setYearAgoChangePercent(double yearAgoChangePercent) {
         this.yearAgoChangePercent = yearAgoChangePercent;
     }
-    public float getEstimatedChangePercent() {
+    public double getEstimatedChangePercent() {
         return estimatedChangePercent;
     }
-    public void setEstimatedChangePercent(float estimatedChangePercent) {
+    public void setEstimatedChangePercent(double estimatedChangePercent) {
         this.estimatedChangePercent = estimatedChangePercent;
     }
     public int getSymbolId() {
@@ -120,6 +122,5 @@ public class Earnings {
     public void setSymbolId(int symbolId) {
         this.symbolId = symbolId;
     }
-
     
 }

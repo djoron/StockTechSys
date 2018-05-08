@@ -14,16 +14,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Company {
 
  // xxxx a verifier les types. DOuble pour entiers, Big decimal pour float
-    protected String symbol;
-    protected String companyName;
-    protected String exchange;
-    protected String industry;
-    protected String website;
-    protected String description;
+    private String symbol;
+    private String companyName;
+    private String exchange;
+    private String industry;
+    private String website;
+    private String description;
     @JsonProperty("CEO")
-    protected String ceo;
-    protected String issueType;
-    protected String sector;
+    private String ceo;
+    private String issueType;
+    private String sector;
 
     public String getSymbol() {
         return symbol;

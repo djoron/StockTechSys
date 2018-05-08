@@ -35,33 +35,34 @@ import java.util.Date;
 
 public class ChartOneDay {
    
-    protected Date date;
-    protected Date minute;
-    protected String label;
-    protected BigDecimal high;
-    protected BigDecimal low;
-    protected BigDecimal average;
-    protected Integer volume;
-    protected Integer notional;
-    protected Integer numberOfTrades;
-    protected BigDecimal marketHigh;
-    protected BigDecimal marketLow;
-    protected BigDecimal marketAverage;
-    protected Integer marketVolume;
-    protected BigDecimal marketNotional;
-    protected BigDecimal marketNumberOfTrades;
-    protected float marketChangeOverTime;
-    protected float changeOverTime;
-    public String getDate() {
+    private Date date;
+    private int minute;
+    private String label;
+    private BigDecimal high;
+    private BigDecimal low;
+    private BigDecimal average;
+    private Integer volume;
+    private Integer notional;
+    private Integer numberOfTrades;
+    private BigDecimal marketHigh;
+    private BigDecimal marketLow;
+    private BigDecimal marketAverage;
+    private Integer marketVolume;
+    private BigDecimal marketNotional;
+    private BigDecimal marketNumberOfTrades;
+    private double marketChangeOverTime;
+    private double changeOverTime;
+    
+    public Date getDate() {
         return date;
     }
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
-    public String getMinute() {
+    public int getMinute() {
         return minute;
     }
-    public void setMinute(String minute) {
+    public void setMinute(int minute) {
         this.minute = minute;
     }
     public String getLabel() {
@@ -142,16 +143,16 @@ public class ChartOneDay {
     public void setMarketNumberOfTrades(BigDecimal marketNumberOfTrades) {
         this.marketNumberOfTrades = marketNumberOfTrades;
     }
-    public float getMarketChangeOverTime() {
+    public double getMarketChangeOverTime() {
         return marketChangeOverTime;
     }
-    public void setMarketChangeOverTime(float marketChangeOverTime) {
+    public void setMarketChangeOverTime(double marketChangeOverTime) {
         this.marketChangeOverTime = marketChangeOverTime;
     }
-    public float getChangeOverTime() {
+    public double getChangeOverTime() {
         return changeOverTime;
     }
-    public void setChangeOverTime(float changeOverTime) {
+    public void setChangeOverTime(double changeOverTime) {
         this.changeOverTime = changeOverTime;
     }
     

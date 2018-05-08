@@ -25,15 +25,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Dividends {
    
-    protected Date exDate;
-    protected Date paymentDate;
-    protected Date recordDate;
-    protected Date declaredDate;
-    protected float amount;
+    private Date exDate;
+    private Date paymentDate;
+    private Date recordDate;
+    private Date declaredDate;
+    private double amount;
     @JsonProperty("type")
-    protected String typediv;
-    protected String qualified;
-    protected String indicated;
+    private String typediv;
+    private String qualified;
+    private String indicated;
+    
     public Date getExDate() {
         return exDate;
     }
@@ -58,10 +59,10 @@ public class Dividends {
     public void setDeclaredDate(Date declaredDate) {
         this.declaredDate = declaredDate;
     }
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
     public String getTypediv() {

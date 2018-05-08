@@ -29,18 +29,18 @@ import java.util.Date;
  */
 public class Chart {
  
-    protected Date date;
-    protected BigDecimal open;
-    protected BigDecimal high;
-    protected BigDecimal low;
-    protected BigDecimal close;
-    protected Integer volume;
-    protected Integer unadjustedVolume;
-    protected float change;
-    protected float changePercent;
-    protected BigDecimal vwap;
-    protected String label;
-    protected float changeOverTime;
+    private Date date;
+    private BigDecimal open;
+    private BigDecimal high;
+    private BigDecimal low;
+    private BigDecimal close;
+    private Integer volume;
+    private Integer unadjustedVolume;
+    private double change;
+    private double changePercent;
+    private BigDecimal vwap;
+    private String label;
+    private double changeOverTime;
     
     public void setDate(Date date) {
         this.date = date;
@@ -70,11 +70,11 @@ public class Chart {
         this.unadjustedVolume = unadjustedVolume;
     }
 
-    public void setChange(float change) {
+    public void setChange(double change) {
         this.change = change;
     }
 
-    public void setChangePercent(float changePercent) {
+    public void setChangePercent(double changePercent) {
         this.changePercent = changePercent;
     }
 
@@ -82,7 +82,7 @@ public class Chart {
         this.vwap = vwap;
     }
 
-    public void setChangeOverTime(float changeOverTime) {
+    public void setChangeOverTime(double changeOverTime) {
         this.changeOverTime = changeOverTime;
     }
 }
