@@ -6,7 +6,7 @@
 package com.evdosoft.stocktechsys.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,10 +29,10 @@ import lombok.Data;
 @Data
 public class Dividends {
    
-    private Date exDate;
-    private Date paymentDate;
-    private Date recordDate;
-    private Date declaredDate;
+    private LocalDate exDate;
+    private LocalDate paymentDate;
+    private LocalDate recordDate;
+    private LocalDate declaredDate;
     private BigDecimal amount;
     @JsonProperty("type")
     private String typediv;

@@ -5,7 +5,7 @@
  */
 package com.evdosoft.stocktechsys.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import lombok.Data;
@@ -20,7 +20,7 @@ public class Symbol {
  // xxxx a verifier les types. DOuble pour entiers, Big decimal pour float
     private String symbol;
     private String name;
-    private Date date;
+    private LocalDate date;
     private boolean isEnabled;
     private String type;
     private String iexId;

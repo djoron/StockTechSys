@@ -6,7 +6,7 @@
 package com.evdosoft.stocktechsys.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -61,19 +61,19 @@ public class Quote {
     private String sector;
     private String calculationPrice;
     private BigDecimal open;
-    private Date openTime;
+    private LocalDate openTime;
     private BigDecimal close;
-    private Date closeTime;
+    private LocalDate closeTime;
     private BigDecimal latestPrice;
     private String latestSource;
-    private Date latestTime;
-    private Date latestUpdate; 
+    private LocalDate latestTime;
+    private LocalDate latestUpdate; 
     private Long latestVolume;
     private BigDecimal iexRealtimePrice;
     private Long iexRealtimeSize;
-    private Date iexLastUpdated;
+    private LocalDate iexLastUpdated;
     private BigDecimal delayedPrice;
-    private Date delayedPriceTime;
+    private LocalDate delayedPriceTime;
     private BigDecimal previousClose;
     private BigDecimal change;
     private BigDecimal changePercent;

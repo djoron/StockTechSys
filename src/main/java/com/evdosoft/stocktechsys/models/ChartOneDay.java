@@ -6,7 +6,7 @@
 package com.evdosoft.stocktechsys.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -38,7 +38,7 @@ import lombok.Data;
 @Data
 public class ChartOneDay {
    
-    private Date date;
+    private LocalDate date;
 //    private Time minute;
     private String label;
     private BigDecimal high;

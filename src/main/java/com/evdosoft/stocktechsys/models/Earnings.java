@@ -6,7 +6,7 @@
 package com.evdosoft.stocktechsys.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -41,9 +41,9 @@ public class Earnings {
     private String      announceTime;
     private BigDecimal  numberOfEstimates;
     private BigDecimal  EPSSurpriseDollar;
-    private Date    EPSReportDate;
+    private LocalDate    EPSReportDate;
     private String fiscalPeriod;
-    private Date  fiscalEndDate;
+    private LocalDate  fiscalEndDate;
     private BigDecimal  yearAgo;
     private BigDecimal  yearAgoChangePercent;
     private BigDecimal  estimatedChangePercent;
