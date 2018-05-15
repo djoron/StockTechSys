@@ -5,6 +5,7 @@
  */
 package com.evdosoft.stocktechsys.models;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -31,53 +32,53 @@ import java.util.Date;
  */
 public class Earnings {
 
-    private double  actualEPS;
-    private double  consensusEPS;
-    private double  estimatedEPS;
-    private double  announceTime;
-    private double  numberOfEstimates;
-    private double  EPSSurpriseDollar;
+    private BigDecimal  actualEPS;
+    private BigDecimal  consensusEPS;
+    private BigDecimal  estimatedEPS;
+    private String      announceTime;
+    private BigDecimal  numberOfEstimates;
+    private BigDecimal  EPSSurpriseDollar;
     private Date    EPSReportDate;
     private String fiscalPeriod;
     private Date  fiscalEndDate;
-    private double  yearAgo;
-    private double  yearAgoChangePercent;
-    private double  estimatedChangePercent;
+    private BigDecimal  yearAgo;
+    private BigDecimal  yearAgoChangePercent;
+    private BigDecimal  estimatedChangePercent;
     private int    symbolId;
-    public double getActualEPS() {
+    public BigDecimal getActualEPS() {
         return actualEPS;
     }
-    public void setActualEPS(double actualEPS) {
+    public void setActualEPS(BigDecimal actualEPS) {
         this.actualEPS = actualEPS;
     }
-    public double getConsensusEPS() {
+    public BigDecimal getConsensusEPS() {
         return consensusEPS;
     }
-    public void setConsensusEPS(double consensusEPS) {
+    public void setConsensusEPS(BigDecimal consensusEPS) {
         this.consensusEPS = consensusEPS;
     }
-    public double getEstimatedEPS() {
+    public BigDecimal getEstimatedEPS() {
         return estimatedEPS;
     }
-    public void setEstimatedEPS(double estimatedEPS) {
+    public void setEstimatedEPS(BigDecimal estimatedEPS) {
         this.estimatedEPS = estimatedEPS;
     }
-    public double getAnnounceTime() {
+    public String getAnnounceTime() {
         return announceTime;
     }
-    public void setAnnounceTime(double announceTime) {
+    public void setAnnounceTime(String announceTime) {
         this.announceTime = announceTime;
     }
-    public double getNumberOfEstimates() {
+    public BigDecimal getNumberOfEstimates() {
         return numberOfEstimates;
     }
-    public void setNumberOfEstimates(double numberOfEstimates) {
+    public void setNumberOfEstimates(BigDecimal numberOfEstimates) {
         this.numberOfEstimates = numberOfEstimates;
     }
-    public double getEPSSurpriseDollar() {
+    public BigDecimal getEPSSurpriseDollar() {
         return EPSSurpriseDollar;
     }
-    public void setEPSSurpriseDollar(double ePSSurpriseDollar) {
+    public void setEPSSurpriseDollar(BigDecimal ePSSurpriseDollar) {
         EPSSurpriseDollar = ePSSurpriseDollar;
     }
     public Date getEPSReportDate() {
@@ -98,22 +99,22 @@ public class Earnings {
     public void setFiscalEndDate(Date fiscalEndDate) {
         this.fiscalEndDate = fiscalEndDate;
     }
-    public double getYearAgo() {
+    public BigDecimal getYearAgo() {
         return yearAgo;
     }
-    public void setYearAgo(double yearAgo) {
+    public void setYearAgo(BigDecimal yearAgo) {
         this.yearAgo = yearAgo;
     }
-    public double getYearAgoChangePercent() {
+    public BigDecimal getYearAgoChangePercent() {
         return yearAgoChangePercent;
     }
-    public void setYearAgoChangePercent(double yearAgoChangePercent) {
+    public void setYearAgoChangePercent(BigDecimal yearAgoChangePercent) {
         this.yearAgoChangePercent = yearAgoChangePercent;
     }
-    public double getEstimatedChangePercent() {
+    public BigDecimal getEstimatedChangePercent() {
         return estimatedChangePercent;
     }
-    public void setEstimatedChangePercent(double estimatedChangePercent) {
+    public void setEstimatedChangePercent(BigDecimal estimatedChangePercent) {
         this.estimatedChangePercent = estimatedChangePercent;
     }
     public int getSymbolId() {
@@ -123,4 +124,5 @@ public class Earnings {
         this.symbolId = symbolId;
     }
     
+        
 }
