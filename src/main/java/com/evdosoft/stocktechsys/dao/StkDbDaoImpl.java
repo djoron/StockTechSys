@@ -65,18 +65,18 @@ public class StkDbDaoImpl implements StkDbDao {
     @Override
     public boolean createCompanyTables() throws SQLException {
 	logger.info("createCompanyTable Company starting");
-	String query = "CREATE TABLE COMPANY   (companyid INTEGER PRIMARY KEY," + 
-		"  symbol             VARCHAR(10) NOT NULL, " + 
-		"  companyname        VARCHAR(255) NOT NULL, " + 
-		"  companyexchange    VARCHAR(80),  " + 
-		"  industry           VARCHAR(255), " + 
-		"  website            VARCHAR(255),  " + 
-		"  description        VARCHAR(500), " + 
-		"  ceo                VARCHAR(255),  " + 
-		"  issuetype          VARCHAR(80), " + 
-		"  sector             VARCHAR(80),  " + 		
-		"  UNIQUE KEY (symbol, companyexchange )," + 
-		"  FOREIGN KEY(symbol) REFERENCES symbol(symbol));              ";
+	String query = "CREATE TABLE COMPANY   (ID INTEGER PRIMARY KEY," + 
+		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
+		"  COMPANYNAME        VARCHAR(255) NOT NULL, " + 
+		"  EXCHANGE    	      VARCHAR(80),  " + 
+		"  INDUSTRY           VARCHAR(255), " + 
+		"  WEBSITE            VARCHAR(255),  " + 
+		"  DESCRIPTION        VARCHAR(500), " + 
+		"  CEO                VARCHAR(255),  " + 
+		"  ISSUETYPE          VARCHAR(80), " + 
+		"  SECTOR             VARCHAR(80),  " + 		
+		"  UNIQUE KEY (SYMBOL, EXCHANGE)," + 
+		"  FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL));              ";
 		
 	
 	try {
@@ -108,7 +108,7 @@ public class StkDbDaoImpl implements StkDbDao {
     public boolean createSymbolTable() throws SQLException {
 	logger.info("createSymbolTable Symbol starting");
 	jdbcTemplate.execute("DROP TABLE SYMBOL IF EXISTS");
-	String query = "CREATE TABLE SYMBOL   (symbolID INTEGER PRIMARY KEY,   " + 
+	String query = "CREATE TABLE SYMBOL   (ID INTEGER PRIMARY KEY,   " + 
 		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
 		"  NAME               VARCHAR(255) NOT NULL, " + 
 		"  DATE               DATE, "    + 
