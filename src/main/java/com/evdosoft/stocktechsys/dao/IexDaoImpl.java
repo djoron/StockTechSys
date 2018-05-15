@@ -8,6 +8,7 @@ package com.evdosoft.stocktechsys.dao;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -205,18 +206,17 @@ public class IexDaoImpl implements IexDao {
      * @throws java.lang.Exception
      */
     @Override
-    public String getLastOpenMarketDate() throws Exception {
+    public LocalDate getLastOpenMarketDate() throws Exception {
 
-	String lastOpenDate = "";
+	LocalDate lastOpenDate = null;
 	List<Chart> chartList = new ArrayList<>();
 
 	chartList = updateDailyChartList(parameters.getSymbolToCheckLastMarketOpenDate(), StockTechSysConstants.ONEMONTH);
 
 	if (chartList.size() > 1) {
 	    lastOpenDate = chartList.get(chartList.size() - 1).getDate();
-	} else
-	    lastOpenDate = "";
-
+	}
+	
 	return lastOpenDate;
     }
 }

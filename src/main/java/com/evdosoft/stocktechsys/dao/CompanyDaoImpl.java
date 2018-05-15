@@ -5,10 +5,8 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -123,50 +121,31 @@ public class CompanyDaoImpl implements CompanyDao {
 	 * .collect(Collectors.toList());
 	 * 
 	 */
-	StkDbDao sqliteDao = new StkDbDaoImpl();
-	Statement stmt = null;
-	PreparedStatement prepStmt = null;
-
-	Connection c = sqliteDao.openSqlDatabase();
 
 	if (companyList.size() > 0) {
-	    stmt = null;
-	    stmt = c.createStatement();
-	    c.setAutoCommit(false);
-
-	    prepStmt = c.prepareStatement("INSERT OR REPLACE INTO COMPANY (SYMBOL, COMPANYNAME, "
+	    String SQL = "INSERT OR REPLACE INTO COMPANY (SYMBOL, COMPANYNAME, "
 		    + "EXCHANGE, INDUSTRY, WEBSITE, DESCRIPTION, CEO, ISSUETYPE, "
-		    + "SECTOR) VALUES (?,?,?,?,?,?,?,?,?);");
-	    for (Company s : companyList) {
-		prepStmt.setString(1, s.getSymbol());
-		prepStmt.setString(2, s.getCompanyName());
-		prepStmt.setString(3, s.getExchange());
-		prepStmt.setString(4, s.getIndustry());
-		prepStmt.setString(5, s.getWebsite());
-		prepStmt.setString(6, s.getDescription());
-		prepStmt.setString(7, s.getCeo());
-		prepStmt.setString(8, s.getIssueType());
-		prepStmt.setString(9, s.getSector());
+		    + "SECTOR) VALUES (?,?,?,?,?,?,?,?,?);";
+//	    for (Company s : companyList) {
+//		prepStmt.setString(1, s.getSymbol());
+//		prepStmt.setString(2, s.getCompanyName());
+//		prepStmt.setString(3, s.getExchange());
+//		prepStmt.setString(4, s.getIndustry());
+//		prepStmt.setString(5, s.getWebsite());
+//		prepStmt.setString(6, s.getDescription());
+//		prepStmt.setString(7, s.getCeo());
+//		prepStmt.setString(8, s.getIssueType());
+//		prepStmt.setString(9, s.getSector());
+//
+//		prepStmt.addBatch();
+//	    }
 
-		prepStmt.addBatch();
-	    }
-
-	    try {
-		prepStmt.executeBatch();
-		c.commit();
-	    } catch (Exception e) {
-		logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-		return false;
-	    }
-	    prepStmt.close();
-	    c.setAutoCommit(true);
+	   
 	    logger.info("updateCompanyList: CompanyList saved in SqlDB...done");
 	} else {
-	    logger.error("updateCompanyList: CompanyList save FAILED in SqlDB");
-	    sqliteDao.closeSqlDatabase(c);
+	    logger.error("updateCompanyList: CompanyList save FAILED in SqlDB");	  
 	    return false;
-	}
-	sqliteDao.closeSqlDatabase(c);
+	}	
 	return true;
     }
 

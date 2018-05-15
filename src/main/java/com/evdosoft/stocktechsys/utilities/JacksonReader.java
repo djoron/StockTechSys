@@ -5,14 +5,7 @@
  */
 package com.evdosoft.stocktechsys.utilities;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import com.evdosoft.stocktechsys.models.StockGoogle;
 /**
  *
  * @author atlantis

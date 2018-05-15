@@ -5,15 +5,16 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.evdosoft.stocktechsys.models.Chart;
@@ -27,113 +28,66 @@ public class ChartDaoImpl implements ChartDao {
 
     private static final Logger logger = LoggerFactory.getLogger(ChartDaoImpl.class);
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
     @Override
     public int saveChartListToDb(List<Chart> chartList, String symbol) {
 
-	StkDbDao sqliteDao = new StkDbDaoImpl();
-	Statement stmt = null;
-	PreparedStatement prepStmt = null;
-	int count = 0;
-
-	Connection c = sqliteDao.openSqlDatabase();
-
 	if (chartList.size() > 0) {
-	    stmt = null;
-
-	    try {
-		stmt = c.createStatement();
-		c.setAutoCommit(false);
-		prepStmt = c.prepareStatement("INSERT INTO CHART (" + " SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
+	   String sql = "INSERT INTO CHART (" + " SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
 			+ " VOLUME, UNADJUSTEDVOLUME, CHANGE, CHANGEPERCENT, " + " VWAP, LABEL, CHANGEOVERTIME)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);");
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
-		for (Chart ch : chartList) {
-		    prepStmt.setString(1, symbol);
-		    prepStmt.setString(2, ch.getDate());
-		    prepStmt.setString(3, ch.getOpen());
-		    prepStmt.setString(4, ch.getHigh());
-		    prepStmt.setString(5, ch.getLow());
-		    prepStmt.setString(6, ch.getClose());
-		    prepStmt.setString(7, ch.getVolume());
-		    prepStmt.setString(8, ch.getUnadjustedVolume());
-		    prepStmt.setString(9, ch.getChange());
-		    prepStmt.setString(10, ch.getChangePercent());
-		    prepStmt.setString(11, ch.getVwap());
-		    prepStmt.setString(12, ch.getLabel());
-		    prepStmt.setString(13, ch.getChangeOverTime());
+	   jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+		    
+       		@Override
+	        public void setValues(PreparedStatement ps, int i) throws SQLException {
+       	    	Chart ch = chartList.get(i);
+		    ps.setString(1, symbol);		    
+		    ps.setDate(2, java.sql.Date.valueOf(ch.getDate()));
+		    ps.setBigDecimal(3, ch.getOpen());
+		    ps.setBigDecimal(4, ch.getHigh());
+		    ps.setBigDecimal(5, ch.getLow());
+		    ps.setBigDecimal(6, ch.getClose());
+		    ps.setLong(7, ch.getVolume());
+		    ps.setLong(8, ch.getUnadjustedVolume());
+		    ps.setBigDecimal(9, ch.getChange());
+		    ps.setBigDecimal(10, ch.getChangePercent());
+		    ps.setBigDecimal(11, ch.getVwap());
+		    ps.setString(12, ch.getLabel());
+		    ps.setBigDecimal(13, ch.getChangeOverTime());
+       		}
 
-		    prepStmt.addBatch();
-		    count++;
-		}
-
-		prepStmt.executeBatch();
-		c.commit();
-
-		prepStmt.close();
-		c.setAutoCommit(true);
-	    } catch (Exception e) {
-		logger.error("saveChartListToDb: Prep Statement failed");
-		logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-		return 0;
-	    }
+		    @Override
+		        public int getBatchSize() {
+		    		return chartList.size();
+		        }
+		    });     
+	    
 	} else {
-	    logger.error("saveChartListToDb: ChartList save FAILED in SqlDB at symbol {}.", symbol);
-	    sqliteDao.closeSqlDatabase(c);
+	    logger.error("saveChartListToDb: ChartList save FAILED in SqlDB at symbol {}.", symbol);	    
 	    return 0;
 	}
-	sqliteDao.closeSqlDatabase(c);
-	return count;
+	return chartList.size();
     }
 
-    public String getLastSavedDownloadChartDate(String symbol) {
-
-	StkDbDao sqliteDao = new StkDbDaoImpl();
-	Statement stmt = null;
-	PreparedStatement prepStmt = null;
-	int count = 0;
-
-	Connection c = sqliteDao.openSqlDatabase();
-
+    @Override
+    public LocalDate getLastSavedDownloadChartDate(String symbol) {
+	LocalDate date = null;
 	if (symbol != null) {
-	    stmt = null;
+	    String SQL = "SELECT * FROM CHART" + " WHERE SYMBOL = ?"
+			+ " AND DATE = (SELECT MAX(DATE)" + " FROM CHART WHERE SYMBOL = ?)";
 
-	    try {
-		stmt = c.createStatement();
-		c.setAutoCommit(false);
-		prepStmt = c.prepareStatement("SELECT * FROM CHART" + " WHERE SYMBOL = ?"
-			+ " AND DATE = (SELECT MAX(DATE)" + " FROM CHART WHERE SYMBOL = ?)");
-
-		prepStmt.setString(1, symbol);
-		prepStmt.setString(2, symbol);
-		prepStmt.addBatch();
-		prepStmt.executeBatch();
-		c.commit();
-
-		ResultSet rs = prepStmt.executeQuery();
-		int found = 0;
-		// try {
-		while (rs.next()) {
-		    // if we go in while, there is 1 element
-		    found++;
-		}
-
-		prepStmt.close();
-		c.setAutoCommit(true);
-		// } catch (Exception e) {
-		// logger.error("getLastSavedDownloadChartDate: Prep Statement failed");
-		// logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-		// return null;
-		// }
-	    } catch (SQLException ex) {
-		logger.error("Very bad : SQL exception", ex);
+	    Chart chart = jdbcTemplate.queryForObject(SQL, new ChartRowMapper());
+	    if(chart != null) {
+		date = chart.getDate();
 	    }
-
-	    logger.error("getLastSavedDownloadChartDate: Null symbol passed as argument.");
-	    sqliteDao.closeSqlDatabase(c);
-	    return null;
 	}
-	return null;
+	
+	return date;
     }
+    
 }
 /*
  * xxx

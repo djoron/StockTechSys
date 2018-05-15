@@ -5,7 +5,6 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -60,8 +59,8 @@ public class SymbolDaoImpl implements SymbolDao {
 	    		Symbol symbol = symbolList.get(i);
 	    		ps.setString(1,symbol.getSymbol());
 	                ps.setString(2,symbol.getName());
-	                ps.setDate(3,(Date) symbol.getDate());
-	                ps.setBoolean(4,symbol.getIsEnabled());
+	                ps.setDate(3, java.sql.Date.valueOf(symbol.getDate()));
+	                ps.setBoolean(4,symbol.isEnabled());
 	                ps.setString(5,symbol.getType());
 	                ps.setString(6,symbol.getIexId());	    	
 	        }

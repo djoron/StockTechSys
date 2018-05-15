@@ -6,10 +6,11 @@
 package com.evdosoft.stocktechsys.dao;
 
 import java.net.MalformedURLException;
+import java.time.LocalDate;
 import java.util.List;
+
 import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
-import com.evdosoft.stocktechsys.models.Quote;
 import com.evdosoft.stocktechsys.models.Symbol;
 
 /**
@@ -23,5 +24,5 @@ public interface IexDao {
     public List<Company>  getCompanyList(List<Symbol> symbolList) throws MalformedURLException;
     public List<Chart>    getDailyChartList(String symbol, String period) throws MalformedURLException;
     public List<Chart>    updateDailyChartList(String symbol, String period) throws MalformedURLException;
-    public String         getLastOpenMarketDate () throws Exception;
+    public LocalDate      getLastOpenMarketDate () throws Exception;
 }
