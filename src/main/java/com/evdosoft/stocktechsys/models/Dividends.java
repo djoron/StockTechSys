@@ -5,9 +5,12 @@
  */
 package com.evdosoft.stocktechsys.models;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 /**
  * Model for dividends data from IEX
@@ -23,65 +26,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
    "indicated":""}]
     * @author dominicj
  */
+@Data
 public class Dividends {
    
     private Date exDate;
     private Date paymentDate;
     private Date recordDate;
     private Date declaredDate;
-    private double amount;
+    private BigDecimal amount;
     @JsonProperty("type")
     private String typediv;
     private String qualified;
     private String indicated;
-    
-    public Date getExDate() {
-        return exDate;
-    }
-    public void setExDate(Date exDate) {
-        this.exDate = exDate;
-    }
-    public Date getPaymentDate() {
-        return paymentDate;
-    }
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-    public Date getRecordDate() {
-        return recordDate;
-    }
-    public void setRecordDate(Date recordDate) {
-        this.recordDate = recordDate;
-    }
-    public Date getDeclaredDate() {
-        return declaredDate;
-    }
-    public void setDeclaredDate(Date declaredDate) {
-        this.declaredDate = declaredDate;
-    }
-    public double getAmount() {
-        return amount;
-    }
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-    public String getTypediv() {
-        return typediv;
-    }
-    public void setTypediv(String typediv) {
-        this.typediv = typediv;
-    }
-    public String getQualified() {
-        return qualified;
-    }
-    public void setQualified(String qualified) {
-        this.qualified = qualified;
-    }
-    public String getIndicated() {
-        return indicated;
-    }
-    public void setIndicated(String indicated) {
-        this.indicated = indicated;
-    }
-        
+            
 }

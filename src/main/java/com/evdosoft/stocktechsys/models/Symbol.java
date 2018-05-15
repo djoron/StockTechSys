@@ -8,10 +8,13 @@ package com.evdosoft.stocktechsys.models;
 import java.util.Date;
 import java.util.Objects;
 
+import lombok.Data;
+
 /**
  *
  * @author atlantis
  */
+@Data
 public class Symbol {
 
  // xxxx a verifier les types. DOuble pour entiers, Big decimal pour float
@@ -21,54 +24,6 @@ public class Symbol {
     private boolean isEnabled;
     private String type;
     private String iexId;
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public boolean getIsEnabled() {
-        return isEnabled;
-    }
-
-    public void setIsEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getIexId() {
-        return iexId;
-    }
-
-    public void setIexId(String iexId) {
-        this.iexId = iexId;
-    }
 
     @Override
     public int hashCode() {

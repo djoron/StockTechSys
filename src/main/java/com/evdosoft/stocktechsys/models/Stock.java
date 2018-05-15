@@ -5,10 +5,15 @@
  */
 package com.evdosoft.stocktechsys.models;
 
+import java.math.BigDecimal;
+
+import lombok.Data;
+
 /**
  *
  * @author atlantis
  */
+@Data
 public class Stock {
 
  // xxxx a verifier les types. DOuble pour entiers, Big decimal pour double
@@ -21,13 +26,13 @@ public class Stock {
     private String namecorrected;
     private String symbolcorrected;
     private String ipo;
-    private double  bookvalue;
-    private double  shortratio;
+    private BigDecimal  bookvalue;
+    private BigDecimal  shortratio;
     private String dividendPayDate;
     private String exDividendDate;
-    private double pricebook;
-    private double marketcap;
-    private double dividendPerShare;
+    private BigDecimal pricebook;
+    private BigDecimal marketcap;
+    private BigDecimal dividendPerShare;
     private String dayLastUpdate; // Day software was last run to update price of stock
     private Integer obsolete;
     private char priceSource; // Default Price Source. Y=Yahoo. G = Google (by default)
@@ -38,160 +43,5 @@ public class Stock {
       9- Date,10- EPS,11- Book value,12- Last trade with time,13- Short ratio,14- Dividend pay date,15- Q ex-dividend date,
       16- Price/book, 17 - Market capitalization,18- Earnings per share,19 - Dividend per share
 */
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        namecorrected = name.replaceAll("'", " ");
-        // remplace tout ' par ' '
-        this.name = namecorrected;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        // Google uses ., not /
-        // symbolcorrected = symbol.replaceAll("/", ".");
-        this.symbol = symbol; // corrected;
-    }
-
-    public String getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-    
-    public String getExchangeName() {
-        return exchangeName;
-    }
-
-    public void setExchangeName(String exchangeName) {
-        this.exchangeName = exchangeName;
-    }
-
-    public String getSector() {
-        return sector;
-    }
-
-    public void setSector(String sector) {
-        this.sector = sector;
-    }
-    
-    public String getIndustry() {
-        return industry;
-    }
-
-    public void setIndustry(String industry) {
-        this.industry = industry;
-    }
-
-    public String getNamecorrected() {
-        return namecorrected;
-    }
-
-    public void setNamecorrected(String namecorrected) {
-        this.namecorrected = namecorrected;
-    }
-
-    public String getSymbolcorrected() {
-        return symbolcorrected;
-    }
-
-    public void setSymbolcorrected(String symbolcorrected) {
-        this.symbolcorrected = symbolcorrected;
-    }
- 
-    public String getIpo() {
-        return ipo;
-    }
-
-    public void setIpo(String ipo) {
-        this.ipo = ipo;
-    }    
-    
-    public double getBookvalue() {
-        return bookvalue;
-    }
-
-    public void setBookvalue(double bookvalue) {
-        this.bookvalue = bookvalue;
-    }
-
-    public double getShortratio() {
-        return shortratio;
-    }
-
-    public void setShortratio(double shortratio) {
-        this.shortratio = shortratio;
-    }
-
-    public String getDividendPayDate() {
-        return dividendPayDate;
-    }
-
-    public void setDividendPayDate(String dividendPayDate) {
-        this.dividendPayDate = dividendPayDate;
-    }
-    
-    public String getExDividendDate() {
-        return exDividendDate;
-    }
-
-    public void setExDividendDate(String exDividendDate) {
-        this.exDividendDate = exDividendDate;
-    }
-
-    public double getPricebook() {
-        return pricebook;
-    }
-
-    public void setPricebook(double pricebook) {
-        this.pricebook = pricebook;
-    }
-
-    public double getMarketcap() {
-        return marketcap;
-    }
-
-    public void setMarketcap(double marketcap) {
-        this.marketcap = marketcap;
-    }
-    
-    public double getDividendPerShare() {
-        return dividendPerShare;
-    }
-
-    public void setDividendPerShare(double dividendpershare) {
-        this.dividendPerShare = dividendpershare;
-    }
-
-    public String getDayLastUpdate() {
-        return dayLastUpdate;
-    }
-
-    public void setDayLastUpdate(String dayLastUpdate) {
-        this.dayLastUpdate = dayLastUpdate;
-    }
-    public Integer getObsolete() {
-        return obsolete;
-    }
-
-    public void setObsolete(Integer obsolete) {
-        this.obsolete = obsolete;
-    }
-
-    public char getPriceSource() {
-        return priceSource;
-    }
-
-    public void setPriceSource(char priceSource) {
-        this.priceSource = priceSource;
-    }
     
 }
