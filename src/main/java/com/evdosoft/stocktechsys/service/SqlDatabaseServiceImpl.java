@@ -7,6 +7,7 @@ package com.evdosoft.stocktechsys.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.evdosoft.stocktechsys.dao.SqliteDao;
 import com.evdosoft.stocktechsys.dao.SqliteDaoImpl;
@@ -15,6 +16,7 @@ import com.evdosoft.stocktechsys.dao.SqliteDaoImpl;
  *
  * @author dominicj
  */
+@Service
 public class SqlDatabaseServiceImpl implements SqlDatabaseService {
  
     private static final Logger logger = LoggerFactory.getLogger(SqlDatabaseServiceImpl.class);

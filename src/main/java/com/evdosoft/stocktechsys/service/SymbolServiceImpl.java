@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.evdosoft.stocktechsys.StockTechSysConstants;
 import com.evdosoft.stocktechsys.dao.IexDao;
@@ -21,6 +22,7 @@ import com.evdosoft.stocktechsys.models.Symbol;
  * Manipulate Symbol List as retrieved by IEX
  * @author dominicj
  */
+@Service
 public class SymbolServiceImpl implements SymbolService {
     
     private static final Logger logger = LoggerFactory.getLogger(SymbolServiceImpl.class);
