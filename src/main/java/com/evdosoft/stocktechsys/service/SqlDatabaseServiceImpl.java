@@ -7,10 +7,10 @@ package com.evdosoft.stocktechsys.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.evdosoft.stocktechsys.dao.SqliteDao;
-import com.evdosoft.stocktechsys.dao.SqliteDaoImpl;
+import com.evdosoft.stocktechsys.dao.StkDbDao;
 
 /**
  *
@@ -19,6 +19,7 @@ import com.evdosoft.stocktechsys.dao.SqliteDaoImpl;
 @Service
 public class SqlDatabaseServiceImpl implements SqlDatabaseService {
  
+    @Autowired private StkDbDao stkDbDao;
     private static final Logger logger = LoggerFactory.getLogger(SqlDatabaseServiceImpl.class);
     
     /* (non-Javadoc)
@@ -27,16 +28,15 @@ public class SqlDatabaseServiceImpl implements SqlDatabaseService {
     @Override
     public boolean createSqlDb() throws Exception {
     
-        SqliteDao sqliteDao = new SqliteDaoImpl();
-        boolean status = false;
+        boolean status = true;
         
-        status = sqliteDao.createSymbolTable() &&
-                 sqliteDao.createSymbolTemporaryTable() &&
-                 sqliteDao.createCompanyTables() && 
-                 sqliteDao.createChartTable() &&
-                 sqliteDao.createQuoteTable();
-        
-        
+        status = status && stkDbDao.createSymbolTable();
+
+                //  StkDbDao.createSymbolTemporaryTable() &&
+        status = status && stkDbDao.createCompanyTables();
+        status = status && stkDbDao.createChartTable();
+        status = status && stkDbDao.createQuoteTable();
+                
         if (status) {
             logger.info("createSqlDb: Completed successfully");
         } else {

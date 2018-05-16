@@ -105,7 +105,7 @@ public class StkDbDaoImpl implements StkDbDao {
      * @throws java.sql.SQLException
      */
     @Override
-    public boolean createSymbolTable() throws SQLException {
+    public boolean createSymbolTable() {
 	logger.info("createSymbolTable Symbol starting");
 	jdbcTemplate.execute("DROP TABLE SYMBOL IF EXISTS");
 	String query = "CREATE TABLE SYMBOL   (ID INTEGER PRIMARY KEY,   " + 
@@ -116,20 +116,22 @@ public class StkDbDaoImpl implements StkDbDao {
 		"  TYPE               VARCHAR(4), " + 
 		"  IEXID              INTEGER, " + 
 		"  UNIQUE KEY (SYMBOL) );";
-	try {
+//	try {
 
-	    if (execStatement(query) == true) {
+	    jdbcTemplate.execute(query);
+	    /*
 		logger.info("createCompanyTables created successfully");
 	    } else {
 		logger.error("createSymbolTable Symbol did not complete.");
 	    }
-	    return true;
+	    return true; *
 	} catch (Exception e) {
 	    logger.error("createSymbolTable Symbol did not complete.");
 	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
 	    return false;
 	}
-
+*/
+	    return false;
     }
    
     /**
