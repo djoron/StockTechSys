@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.evdosoft.stocktechsys.models.Stock;
@@ -30,6 +31,9 @@ Download differences and save into company DB.
 @Service
 public class DataServiceImpl implements DataService {
 
+    @Autowired
+    private FileOperations fileOperation;
+    
     private static final Logger logger = LoggerFactory.getLogger(DataServiceImpl.class);
     
     // Will contain Entire Stock List to/from SQLDB.
@@ -54,11 +58,10 @@ public class DataServiceImpl implements DataService {
 	        // passed as parameter to other services.
 	        
 	        // Initialize service for Stock list management
-//	        CompanyService companyService = new CompanyService();
-	        PriceHistoryService priceHistoryService = new PriceHistoryServiceImpl();
-	        SqlDatabaseService sqlDatabaseService = new SqlDatabaseServiceImpl();
+//	        PriceHistoryService priceHistoryService = new PriceHistoryServiceImpl();
+//	        SqlDatabaseService sqlDatabaseService = new SqlDatabaseServiceImpl();
 	        // To retrieve SymbolList from IEX
-	        SymbolService symbolService = new SymbolServiceImpl();
+//	        SymbolService symbolService = new SymbolServiceImpl();
 	        // Will contain symbol only List from Internet.
 	        List<Symbol> symbolList = null;
 	            
@@ -73,9 +76,7 @@ public class DataServiceImpl implements DataService {
 	        }
 	 
 	        logger.info("Data provided for free by IEX: https://iextrading.com/api-exhibit-a" );
-
 	        
-	        FileOperations fileOperation = new FileOperations();
 	        beginTimeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
 	        // If DB does not exist, create new one else ask user if he wants to 
 	        // delete current data

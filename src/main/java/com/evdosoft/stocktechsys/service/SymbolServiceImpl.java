@@ -9,13 +9,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.evdosoft.stocktechsys.StockTechSysConstants;
 import com.evdosoft.stocktechsys.dao.IexDao;
-import com.evdosoft.stocktechsys.dao.IexDaoImpl;
 import com.evdosoft.stocktechsys.dao.SymbolDao;
-import com.evdosoft.stocktechsys.dao.SymbolDaoImpl;
 import com.evdosoft.stocktechsys.models.Symbol;
 
 /**
@@ -27,13 +26,17 @@ public class SymbolServiceImpl implements SymbolService {
     
     private static final Logger logger = LoggerFactory.getLogger(SymbolServiceImpl.class);
     
+    @Autowired
+    private IexDao iexDao;
+    
+    @Autowired
+    SymbolDao symbolDao;
+    
     /* (non-Javadoc)
      * @see com.evdosoft.stocktechsys.service.SymbolService#getSymbolList()
      */
     @Override
-    public List<Symbol> getSymbolList() throws Exception {
-        
-        IexDao iexDao = new IexDaoImpl() {};
+    public List<Symbol> getSymbolList() throws Exception {                 
         List<Symbol> symbolList = iexDao.getSymbolList();
         logger.info("Symbol List downloaded successfully");
         return symbolList;
@@ -44,7 +47,6 @@ public class SymbolServiceImpl implements SymbolService {
      */
     @Override
     public void saveSymbolList(StockTechSysConstants.TypeListDownload typeListDownload, List<Symbol> symbolList) throws Exception {
-        SymbolDao symbolDao = new SymbolDaoImpl() {};
         symbolDao.saveSymbolList(symbolList, typeListDownload);
         
     }

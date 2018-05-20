@@ -34,8 +34,12 @@ public class IexDaoImpl implements IexDao {
 
     private static final Logger logger = LoggerFactory.getLogger(IexDaoImpl.class);
     
-    @Autowired
     private Parameters parameters;
+    
+    @Autowired
+    public IexDaoImpl(Parameters parameters) {
+	this.parameters = parameters;
+    }    
     
     /**
      *
@@ -46,8 +50,7 @@ public class IexDaoImpl implements IexDao {
     @Override
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
-	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();
-	int size = 0;
+	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
 	List<Symbol> symbolList = null;
 	// logger.debug("getSymbolList - Launching Symbol download - IEX Url
 	// {}",urlstr);
@@ -56,7 +59,6 @@ public class IexDaoImpl implements IexDao {
 	try {
 	    symbolList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<Symbol>>() {
 	    });
-	    size = symbolList.size();
 	    // logger.info("getSymbolList - Read {} symbols",size);
 
 	} catch (IOException e) {

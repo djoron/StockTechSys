@@ -7,16 +7,14 @@ package com.evdosoft.stocktechsys;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Data;
-
 /**
  *
  * @author atlantis Open InitJson.json file that contains various parameters.
  *         Initializes using static init sequence Used http://jsonmate.com/ to
  *         validate JSON file.
  */
-@Data
-@ConfigurationProperties("stocktechsys")
+
+@ConfigurationProperties(prefix="stocktechsys")
 public class Parameters {
         
     private String iexPrefix;
@@ -30,7 +28,75 @@ public class Parameters {
     private int maxDayBeforeObsolete;
     private int stringBufferSize;
     private int timeout;
+    
+    public String getIexPrefix() {
+        return iexPrefix;
+    }
+    public void setIexPrefix(String iexPrefix) {
+        this.iexPrefix = iexPrefix;
+    }
+    public String getIexPrefixSymbols() {
+        return iexPrefixSymbols;
+    }
+    public void setIexPrefixSymbols(String iexPrefixSymbols) {
+        this.iexPrefixSymbols = iexPrefixSymbols;
+    }
+    public int getYearHistoryInt() {
+        return yearHistoryInt;
+    }
+    public void setYearHistoryInt(int yearHistoryInt) {
+        this.yearHistoryInt = yearHistoryInt;
+    }
+    public String getYearHistoryString() {
+        return yearHistoryString;
+    }
+    public void setYearHistoryString(String yearHistoryString) {
+        this.yearHistoryString = yearHistoryString;
+    }
+    public int getHourBloombergDataAvail() {
+        return hourBloombergDataAvail;
+    }
+    public void setHourBloombergDataAvail(int hourBloombergDataAvail) {
+        this.hourBloombergDataAvail = hourBloombergDataAvail;
+    }
+    public int getIexMaxStockAtaTime() {
+        return iexMaxStockAtaTime;
+    }
+    public void setIexMaxStockAtaTime(int iexMaxStockAtaTime) {
+        this.iexMaxStockAtaTime = iexMaxStockAtaTime;
+    }
+    public int getMaxStocktoProcess() {
+        return maxStocktoProcess;
+    }
+    public void setMaxStocktoProcess(int maxStocktoProcess) {
+        this.maxStocktoProcess = maxStocktoProcess;
+    }
+    public String getSymbolToCheckLastMarketOpenDate() {
+        return symbolToCheckLastMarketOpenDate;
+    }
+    public void setSymbolToCheckLastMarketOpenDate(String symbolToCheckLastMarketOpenDate) {
+        this.symbolToCheckLastMarketOpenDate = symbolToCheckLastMarketOpenDate;
+    }
+    public int getMaxDayBeforeObsolete() {
+        return maxDayBeforeObsolete;
+    }
+    public void setMaxDayBeforeObsolete(int maxDayBeforeObsolete) {
+        this.maxDayBeforeObsolete = maxDayBeforeObsolete;
+    }
+    public int getStringBufferSize() {
+        return stringBufferSize;
+    }
+    public void setStringBufferSize(int stringBufferSize) {
+        this.stringBufferSize = stringBufferSize;
+    }
+    public int getTimeout() {
+        return timeout;
+    }
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 
+    
     // public static String PARAMETERSPATH = ".\\Properties.json";
     //
     // public static String DATABASEFILENAME; // Database file name

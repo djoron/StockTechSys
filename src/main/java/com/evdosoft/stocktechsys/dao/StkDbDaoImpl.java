@@ -79,21 +79,8 @@ public class StkDbDaoImpl implements StkDbDao {
 		"  FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL));              ";
 		
 	
-	try {
-
-	    if (execStatement(query) == true) {
-		// logger.info("createCompanyTables created successfully");
-	    } else {
-		logger.error("createCompanyTable Company did not complete.");
-	    }
-	} catch (Exception e) {
-	    logger.error("createCompanyTable Company did not complete.");
-	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-	    return false;
-
+	return execStatement(query);
 	}
-	return true;
-    }
 
     /**
      *
@@ -107,7 +94,7 @@ public class StkDbDaoImpl implements StkDbDao {
     @Override
     public boolean createSymbolTable() {
 	logger.info("createSymbolTable Symbol starting");
-	jdbcTemplate.execute("DROP TABLE SYMBOL IF EXISTS");
+	jdbcTemplate.execute("DROP TABLE IF EXISTS SYMBOL");
 	String query = "CREATE TABLE SYMBOL   (ID INTEGER PRIMARY KEY,   " + 
 		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
 		"  NAME               VARCHAR(255) NOT NULL, " + 
@@ -116,22 +103,9 @@ public class StkDbDaoImpl implements StkDbDao {
 		"  TYPE               VARCHAR(4), " + 
 		"  IEXID              INTEGER, " + 
 		"  UNIQUE KEY (SYMBOL) );";
-//	try {
 
 	    jdbcTemplate.execute(query);
-	    /*
-		logger.info("createCompanyTables created successfully");
-	    } else {
-		logger.error("createSymbolTable Symbol did not complete.");
-	    }
-	    return true; *
-	} catch (Exception e) {
-	    logger.error("createSymbolTable Symbol did not complete.");
-	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-	    return false;
-	}
-*/
-	    return false;
+	    return true;
     }
    
     /**
@@ -172,19 +146,7 @@ public class StkDbDaoImpl implements StkDbDao {
 			+ "FOREIGN KEY(SYMBOL,PRIMARYEXCHANGE) REFERENCES COMPANY(SYMBOL,EXCHANGE)" + ");"
 			+ "CREATE INDEX DATE_IDX ON QUOTE (SYMBOL, PRIMARYEXCHANGE, CLOSETIME);";
 
-	try {
-	    if (execStatement(query) == true) {
-		// logger.info("createCompanyTables created successfully");
-		return true;
-	    } else {
-		logger.error("createQuoteTable did not complete.");
-		return false;
-	    }
-	} catch (Exception e) {
-	    logger.error("createQuoteTable did not complete.");
-	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-	    return false;
-	}
+	return execStatement(query);
     }
 
     /**
@@ -201,7 +163,7 @@ public class StkDbDaoImpl implements StkDbDao {
 	// stmt = null;
 	// stmt = c.createStatement();
 
-	// logger.info("createChartTable starting");
+	// logger.info("createChartTable starting");	
 	String query = // FOR NOW delete table if already exists
 		"CREATE TABLE CHART " + "(chartID INTEGER PRIMARY KEY," + " SYMBOL       VARCHAR(10) NOT NULL,"
 			+ " DATE                   TEXT, " + " OPEN                   TEXT, "

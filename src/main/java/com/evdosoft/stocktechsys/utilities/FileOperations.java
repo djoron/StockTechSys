@@ -9,11 +9,13 @@ import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author atlantis
  */
+@Component
 public class FileOperations {
 
     private static final Logger logger = LoggerFactory.getLogger(FileOperations.class);

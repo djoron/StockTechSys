@@ -10,12 +10,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.evdosoft.stocktechsys.dao.CompanyDao;
-import com.evdosoft.stocktechsys.dao.CompanyDaoImpl;
 import com.evdosoft.stocktechsys.dao.IexDao;
-import com.evdosoft.stocktechsys.dao.IexDaoImpl;
 import com.evdosoft.stocktechsys.models.Company;
 import com.evdosoft.stocktechsys.models.Symbol;
         
@@ -27,16 +26,19 @@ import com.evdosoft.stocktechsys.models.Symbol;
 public class CompanyServiceImpl implements CompanyService {
     
     private static final Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
+    
+    @Autowired
+    private IexDao iexDao;
+    
+    @Autowired
+    private CompanyDao companyDao;
         
     /* (non-Javadoc)
      * @see com.evdosoft.stocktechsys.service.CompanyService#createCompanyList(java.util.List)
      */
     @Override
     public boolean createCompanyList(List<Symbol>symbolList) throws Exception {
-        boolean status;
-        
-        // Dao to access internat Data
-        IexDao iexDao = new IexDaoImpl() {};
+        boolean status;       
         
         List<Company> companyList = iexDao.getCompanyList(symbolList);
         
@@ -48,8 +50,7 @@ public class CompanyServiceImpl implements CompanyService {
             {
                 // Save in SQL DB.
                 logger.info("createCompanyList: Downloaded {} elements.",companyList.size());
-                logger.info("createCompanyList: getCompanyList. Saving into DB.",companyList.size());
-                CompanyDao companyDao = new CompanyDaoImpl();
+                logger.info("createCompanyList: getCompanyList. Saving into DB.",companyList.size());                
                 companyDao.saveCompanyList(companyList);
 
             } else {
@@ -74,10 +75,7 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
     @Override
     public boolean updateCompanyList(List<Symbol>symbolList) throws Exception {
-        boolean status;
-        
-        // Dao to access internat Data
-        IexDao iexDao = new IexDaoImpl() {};
+        boolean status;        
         
         // xxxx SymbolList is full here. Needs to be trimmed.
         
@@ -96,7 +94,6 @@ public class CompanyServiceImpl implements CompanyService {
                 // Save in SQL DB.
                 logger.info("updateCompanyList: Downloaded {} elements.",companyList.size());
                 logger.info("updateCompanyList: Saving into DB.",companyList.size());
-                CompanyDao companyDao = new CompanyDaoImpl();
                 companyDao.updateCompanyList(companyList);
 
             } else {
@@ -122,9 +119,8 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<Company> getCompanyListFromDb() throws Exception {
     
-        List<Company> companyList = new ArrayList<Company>();
+        List<Company> companyList = new ArrayList<>();
 
-        CompanyDao companyDao = new CompanyDaoImpl();
         companyList = companyDao.loadCompanyListFromDb();    
         return companyList;
 

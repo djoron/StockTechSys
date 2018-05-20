@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.evdosoft.stocktechsys.Parameters;
 import com.evdosoft.stocktechsys.dao.ChartDao;
-import com.evdosoft.stocktechsys.dao.ChartDaoImpl;
 import com.evdosoft.stocktechsys.dao.IexDao;
-import com.evdosoft.stocktechsys.dao.IexDaoImpl;
 import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
 
@@ -34,13 +32,20 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
     @Autowired
     private Parameters parameters;
     
+    @Autowired
+    private IexDao iexDao;
+    
+    @Autowired
+    private ChartDao chartDao;
+    
+    @Autowired
+    private CompanyService companyService;
+    
     /* (non-Javadoc)
      * @see com.evdosoft.stocktechsys.service.PriceHistoryService#createChartlist()
      */
     @Override
     public boolean createChartlist() throws Exception {
-
-        CompanyService companyService = new CompanyServiceImpl();
         List<Company> companyList;
         List<Chart> chartList;
         int count=0;
@@ -49,8 +54,6 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
         // Get company list from SQL DB.
         companyList = companyService.getCompanyListFromDb();
         
-        IexDao iexDao = new IexDaoImpl() {};
-        ChartDao chartDao = new ChartDaoImpl() {};
         int totalSymbols = companyList.size();
         
         for (Company company: companyList ) {    
@@ -91,10 +94,7 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
        
         boolean status;
         // Get company list from SQL DB.
-        companyList = companyService.getCompanyListFromDb();
-        
-        IexDao iexDao = new IexDaoImpl() {};
-        ChartDao chartDao = new ChartDaoImpl() {};
+        companyList = companyService.getCompanyListFromDb();        
         
         // Will hold sorted company list by SQL fetch date
         List <Company> companySort = new ArrayList<>();
