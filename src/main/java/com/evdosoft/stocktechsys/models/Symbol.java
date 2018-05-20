@@ -6,7 +6,10 @@
 package com.evdosoft.stocktechsys.models;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+
+import com.evdosoft.stocktechsys.web.resource.SymbolResource;
 
 import lombok.Data;
 
@@ -48,6 +51,19 @@ public class Symbol {
             return false;
         }
         return true;
+    }
+
+    public Symbol() {
+	
+    }
+    
+    public Symbol(SymbolResource resource) {
+	this.iexId = resource.getIexId();
+	this.isEnabled = Boolean.parseBoolean(resource.getIsEnabled());
+	this.name = resource.getName();
+	this.symbol = resource.getSymbol();
+	this.type = resource.getType();
+	this.date = LocalDate.parse(resource.getDate(), DateTimeFormatter.ofPattern("YYYY-MM-dd"));
     }
     
 }

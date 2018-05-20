@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.evdosoft.stocktechsys.StockTechSysConstants.TypeListDownload;
 import com.evdosoft.stocktechsys.models.Symbol;
 import com.evdosoft.stocktechsys.service.SqlDatabaseService;
 import com.evdosoft.stocktechsys.service.SymbolService;
@@ -28,7 +29,8 @@ public class Bootstrapping {
     	    System.out.println("in Bootstrapping !");
 		sqlDatabaseService.createSqlDb();
 	    
-    	    symbolList = symbolService.getSymbolList(); 
+    	    symbolList = symbolService.getSymbolList();
+    	    symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);
     	    
     	}
 }

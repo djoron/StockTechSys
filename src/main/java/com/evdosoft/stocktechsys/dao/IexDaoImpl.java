@@ -22,6 +22,7 @@ import com.evdosoft.stocktechsys.StockTechSysConstants;
 import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
 import com.evdosoft.stocktechsys.models.Symbol;
+import com.evdosoft.stocktechsys.web.resource.SymbolResource;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,14 +52,19 @@ public class IexDaoImpl implements IexDao {
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
 	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
-	List<Symbol> symbolList = null;
+	List<Symbol> symbolList = new ArrayList<>();
 	// logger.debug("getSymbolList - Launching Symbol download - IEX Url
 	// {}",urlstr);
 
 	ObjectMapper objectMapper = new ObjectMapper();
 	try {
-	    symbolList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<Symbol>>() {
+	    List<SymbolResource> symbolResourceList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<SymbolResource>>() {
 	    });
+	    
+	    for(SymbolResource resource : symbolResourceList) {
+		Symbol symbol = new Symbol(resource);
+		symbolList.add(symbol);
+	    }
 	    // logger.info("getSymbolList - Read {} symbols",size);
 
 	} catch (IOException e) {
