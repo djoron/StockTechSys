@@ -34,8 +34,8 @@ public class SqlDatabaseServiceImpl implements SqlDatabaseService {
 
                 //  StkDbDao.createSymbolTemporaryTable() &&
         status = status && stkDbDao.createCompanyTables();
-        status = status && stkDbDao.createChartTable();
-        status = status && stkDbDao.createQuoteTable();
+//        status = status && stkDbDao.createChartTable();
+//        status = status && stkDbDao.createQuoteTable();
                 
         if (status) {
             logger.info("createSqlDb: Completed successfully");
