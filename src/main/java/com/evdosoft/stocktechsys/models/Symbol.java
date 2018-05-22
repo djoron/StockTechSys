@@ -63,7 +63,7 @@ public class Symbol {
 	this.name = resource.getName();
 	this.symbol = resource.getSymbol();
 	this.type = resource.getType();
-	this.date = LocalDate.parse(resource.getDate(), DateTimeFormatter.ofPattern("YYYY-MM-dd"));
+	this.date = LocalDate.parse(resource.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
     
 }

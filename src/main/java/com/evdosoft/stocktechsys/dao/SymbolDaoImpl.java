@@ -29,10 +29,7 @@ public class SymbolDaoImpl implements SymbolDao {
     private Logger logger = LoggerFactory.getLogger(SymbolDaoImpl.class);
     
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    private StkDbDao sqliteDao;       
+    private JdbcTemplate jdbcTemplate;    
     
     /**
      * Save Company Downloaded from internet into DB. Method downloads temporary
@@ -44,9 +41,6 @@ public class SymbolDaoImpl implements SymbolDao {
      */
     @Override
     public boolean saveSymbolList(List<Symbol> symbolList, TypeListDownload val) throws Exception{           
-                
-       // Delete old Temp table
-        sqliteDao.createSymbolTable();
         
         if (symbolList.size() > 0) {                          
             String sql = "INSERT INTO SYMBOL  (SYMBOL, NAME, "
