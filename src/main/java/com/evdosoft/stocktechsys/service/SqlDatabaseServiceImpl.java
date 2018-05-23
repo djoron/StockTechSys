@@ -29,13 +29,17 @@ public class SqlDatabaseServiceImpl implements SqlDatabaseService {
     public boolean createSqlDb() throws Exception {
     
         boolean status = true;
+ 
+        logger.info("createSqlDb: Starting");
         
+        // First drop any table
+        status = status && stkDbDao.dropAllTables();
+ 
+        // Now create new tables
         status = status && stkDbDao.createSymbolTable();
-
-                //  StkDbDao.createSymbolTemporaryTable() &&
         status = status && stkDbDao.createCompanyTables();
-//        status = status && stkDbDao.createChartTable();
-//        status = status && stkDbDao.createQuoteTable();
+        // status = status && stkDbDao.createChartTable();
+        // status = status && stkDbDao.createQuoteTable();
                 
         if (status) {
             logger.info("createSqlDb: Completed successfully");

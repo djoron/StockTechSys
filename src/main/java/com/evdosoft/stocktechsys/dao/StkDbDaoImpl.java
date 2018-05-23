@@ -77,9 +77,9 @@ public class StkDbDaoImpl implements StkDbDao {
 		"  SECTOR             VARCHAR(80),  " + 		
 		"  UNIQUE KEY (SYMBOL, EXCHANGE)," + 
 		"  FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL));              ";
-		
 	
 	return execStatement(query);
+
 	}
 
     /**
@@ -92,11 +92,11 @@ public class StkDbDaoImpl implements StkDbDao {
      * @throws java.sql.SQLException
      */
     @Override
-    public boolean createSymbolTable() {
+    public boolean createSymbolTable() throws SQLException {
 	logger.info("createSymbolTable Symbol starting");
-	jdbcTemplate.execute("DROP TABLE IF EXISTS SYMBOL");
-	String query = "CREATE TABLE SYMBOL   (ID INTEGER PRIMARY KEY,   " + 
-		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
+	
+	String query = "CREATE TABLE SYMBOL   ( " + 
+		"  SYMBOL             VARCHAR(10) NOT NULL PRIMARY KEY, " + 
 		"  NAME               VARCHAR(255) NOT NULL, " + 
 		"  DATE               DATE, "    + 
 		"  ISENABLED          BIT, "  + 
@@ -104,8 +104,7 @@ public class StkDbDaoImpl implements StkDbDao {
 		"  IEXID              INTEGER, " + 
 		"  UNIQUE KEY (SYMBOL) );";
 
-	    jdbcTemplate.execute(query);
-	    return true;
+	return execStatement(query);
     }
    
     /**
@@ -163,8 +162,8 @@ public class StkDbDaoImpl implements StkDbDao {
 	// stmt = null;
 	// stmt = c.createStatement();
 
-	// logger.info("createChartTable starting");	
-	String query = // FOR NOW delete table if already exists
+	logger.info("createChartTable starting");	
+	String query = 
 		"CREATE TABLE CHART " + "(chartID INTEGER PRIMARY KEY," + " SYMBOL       VARCHAR(10) NOT NULL,"
 			+ " DATE                   DATE, " 
 			+ " OPEN                   DECIMAL(19,2), "
@@ -178,25 +177,48 @@ public class StkDbDaoImpl implements StkDbDao {
 			+ " VWAP                   DECIMAL(19,2), "
 			+ " LABEL                  VARCHAR(50), " 
 			+ " CHANGEOVERTIME         DECIMAL(19,2), "
-			+ "UNIQUE (SYMBOL, DATE) ON CONFLICT REPLACE, "
-			+ "FOREIGN KEY(SYMBOL) REFERENCES COMPANY(SYMBOL)" + ");"
-			+ "CREATE INDEX SYMBOL_CHART ON CHART (SYMBOL, DATE);";
+			+ " UNIQUE (SYMBOL, DATE) ON CONFLICT REPLACE, "
+			+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)),"
+			+ " CREATE INDEX SYMBOL_CHART ON CHART (SYMBOL, DATE);";
 
-	try {
-	    if (execStatement(query) == true) {
-		// logger.info("createCompanyTables created successfully");
-		return true;
-	    } else {
-		logger.error("createChartTable did not complete.");
-		return false;
-	    }
-	} catch (Exception e) {
-	    logger.error("createChartTable did not complete.");
-	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-	    return false;
-	}
+
+	
+	return execStatement(query);
     }
 
+
+    /**
+     *
+     * Create SymbolList Table to contain Symbol info.
+     * 
+     * @version 1.0
+     * @author : dj
+     * @return true if successful.
+     * @throws java.sql.SQLException
+     */
+    @Override
+    public boolean dropAllTables() throws SQLException {
+	logger.info("dropAllTables starting");
+
+	String query = 	"SET FOREIGN_KEY_CHECKS=0;";
+	jdbcTemplate.execute(query);
+	query = "DROP TABLE IF EXISTS COMPANY;";
+	jdbcTemplate.execute(query);
+	 query = "DROP TABLE IF EXISTS SYMBOL;";
+	jdbcTemplate.execute(query);	
+	query =	"DROP TABLE IF EXISTS CHART;";
+	jdbcTemplate.execute(query);	
+	query = "DROP TABLE IF EXISTS QUOTE;";
+	jdbcTemplate.execute(query);
+	query = "SET FOREIGN_KEY_CHECKS=1;";
+	jdbcTemplate.execute(query);
+
+	return true;
+    }
+
+
+	
+	
     @Override
     public boolean deleteDuplicateFromStockListTrimDb() throws SQLException {
 

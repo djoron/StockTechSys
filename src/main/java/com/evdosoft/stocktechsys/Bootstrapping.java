@@ -27,7 +27,7 @@ public class Bootstrapping {
     	    List<Symbol> symbolList = new ArrayList<>(); 
 
     	    System.out.println("in Bootstrapping !");
-//		sqlDatabaseService.createSqlDb();
+		sqlDatabaseService.createSqlDb();
 	    
     	    symbolList = symbolService.getSymbolList();
     	    symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);

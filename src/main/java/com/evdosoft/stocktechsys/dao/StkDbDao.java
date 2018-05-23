@@ -17,5 +17,6 @@ public interface StkDbDao {
     public boolean createSymbolTable () throws SQLException;
     public boolean createQuoteTable () throws SQLException; 
     public boolean createChartTable () throws SQLException;
+    public boolean dropAllTables() throws SQLException;
     public boolean deleteDuplicateFromStockListTrimDb () throws SQLException;
 }
