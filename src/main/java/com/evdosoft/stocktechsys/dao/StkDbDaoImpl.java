@@ -65,13 +65,13 @@ public class StkDbDaoImpl implements StkDbDao {
     @Override
     public boolean createCompanyTables() throws SQLException {
 	logger.info("createCompanyTable Company starting");
-	String query = "CREATE TABLE COMPANY   (ID INTEGER PRIMARY KEY," + 
+	String query = "CREATE TABLE COMPANY   (ID INTEGER PRIMARY KEY AUTO_INCREMENT," + 
 		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
 		"  COMPANYNAME        VARCHAR(255) NOT NULL, " + 
 		"  EXCHANGE    	      VARCHAR(80),  " + 
 		"  INDUSTRY           VARCHAR(255), " + 
 		"  WEBSITE            VARCHAR(255),  " + 
-		"  DESCRIPTION        VARCHAR(500), " + 
+		"  DESCRIPTION        TEXT, " + 
 		"  CEO                VARCHAR(255),  " + 
 		"  ISSUETYPE          VARCHAR(80), " + 
 		"  SECTOR             VARCHAR(80),  " + 		

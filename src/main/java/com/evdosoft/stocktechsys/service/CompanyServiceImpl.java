@@ -39,7 +39,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public boolean createCompanyList(List<Symbol>symbolList) throws Exception {
         boolean status;       
-        
+
+        logger.info("createCompanyList starting.");
+
         List<Company> companyList = iexDao.getCompanyList(symbolList);
         
         // Use internet to download full Symbol List to populate new DB 
