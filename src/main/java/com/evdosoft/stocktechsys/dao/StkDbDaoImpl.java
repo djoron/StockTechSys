@@ -122,7 +122,7 @@ public class StkDbDaoImpl implements StkDbDao {
 	// stmt = c.createStatement();
 
 	logger.info("createQuoteTable starting");
-	String query = // FOR NOW delete table if already exists
+	String query = 
 		"CREATE TABLE QUOTE " + "(quoteID INTEGER PRIMARY KEY," + " SYMBOL       VARCHAR(10) NOT NULL,"
 			+ " COMPANYNAME            TEXT, " + " PRIMARYEXCHANGE         TEXT, "
 			+ " SECTOR                 TEXT, " + " CALCULATIONPRICE       TEXT, "
@@ -142,7 +142,7 @@ public class StkDbDaoImpl implements StkDbDao {
 			+ " WEEK52HIGH             TEXT, " + " WEEK52LOW              TEXT, "
 			+ " YTDCHANGE              TEXT, "
 			+ "UNIQUE (SYMBOL, PRIMARYEXCHANGE, CLOSETIME) ON CONFLICT REPLACE, "
-			+ "FOREIGN KEY(SYMBOL,PRIMARYEXCHANGE) REFERENCES COMPANY(SYMBOL,EXCHANGE)" + ");"
+			+ "FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)" + ");"
 			+ "CREATE INDEX DATE_IDX ON QUOTE (SYMBOL, PRIMARYEXCHANGE, CLOSETIME);";
 
 	return execStatement(query);
@@ -164,26 +164,32 @@ public class StkDbDaoImpl implements StkDbDao {
 
 	logger.info("createChartTable starting");	
 	String query = 
-		"CREATE TABLE CHART " + "(chartID INTEGER PRIMARY KEY," + " SYMBOL       VARCHAR(10) NOT NULL,"
-			+ " DATE                   DATE, " 
-			+ " OPEN                   DECIMAL(19,2), "
-			+ " HIGH                   DECIMAL(19,2), " 
-			+ " LOW                    DECIMAL(19,2), "
-			+ " CLOSE                  DECIMAL(19,2), "
-			+ " VOLUME                 BIGINT, "
-			+ " UNADJUSTEDVOLUME       BIGINT, " 
-			+ " CHANGE                 DECIMAL(19,2), "
+		"CREATE TABLE CHART ( "
+	                + " chartID INTEGER PRIMARY KEY AUTO_INCREMENT," 
+	                + " SYMBOL                 VARCHAR(10) NOT NULL,"
+			+ " DAY                    DATE, " 
+			+ " OPEN                   DECIMAL(19,4), "
+			+ " HIGH                   DECIMAL(19,4), " 
+			+ " LOW                    DECIMAL(19,4), "
+			+ " CLOSE                  DECIMAL(19,4), "
+			+ " VOLUME                 BIGINT(20), "
+			+ " UNADJUSTEDVOLUME       BIGINT(20), " 
+			+ " CHG                    DECIMAL(19,2), "
 			+ " CHANGEPERCENT          DECIMAL(19,2), " 
 			+ " VWAP                   DECIMAL(19,2), "
-			+ " LABEL                  VARCHAR(50), " 
+			+ " LABEL                  VARCHAR(50),   " 
 			+ " CHANGEOVERTIME         DECIMAL(19,2), "
-			+ " UNIQUE (SYMBOL, DATE) ON CONFLICT REPLACE, "
-			+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)),"
-			+ " CREATE INDEX SYMBOL_CHART ON CHART (SYMBOL, DATE);";
-
-
+			+ " UNIQUE KEY SYMBOL_DATE (SYMBOL, DAY), "
+			+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)"
+			+ "); ";
 	
-	return execStatement(query);
+	String query2 = "CREATE INDEX CHART_IDX ON CHART (SYMBOL(10), DAY);";
+	
+	boolean status = false;
+	status = execStatement(query);
+	status = status && execStatement(query2);
+
+	return status; 
     }
 
 
@@ -204,7 +210,7 @@ public class StkDbDaoImpl implements StkDbDao {
 	jdbcTemplate.execute(query);
 	query = "DROP TABLE IF EXISTS COMPANY;";
 	jdbcTemplate.execute(query);
-	 query = "DROP TABLE IF EXISTS SYMBOL;";
+	query = "DROP TABLE IF EXISTS SYMBOL;";
 	jdbcTemplate.execute(query);	
 	query =	"DROP TABLE IF EXISTS CHART;";
 	jdbcTemplate.execute(query);	
