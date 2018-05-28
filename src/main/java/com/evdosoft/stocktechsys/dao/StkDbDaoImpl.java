@@ -167,23 +167,23 @@ public class StkDbDaoImpl implements StkDbDao {
 		"CREATE TABLE CHART ( "
 	                + " chartID INTEGER PRIMARY KEY AUTO_INCREMENT," 
 	                + " SYMBOL                 VARCHAR(10) NOT NULL,"
-			+ " DAY                    DATE, " 
+			+ " `DATE`                 DATE, " 
 			+ " OPEN                   DECIMAL(19,4), "
 			+ " HIGH                   DECIMAL(19,4), " 
 			+ " LOW                    DECIMAL(19,4), "
 			+ " CLOSE                  DECIMAL(19,4), "
 			+ " VOLUME                 BIGINT(20), "
 			+ " UNADJUSTEDVOLUME       BIGINT(20), " 
-			+ " CHG                    DECIMAL(19,2), "
+			+ " `CHANGE`               DECIMAL(19,2), "
 			+ " CHANGEPERCENT          DECIMAL(19,2), " 
 			+ " VWAP                   DECIMAL(19,2), "
 			+ " LABEL                  VARCHAR(50),   " 
 			+ " CHANGEOVERTIME         DECIMAL(19,2), "
-			+ " UNIQUE KEY SYMBOL_DATE (SYMBOL, DAY), "
+			+ " UNIQUE KEY SYMBOL_DATE (SYMBOL, `DATE`), "
 			+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)"
 			+ "); ";
 	
-	String query2 = "CREATE INDEX CHART_IDX ON CHART (SYMBOL(10), DAY);";
+	String query2 = "CREATE INDEX CHART_IDX ON CHART (SYMBOL(10), `DATE`);";
 	
 	boolean status = false;
 	status = execStatement(query);

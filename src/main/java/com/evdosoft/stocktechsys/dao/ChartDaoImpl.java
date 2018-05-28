@@ -5,6 +5,7 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -37,7 +38,9 @@ public class ChartDaoImpl implements ChartDao {
 	if (chartList.size() > 0) {
 	   String sql = "INSERT INTO CHART (" + " SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
 			+ " VOLUME, UNADJUSTEDVOLUME, CHANGE, CHANGEPERCENT, " + " VWAP, LABEL, CHANGEOVERTIME)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE (1,2,3,4,5,6,7,8,9,10,11,12,13);";
+	   
+	   // INSERT INTO table (id, name, age) VALUES(1, "A", 19) ON DUPLICATE KEY UPDATE name="A", age=19
 
 	   jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 		    
@@ -45,7 +48,8 @@ public class ChartDaoImpl implements ChartDao {
 	        public void setValues(PreparedStatement ps, int i) throws SQLException {
        	    	Chart ch = chartList.get(i);
 		    ps.setString(1, symbol);		    
-		    ps.setDate(2, java.sql.Date.valueOf(ch.getDate()));
+		    // ps.setDate(2, java.sql.Date.valueOf(ch.getDate()));
+		    ps.setDate(2, (Date) ch.getDate());
 		    ps.setBigDecimal(3, ch.getOpen());
 		    ps.setBigDecimal(4, ch.getHigh());
 		    ps.setBigDecimal(5, ch.getLow());

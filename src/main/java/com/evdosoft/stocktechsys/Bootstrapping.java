@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.evdosoft.stocktechsys.StockTechSysConstants.TypeListDownload;
 import com.evdosoft.stocktechsys.models.Symbol;
 import com.evdosoft.stocktechsys.service.CompanyService;
+import com.evdosoft.stocktechsys.service.PriceHistoryService;
 import com.evdosoft.stocktechsys.service.SqlDatabaseService;
 import com.evdosoft.stocktechsys.service.SymbolService;
 
@@ -24,19 +25,26 @@ public class Bootstrapping {
 
     	@Autowired
     	private CompanyService companyService;
+    	
+    	@Autowired
+    	private PriceHistoryService priceHistoryService;
+    	
 
     	public void prepareAndFetchData() throws Exception {
     	
     	    // Will contain only new stocks to add while updating from Bloomberg an existing DB
     	    List<Symbol> symbolList = new ArrayList<>(); 
 
-    	System.out.println("in Bootstrapping !");
-		sqlDatabaseService.createSqlDb();
+    	    sqlDatabaseService.createSqlDb();
 	    
     	    symbolList = symbolService.getSymbolList();
     	    symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);
     	    
     	    companyService.createCompanyList(symbolList);
+    	    
+    	    priceHistoryService.createChartlist();
+    	    
+    	    
     	    
     	System.out.println("!! DONE !!");
     	    

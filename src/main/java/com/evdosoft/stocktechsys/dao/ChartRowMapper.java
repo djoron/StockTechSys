@@ -1,6 +1,5 @@
 package com.evdosoft.stocktechsys.dao;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,8 +17,9 @@ public class ChartRowMapper implements RowMapper<Chart> {
 	chart.setChangeOverTime(rs.getBigDecimal("CHANGEOVERTIME"));
 	chart.setChangePercent(rs.getBigDecimal("CHANGEPERCENT"));
 	chart.setClose(rs.getBigDecimal("CLOSE"));
-	Date date = rs.getDate("DATE");
-	chart.setDate(date.toLocalDate());
+	// Date date = rs.getDate("DATE");
+	// chart.setDate(date.toLocalDate());
+	chart.setDate(rs.getDate("DATE"));
 	chart.setHigh(rs.getBigDecimal("HIGH"));
 	chart.setLabel(rs.getString("LABEL"));
 	chart.setLow(rs.getBigDecimal("LOW"));

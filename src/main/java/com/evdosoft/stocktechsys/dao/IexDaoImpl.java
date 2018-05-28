@@ -141,15 +141,26 @@ public class IexDaoImpl implements IexDao {
     @Override
     public List<Chart> getDailyChartList(String symbol, String period) throws MalformedURLException {
 
-	// Will contain quote List from Internet.
+	// Will contain chart List from Internet.
 	// https://api.iextrading.com/1.0/stock/aapl/chart/5y
+	// "date":"2013-05-28",
+	// "open":58.6678,
+	// "high":58.8256,
+	// "low":57.4877,
+	// "close":57.5645,
+	// "volume":96404189,
+	// "unadjustedVolume":13772027,
+	// "change":-0.48392,
+	// "changePercent":-0.834,
+	// "vwap":58.0274,
+	// "label":"May 28, 13",
+	// "changeOverTime":0}
+    
 
 	String urlstr = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" + period;
 
 	int size = 0;
 	List<Chart> chartList = null;
-	// logger.debug("getDailyChartList - Launching Symbol chart download - IEX Url
-	// {}",urlstr);
 
 	ObjectMapper objectMapper = new ObjectMapper();
 	try {
