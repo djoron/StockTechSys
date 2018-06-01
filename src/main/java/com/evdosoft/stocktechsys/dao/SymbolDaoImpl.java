@@ -45,7 +45,9 @@ public class SymbolDaoImpl implements SymbolDao {
         if (symbolList.size() > 0) {                          
             String sql = "INSERT INTO SYMBOL  (SYMBOL, NAME, "
                     + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?);";
-           
+
+            logger.info("saveSymbolList: Will save symbol list in DB. Be patient.");
+
             jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 	        
 	        @Override

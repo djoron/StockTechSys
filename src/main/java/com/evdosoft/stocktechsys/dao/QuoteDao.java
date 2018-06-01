@@ -5,10 +5,6 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
-import java.net.MalformedURLException;
-import java.util.List;
-import com.evdosoft.stocktechsys.models.Quote;
-
 /**
  *
  * @author dominicj

@@ -5,7 +5,6 @@
  */
 package com.evdosoft.stocktechsys.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -36,11 +35,16 @@ public class ChartDaoImpl implements ChartDao {
     public int saveChartListToDb(List<Chart> chartList, String symbol) {
 
 	if (chartList.size() > 0) {
-	   String sql = "INSERT INTO CHART (" + " SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
-			+ " VOLUME, UNADJUSTEDVOLUME, CHANGE, CHANGEPERCENT, " + " VWAP, LABEL, CHANGEOVERTIME)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE (1,2,3,4,5,6,7,8,9,10,11,12,13);";
+
+	    String sql = "INSERT INTO CHART (" 
+	                + " SYMBOL, `DATE`, OPEN, HIGH, LOW, CLOSE, "
+			+ " VOLUME, UNADJUSTEDVOLUME, `CHANGE`, CHANGEPERCENT, VWAP, LABEL, CHANGEOVERTIME"
+			+ ")"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ;";
+	   //	+ "ON DUPLICATE KEY UPDATE DATE = (?), ;";
 	   
-	   // INSERT INTO table (id, name, age) VALUES(1, "A", 19) ON DUPLICATE KEY UPDATE name="A", age=19
+	   // INSERT INTO mytable (col1, col2, col3) VALUES (?, ?, ?)
+	   // ON DUPLICATE KEY UPDATE col1=VALUES(col1), col2=VALUES(col2), col3=VALUES(col3);
 
 	   jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 		    
@@ -49,7 +53,13 @@ public class ChartDaoImpl implements ChartDao {
        	    	Chart ch = chartList.get(i);
 		    ps.setString(1, symbol);		    
 		    // ps.setDate(2, java.sql.Date.valueOf(ch.getDate()));
-		    ps.setDate(2, (Date) ch.getDate());
+		    
+		    java.util.Date utilDate = new java.util.Date();
+		    utilDate = ch.getDate();
+		    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		    
+		    ps.setDate(2, sqlDate);
+		    //ps.setDate(2, ch.getDate());
 		    ps.setBigDecimal(3, ch.getOpen());
 		    ps.setBigDecimal(4, ch.getHigh());
 		    ps.setBigDecimal(5, ch.getLow());
@@ -85,7 +95,7 @@ public class ChartDaoImpl implements ChartDao {
 
 	    Chart chart = jdbcTemplate.queryForObject(SQL, new ChartRowMapper());
 	    if(chart != null) {
-		date = chart.getDate();
+		// date = chart.getDate();
 	    }
 	}
 	

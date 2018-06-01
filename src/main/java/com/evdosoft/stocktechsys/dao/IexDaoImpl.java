@@ -159,13 +159,14 @@ public class IexDaoImpl implements IexDao {
 
 	String urlstr = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" + period;
 
-	int size = 0;
+
 	List<Chart> chartList = null;
 
 	ObjectMapper objectMapper = new ObjectMapper();
 	try {
 	    chartList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<Chart>>() {
 	    });
+  	    int size = 0;
 	    size = chartList.size();
 	    // logger.info("getDailyChartList - Read {} dates",size);
 
@@ -233,7 +234,7 @@ public class IexDaoImpl implements IexDao {
 	chartList = updateDailyChartList(parameters.getSymbolToCheckLastMarketOpenDate(), StockTechSysConstants.ONEMONTH);
 
 	if (chartList.size() > 1) {
-	    lastOpenDate = chartList.get(chartList.size() - 1).getDate();
+	  //   lastOpenDate = chartList.get(chartList.size() - 1).getDate();
 	}
 	
 	return lastOpenDate;
