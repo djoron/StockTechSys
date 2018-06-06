@@ -83,6 +83,10 @@ public class ChartDaoImpl implements ChartDao {
 	    logger.error("saveChartListToDb: ChartList save FAILED in SqlDB at symbol {}.", symbol);	    
 	    return 0;
 	}
+	long freemem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+	
+	long maxBytes = Runtime.getRuntime().maxMemory();
+	System.out.println("Max memory: " + maxBytes / 1024 / 1024 + " MB - Freemem "+ freemem);
 	return chartList.size();
     }
 
