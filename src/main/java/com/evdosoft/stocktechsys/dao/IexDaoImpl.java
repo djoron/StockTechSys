@@ -115,6 +115,7 @@ public class IexDaoImpl implements IexDao {
 
 	    } catch (IOException e) {
 		logger.warn("getCompanyList - Skipping unknown symbol from API: ({})", symbol.getSymbol());
+		logger.warn("{}",e.getLocalizedMessage());
 		count--;
 	    }
 	    if (count > parameters.getMaxStocktoProcess())

@@ -5,6 +5,7 @@
  */
 package com.evdosoft.stocktechsys.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -14,6 +15,7 @@ import lombok.Data;
  * @author atlantis
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Company {
 
     private Long id;
@@ -26,7 +28,8 @@ public class Company {
     @JsonProperty("CEO")
     private String ceo;
     private String issueType;
-    private String sector;   
+    private String sector;  
+//    private List<String> tags;
     
     
 }
