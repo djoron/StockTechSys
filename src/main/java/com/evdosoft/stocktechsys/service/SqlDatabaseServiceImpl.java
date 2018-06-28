@@ -50,6 +50,29 @@ public class SqlDatabaseServiceImpl implements SqlDatabaseService {
         return status;
               
     }
+ 
+    /* (non-Javadoc)
+     * @see com.evdosoft.stocktechsys.service.SqlDatabaseService#createSqlDb()
+     */
+    @Override
+    public boolean checkExistSqlDb() throws Exception {
     
+        boolean status = true;
+ 
+        logger.info("checkExistSqlDb: Checking if SqlDb exists");
+        
+        // First drop any table
+        status = status && stkDbDao.checkDbExist();
+ 
+        if (status) {
+            logger.info("checkExistSqlDb: SqlDb exists");
+        } else {
+            logger.info("checkExistSqlDb: SqlDb does not exists");
+        }
+            
+        return status;
+              
+    }
+ 
     
 }
