@@ -12,6 +12,9 @@ public class StocktechsysApplication implements CommandLineRunner {
 
     @Autowired
     private Bootstrapping bootstrapping;
+    
+    @Autowired
+    private AsyncBootstrapping asyncBootstrapping;
 
     public static void main(String[] args) {
 	SpringApplication.run(StocktechsysApplication.class, args);
@@ -21,7 +24,8 @@ public class StocktechsysApplication implements CommandLineRunner {
     @Override
 	public void run(String... args) throws Exception {
 	    
-	bootstrapping.prepareAndFetchData();   
+//	bootstrapping.prepareAndFetchData();   
 	
+	asyncBootstrapping.fetchData();
 	}
 }
