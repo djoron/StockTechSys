@@ -16,11 +16,11 @@ import com.evdosoft.stocktechsys.models.Company;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.codec.BodyCodec;
 
 /**
  * Use Vertx to get http results asynchronously
@@ -49,43 +49,54 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     	logger.info("-------------- http GET company list ASYNC --------------");
     	
         client
-        .getAbs(urlstr)        
+        .getAbs(urlstr)   // Path to Symbol list 
         .send(ar -> {
           if (ar.succeeded()) {            
             HttpResponse<Buffer> response = ar.result();
 
             // Decode the body as a json object
-            JsonArray body = response.bodyAsJsonArray();            
+            JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
             logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
             
             WebClient client2 = WebClient.create(vertx);   
             int lastIndex = body.size() - 1;
-            for(int i=0; i<body.size()-1; i++ ) {
-            	final int index = i;
+            for(int i=0; i<body.size() ; i++ ) {
+               //  if (isBadSymbol(body.getJsonObject(i),i)) {continue;}
+        	final int index = i;
             	JsonObject json = body.getJsonObject(i);
             	if(json.containsKey("symbol")) {
-            		String symbol = json.getString("symbol");
+            		String symbol = json.getString("symbol");            		
             		String companyUrl = parameters.getIexPrefix() + "stock/" + symbol + "/company";
+            		
+            		// Vertx async http request
             		client2
-            		.getAbs(companyUrl)
-            		.as(BodyCodec.jsonObject())
+            		.getAbs(companyUrl) // Get company info here.
             		.send(aar -> {
             			if(aar.succeeded()) { 
-            				HttpResponse<JsonObject> jsonResponse = aar.result();
-            				JsonObject jsonCompany = jsonResponse.body();
-            				if(jsonCompany != null) {
-            					Company company = readCompany(jsonCompany);   
-            					if (company.getCompanyName() != null) {
-            					    companies.add(company);
-            					}
-            				}
-//            				logger.info("Got HTTP response with status " + jsonResponse.statusCode() + " from i=" + index);
-            				if(index == lastIndex) {
-            					LocalTime t2 = LocalTime.now();
-            					logger.info("Added " + companies.size() + " companies.");
-            					logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
-            					future.complete(companies);
-            				}
+            			    	HttpResponse<Buffer> response2 = aar.result();
+            			    	try {
+                				JsonObject jsonCompany = response2.bodyAsJsonObject();
+                				if(jsonCompany != null) {
+                					Company company = readCompany(jsonCompany);   
+                					if (company.getCompanyName() != null) {
+                					    companies.add(company);
+                					}
+                				}
+                				if (index % 500 == 1) { // Logger to see where we are only
+                				    logger.info("Got HTTP response with status " + response2.statusCode() + " from i=" + index);
+                				}
+                				
+            			    	} catch(DecodeException e) {
+            			    	    logger.warn("Failed to decode company for symbol {}, element #= {}", symbol, index);
+            			    	} finally {
+                			    	if(index == lastIndex) {
+                			    	    LocalTime t2 = LocalTime.now();
+                			    	    logger.info("Added " + companies.size() + " companies.");
+                			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
+                			    	    future.complete(companies);
+                			    	}
+            			    	}
+            			    	
             			} else {
             			    logger.warn("Something went wrong url {}", companyUrl);
             			    logger.warn("Something went wrong symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
@@ -103,6 +114,11 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         }); 
         
         return future;
+    }
+
+    private boolean isBadSymbol(JsonObject json, int i) {
+	logger.info("isBadSymbol {}",i);
+	return json.containsKey("symbol") && json.getString("symbol") != null && json.getString("symbol").equals("GVC^#");
     }
 
     private Company readCompany(JsonObject jsonCompany) {
