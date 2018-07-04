@@ -33,9 +33,7 @@ public class Bootstrapping {
     	public void prepareAndFetchData() throws Exception {
     	
        	    if (sqlDatabaseService.checkExistSqlDb()== false) {
-       	    
-       	    
-	    	    // Will contain only new stocks to add while updating from Bloomberg an existing DB
+	    	    
 	    	    List<Symbol> symbolList = new ArrayList<>(); 
 	
 	    	    sqlDatabaseService.createSqlDb();
