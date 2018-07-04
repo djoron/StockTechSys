@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class DialogWindow {
  
-    public static boolean AskUserInputNewDatabase () {    
+    public boolean AskUserInputNewDatabase () {    
  //default icon, custom title
         JFrame frame = new JFrame("");
         int n = JOptionPane.showConfirmDialog(
