@@ -33,18 +33,17 @@ public class Bootstrapping {
     	@Autowired
     	private DialogWindow dialogWindow;
     	
-    	
-
     	public void prepareAndFetchData() throws Exception {
     	
     	    // If SqlDB exist, ask user if want to start from scratch
-            boolean createNewDb = false;
-    	    if (sqlDatabaseService.checkExistSqlDb()== true) {
+            boolean createNewDb;
+            createNewDb = true;
+/*    	    if (sqlDatabaseService.checkExistSqlDb()== true) {
   	    
-    		createNewDb = dialogWindow.AskUserInputNewDatabase();
+     		createNewDb = dialogWindow.AskUserInputNewDatabase();
    	    
     	    } else createNewDb = true; // Doesn't exist so create it.
-    	    
+*/    	    
     	    if (createNewDb == true) {
 	    	    
 	    	    List<Symbol> symbolList = new ArrayList<>(); 
