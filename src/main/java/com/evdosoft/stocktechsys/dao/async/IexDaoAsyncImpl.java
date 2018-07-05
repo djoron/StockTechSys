@@ -87,7 +87,9 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             					future.complete(companies);
             				}
             			} else {
-            			    	logger.info("Something went wrong " + aar.cause().getMessage());
+            			    logger.info("Something went wrong url {}", companyUrl);
+            			logger.info("Something went wrong url {}", jsonCompany);
+            			    logger.info("Something went wrong symbol {} - {}", symbol, aar.cause().getMessage());
 //            				aar.cause().printStackTrace();
             			}
             		});            		
