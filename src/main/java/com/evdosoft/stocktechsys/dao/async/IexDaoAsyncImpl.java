@@ -88,7 +88,6 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             				}
             			} else {
             			    logger.info("Something went wrong url {}", companyUrl);
-            			logger.info("Something went wrong url {}", jsonCompany);
             			    logger.info("Something went wrong symbol {} - {}", symbol, aar.cause().getMessage());
 //            				aar.cause().printStackTrace();
             			}
