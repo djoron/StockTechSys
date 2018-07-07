@@ -51,6 +51,7 @@ public class IexDaoImpl implements IexDao {
     @Override
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
+	// https://api.iextrading.com/1.0/ref-data/symbols
 	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
 	List<Symbol> symbolList = new ArrayList<>();
 	// logger.debug("getSymbolList - Launching Symbol download - IEX Url

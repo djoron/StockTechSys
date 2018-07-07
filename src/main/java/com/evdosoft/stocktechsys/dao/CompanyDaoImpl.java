@@ -42,11 +42,20 @@ public class CompanyDaoImpl implements CompanyDao {
     @Override
     public boolean saveCompanyList(List<Company> companyList) throws Exception {
 
+	String sql = "SET FOREIGN_KEY_CHECKS=0;";
+	jdbcTemplate.execute(sql);
+
+
 	if (companyList.size() > 0) {
 	    // Just insert, not replace here.
-	    String sql = ("INSERT INTO COMPANY (SYMBOL, COMPANYNAME, "
+	    sql = ("INSERT INTO COMPANY (SYMBOL, COMPANYNAME, "
 		    + "EXCHANGE, INDUSTRY, WEBSITE, DESCRIPTION, CEO, ISSUETYPE, "
-		    + "SECTOR) VALUES (?,?,?,?,?,?,?,?,?);");
+		    + "SECTOR) VALUES (?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY "
+		    + "UPDATE COMPANYNAME = VALUES(COMPANYNAME),"
+		    + "EXCHANGE = VALUES(EXCHANGE), INDUSTRY = VALUES(INDUSTRY),"
+		    + "WEBSITE = VALUES(WEBSITE),"
+		    + "DESCRIPTION = VALUES(DESCRIPTION), CEO = VALUES(CEO),"
+		    + "ISSUETYPE = VALUES(ISSUETYPE), SECTOR = VALUES(SECTOR);");
 
 	    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 	    
@@ -71,8 +80,12 @@ public class CompanyDaoImpl implements CompanyDao {
 	    		return companyList.size();
 	        }
 	    });            
-        logger.info("saveCompanyList: CompanylList saved in SqlDB...done");
-    } else {
+	        sql = "SET FOREIGN_KEY_CHECKS=1;";
+		jdbcTemplate.execute(sql);
+
+	    logger.info("saveCompanyList: CompanylList saved in SqlDB...done");
+
+       } else {
         logger.error("saveCompanyList: CompanyList save FAILED in SqlDB");
         return false;
     }

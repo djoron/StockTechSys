@@ -76,8 +76,10 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             				HttpResponse<JsonObject> jsonResponse = aar.result();
             				JsonObject jsonCompany = jsonResponse.body();
             				if(jsonCompany != null) {
-            					Company company = readCompany(jsonCompany);            					
-            					companies.add(company);
+            					Company company = readCompany(jsonCompany);   
+            					if (company.getCompanyName() != null) {
+            					    companies.add(company);
+            					}
             				}
 //            				logger.info("Got HTTP response with status " + jsonResponse.statusCode() + " from i=" + index);
             				if(index == lastIndex) {
