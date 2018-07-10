@@ -60,9 +60,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             
             WebClient client2 = WebClient.create(vertx);   
             int lastIndex = body.size() - 1;
-            for(int i=0; i<body.size(); i++ ) {
-//            int lastIndex = 499;
-//            for(int i=0; i<500; i++ ) {
+            for(int i=0; i<body.size()-1; i++ ) {
             	final int index = i;
             	JsonObject json = body.getJsonObject(i);
             	if(json.containsKey("symbol")) {
@@ -89,9 +87,9 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             					future.complete(companies);
             				}
             			} else {
-            			    logger.info("Something went wrong url {}", companyUrl);
-            			    logger.info("Something went wrong symbol {} - {}", symbol, aar.cause().getMessage());
-//            				aar.cause().printStackTrace();
+            			    logger.warn("Something went wrong url {}", companyUrl);
+            			    logger.warn("Something went wrong symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
+            			    aar.cause().printStackTrace();
             			}
             		});            		
             	}            	
