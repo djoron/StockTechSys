@@ -59,8 +59,15 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
             
             WebClient client2 = WebClient.create(vertx);   
-            int lastIndex = body.size() - 1;
-            for(int i=0; i<body.size()-1; i++ ) {
+            
+            final int lastIndex;
+            if (parameters.getMaxStocktoProcess() < (body.size()) ) { 
+        	lastIndex = parameters.getMaxStocktoProcess(); // Parameters can override to download less data.
+            } else {
+        	lastIndex = body.size();
+            }
+           
+            for(int i=0; i<=lastIndex; i++ ) {
             	final int index = i;
             	JsonObject json = body.getJsonObject(i);
             	if(json.containsKey("symbol")) {
@@ -70,7 +77,14 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             		.getAbs(companyUrl)
             		.as(BodyCodec.jsonObject())
             		.send(aar -> {
-            			if(aar.succeeded()) { 
+				if(index == lastIndex) {
+					LocalTime t2 = LocalTime.now();
+					logger.info("Added " + companies.size() + " companies.");
+					logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
+					future.complete(companies);
+				}
+
+            		        if(aar.succeeded()) { 
             				HttpResponse<JsonObject> jsonResponse = aar.result();
             				JsonObject jsonCompany = jsonResponse.body();
             				if(jsonCompany != null) {
@@ -80,12 +94,6 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             					}
             				}
 //            				logger.info("Got HTTP response with status " + jsonResponse.statusCode() + " from i=" + index);
-            				if(index == lastIndex) {
-            					LocalTime t2 = LocalTime.now();
-            					logger.info("Added " + companies.size() + " companies.");
-            					logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
-            					future.complete(companies);
-            				}
             			} else {
             			    logger.warn("Something went wrong url {}", companyUrl);
             			    logger.warn("Something went wrong symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
