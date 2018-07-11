@@ -62,9 +62,9 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             
             final int lastIndex;
             if (parameters.getMaxStocktoProcess() < (body.size()) ) { 
-        	lastIndex = parameters.getMaxStocktoProcess(); // Parameters can override to download less data.
+        	lastIndex = parameters.getMaxStocktoProcess()-1; // Parameters can override to download less data.
             } else {
-        	lastIndex = body.size();
+        	lastIndex = body.size()-1;
             }
            
             for(int i=0; i<=lastIndex; i++ ) {
@@ -77,7 +77,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             		.getAbs(companyUrl)
             		.as(BodyCodec.jsonObject())
             		.send(aar -> {
-				if(index == lastIndex) {
+				if(index == lastIndex) { // Last index ? Exit after with future.complete
 					LocalTime t2 = LocalTime.now();
 					logger.info("Added " + companies.size() + " companies.");
 					logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
