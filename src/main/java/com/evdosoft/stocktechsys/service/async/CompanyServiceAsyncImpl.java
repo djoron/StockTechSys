@@ -20,7 +20,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
     private static final Logger logger = LoggerFactory.getLogger(CompanyServiceAsyncImpl.class);
 	    
     @Autowired
-    private IexDaoAsync iexDao;
+    private IexDaoAsync iexDaoAsync;
     
     @Autowired
     private Vertx vertx;
@@ -32,7 +32,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
     public void fetchAndSaveCompanyList() {
 	Future<Void> defaultFuture = Future.future(); 
 	logger.info("Fetch companies asynchronously...");
-	Future<List<Company>> future = iexDao.getCompanyList();
+	Future<List<Company>> future = iexDaoAsync.getCompanyList();
 	future.compose(companyList -> {
 	    logger.info("Save companies synchronously...");
 	    saveCompanyList(companyList);

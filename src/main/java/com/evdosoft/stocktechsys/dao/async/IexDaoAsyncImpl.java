@@ -1,5 +1,8 @@
 package com.evdosoft.stocktechsys.dao.async;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -11,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.evdosoft.stocktechsys.Parameters;
+import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -46,7 +52,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     	List<Company> companies = new ArrayList<>();
     	Future<List<Company>> future = Future.future();
     	
-    	logger.info("-------------- http GET company list ASYNC --------------");
+    	logger.info("-------------- http GET Chart list ASYNC --------------");
     	
         client
         .getAbs(urlstr)        
@@ -111,6 +117,65 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         }); 
         
         return future;
+    }
+
+    /**
+     * Download chart data or price history data from Iex from a given company
+     * symbol
+     * 
+     * @param company
+     * @param period
+     * @return
+     * @throws MalformedURLException
+     */
+    @Override
+    public Future<List<Chart>> getDailyChartList() {
+
+	// Will contain chart List from Internet.
+	// https://api.iextrading.com/1.0/stock/aapl/chart/5y
+	// "date":"2013-05-28",
+	// "open":58.6678,
+	// "high":58.8256,
+	// "low":57.4877,
+	// "close":57.5645,
+	// "volume":96404189,
+	// "unadjustedVolume":13772027,
+	// "change":-0.48392,
+	// "changePercent":-0.834,
+	// "vwap":58.0274,
+	// "label":"May 28, 13",
+	// "changeOverTime":0}
+
+	String urlstr = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" + period;
+	LocalTime t1 = LocalTime.now();
+    	WebClient client = WebClient.create(vertx);
+    	List<Chart> chartList = new ArrayList<>();
+    	Future<List<Chart>> future = Future.future();
+    	
+    	logger.info("-------------- http GET Chart list ASYNC --------------");
+    	
+        client
+        .getAbs(urlstr)        
+        .send(ar -> {
+          if (ar.succeeded()) {            
+
+
+
+	List<Chart> chartList = null;
+
+	ObjectMapper objectMapper = new ObjectMapper();
+	try {
+	    chartList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<Chart>>() {
+	    });
+  	    int size = 0;
+	    size = chartList.size();
+	    // logger.info("getDailyChartList - Read {} dates",size);
+
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return chartList;
     }
 
     private Company readCompany(JsonObject jsonCompany) {
