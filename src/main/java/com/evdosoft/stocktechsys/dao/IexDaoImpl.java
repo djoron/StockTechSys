@@ -119,7 +119,7 @@ public class IexDaoImpl implements IexDao {
 		logger.warn("{}",e.getLocalizedMessage());
 		count--;
 	    }
-	    if (count > parameters.getMaxStocktoProcess())
+	    if (count > (parameters.getMaxStocktoProcess()-1))
 		break;
 	} // for
 

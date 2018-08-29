@@ -100,7 +100,7 @@ public class StkDbDaoImpl implements StkDbDao {
 		"  NAME               VARCHAR(255) NOT NULL, " + 
 		"  DATE               DATE, "    + 
 		"  ISENABLED          BIT, "  + 
-		"  TYPE               VARCHAR(4), " + 
+		"  TYPE               VARCHAR(10), " + 
 		"  IEXID              INTEGER, " + 
 		"  UNIQUE KEY (SYMBOL) );";
 
