@@ -46,7 +46,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     	List<Company> companies = new ArrayList<>();
     	Future<List<Company>> future = Future.future();
     	
-    	logger.info("-------------- http GET company list ASYNC --------------");
+    	logger.info("-------------- http GET company list ASYNC - Please be patient --------------");
     	
         client
         .getAbs(urlstr)   // Path to Symbol list 
