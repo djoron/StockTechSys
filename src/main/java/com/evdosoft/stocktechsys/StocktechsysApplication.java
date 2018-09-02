@@ -24,8 +24,9 @@ public class StocktechsysApplication implements CommandLineRunner {
     @Override
 	public void run(String... args) throws Exception {
 	    
-//	bootstrapping.prepareAndFetchData();   
+//		bootstrapping.prepareAndFetchData();   
 	
-	asyncBootstrapping.fetchData();
+		asyncBootstrapping.fetchData();
+	
 	}
 }
