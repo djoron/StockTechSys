@@ -1,17 +1,22 @@
 package com.evdosoft.stocktechsys.service.async;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.evdosoft.stocktechsys.Parameters;
 import com.evdosoft.stocktechsys.dao.ChartDao;
 import com.evdosoft.stocktechsys.dao.async.IexDaoAsync;
 import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
+import com.evdosoft.stocktechsys.service.CompanyService;
+import com.evdosoft.stocktechsys.StockTechSysConstants;
 
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -20,7 +25,14 @@ import io.vertx.core.Vertx;
 public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
 
     private static final Logger logger = LoggerFactory.getLogger(PriceHistoryServiceAsyncImpl.class);
-	    
+	
+    private Parameters parameters;
+    
+    @Autowired
+    public PriceHistoryServiceAsyncImpl(Parameters parameters) {
+	this.parameters = parameters;
+    }  
+    
     @Autowired
     private IexDaoAsync iexDaoAsync;
     
@@ -30,63 +42,55 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     @Autowired
     private ChartDao chartDao;
     
+    @Autowired
+    private CompanyService companyService;
+    
     @Override
-    public void fetchAndSavePriceHistoryList() {
+    /**
+     * Build List of Strings containing symbols taken from Company List. Then call async download with list.
+     */
+    public void prepareSymbolListDownload() {
+    
+	List<Company> companyList;
+	List<String> symbolList = null;
+	companyList = companyService.getCompanyListFromDb();
+	int maxToDownload = parameters.getmaxChartListToDownload();
+	int count = 0;
+	int period = StockTechSysConstants.DAILY;
+	
+	
+	int totalSymbols = companyList.size();
+        
+        for (Company company: companyList ) {    
+             count++;
+             symbolList.add(company.getSymbol());
+
+             if ((count % maxToDownload) == 0) {
+        	 // Call Async Download
+        	
+             }   
+        } // for
+    
+    
+    }
+    
+    @Override
+    public void fetchAndSavePriceHistoryList(List<String> symbols, int period) {
 	Future<Void> defaultFuture = Future.future(); 
-	logger.info("Fetch price History asynchronously...");
-	Future<List<Chart>> future = iexDaoAsync.getDailyChartList();
-	future.compose(dailyChartList -> {
-	    logger.info("Save daily ChartList synchronously...");
-	    // saveCompanyList(List);
+	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
+	
+	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period);
+	future.compose(chartList -> {
+	    logger.info("Save companies synchronously...");
+	    saveChartList(chartList);
 	}, defaultFuture);
 
-	/***** Code original du service pricehistory */
-	     List<Company> companyList;
-	        List<Chart> chartList;
-	        int count=0;
-	        
-	        int daysSaved = 0;
-	        // Get company list from SQL DB.
-	        companyList = companyService.getCompanyListFromDb();
-	        
-	        int totalSymbols = companyList.size();
-	        
-	        for (Company company: companyList ) {    
-	            try {
-	                count++;
-	                chartList = iexDao.getDailyChartList(company.getSymbol(), parameters.getYearHistoryString());
-	                if (chartList != null) {
-	                    daysSaved = chartDao.saveChartListToDb(chartList, company.getSymbol());
-	                    if (daysSaved>0) {
-	                        logger.info("createChartListToDb: {} of {} - {} days saved"
-	                        + " in SqlDB for symbol {}...",count, totalSymbols, daysSaved, company.getSymbol());
-	                    } else
-	                    {
-	                        logger.warn("createChartlist - Symbol {} chart NOT saved",company.getSymbol());
-	                        // return false; Remove, if one symbol failed, whole thing stopped.
-	                    }    
-	                }    
-	            } catch (IOException e) {
-	                logger.error("createChartlist - Exception e {}",e);
-	                count--;
-	                return false;
-	            }   
-	        } // for
-	        return true;
-	    }
-	    
-	
-	
-	
-	
-	
-	
     }
 
-    private void saveCompanyList(List<Company> companyList) {
+    private void saveChartList(List<Chart> chartList) {
 	vertx.executeBlocking(future -> {
 	    try {
-		companyDao.saveCompanyList(companyList);
+		chartDao.saveChartListToDb(chartList, symbol);
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -96,5 +100,3 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
 	    System.out.println("Company list saved synchronously.");
 	  });
     }
-
-}
