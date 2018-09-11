@@ -118,11 +118,6 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         return future;
     }
 
-    private boolean isBadSymbol(JsonObject json, int i) {
-	logger.info("isBadSymbol {}",i);
-	return json.containsKey("symbol") && json.getString("symbol") != null && json.getString("symbol").equals("GVC^#");
-    }
-
     private Company readCompany(JsonObject jsonCompany) {
 	Company company = new Company();
 	company.setSymbol(jsonCompany.getString("symbol"));
