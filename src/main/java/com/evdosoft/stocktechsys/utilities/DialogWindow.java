@@ -8,15 +8,18 @@ package com.evdosoft.stocktechsys.utilities;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author atlantis
  */
+@Component
 public class DialogWindow {
  
-    public static boolean AskUserInputNewDatabase () {    
- //default icon, custom title
-        JFrame frame = new JFrame("");
+    public boolean AskUserInputNewDatabase () {    
+	//default icon, custom title
+        JFrame frame = new JFrame();
         int n = JOptionPane.showConfirmDialog(
         frame,
         "Do you want to create a Brand new Database ?\n"+

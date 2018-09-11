@@ -19,4 +19,5 @@ public interface StkDbDao {
     public boolean createChartTable () throws SQLException;
     public boolean dropAllTables() throws SQLException;
     public boolean deleteDuplicateFromStockListTrimDb () throws SQLException;
+    public boolean checkDbExist () throws SQLException;
 }

@@ -13,6 +13,7 @@ import com.evdosoft.stocktechsys.service.CompanyService;
 import com.evdosoft.stocktechsys.service.PriceHistoryService;
 import com.evdosoft.stocktechsys.service.SqlDatabaseService;
 import com.evdosoft.stocktechsys.service.SymbolService;
+import com.evdosoft.stocktechsys.utilities.DialogWindow;
 
 @Component
 public class Bootstrapping {
@@ -29,7 +30,9 @@ public class Bootstrapping {
     	@Autowired
     	private PriceHistoryService priceHistoryService;
     	
-
+    	@Autowired
+    	private DialogWindow dialogWindow;
+    	
     	public void prepareAndFetchData() throws Exception {
     	
     	    // Will contain only new stocks to add while updating from Bloomberg an existing DB

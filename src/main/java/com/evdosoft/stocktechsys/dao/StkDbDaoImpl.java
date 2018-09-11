@@ -245,6 +245,26 @@ public class StkDbDaoImpl implements StkDbDao {
 	    return false;
 	}
     }
+    
+    @Override
+    public boolean checkDbExist () throws SQLException {
+
+	String query = "SELECT IF(EXISTS (SELECT SYMBOL FROM SYMBOL), 'Yes','No')";
+
+	try {
+	    if (execStatement(query) == true) {
+		// logger.info("createCompanyTables created successfully");
+		return true;
+	    } else {
+		logger.info("checkDbExist: does not exist. Else1.");
+		return false;
+	    }
+	} catch (Exception e) {
+		logger.info("checkDbExist: does not exist. Else2.");
+	    return false;
+	}
+    
+    }
 
 }
 
