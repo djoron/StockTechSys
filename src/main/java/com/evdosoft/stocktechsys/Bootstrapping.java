@@ -35,32 +35,19 @@ public class Bootstrapping {
     	
     	public void prepareAndFetchData() throws Exception {
     	
-    	    // If SqlDB exist, ask user if want to start from scratch
-            boolean createNewDb;
-            createNewDb = true;
-/*    	    if (sqlDatabaseService.checkExistSqlDb()== true) {
-  	    
-     		createNewDb = dialogWindow.AskUserInputNewDatabase();
-   	    
-    	    } else createNewDb = true; // Doesn't exist so create it.
-*/    	    
-    	    if (createNewDb == true) {
-	    	    
-	    	    List<Symbol> symbolList = new ArrayList<>(); 
-	
-	    	    sqlDatabaseService.createSqlDb();
-		    
-	    	    symbolList = symbolService.getSymbolList();
-	    	    symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);
-	    	    
-	    	    companyService.createCompanyList(symbolList);
-	    	    
-	    	    priceHistoryService.createChartlist();
+    	    // Will contain only new stocks to add while updating from Bloomberg an existing DB
+    	    List<Symbol> symbolList = new ArrayList<>(); 
+
+    	    sqlDatabaseService.createSqlDb();
+	    
+    	    symbolList = symbolService.getSymbolList();
+    	    symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);
     	    
-        }
-            	    
+    	    companyService.createCompanyList(symbolList);
     	    
-    	System.out.println("!! DONE !!");
+    	    priceHistoryService.createChartlist();
+    	    
+    	    System.out.println("!! DONE !!");
     	    
     	}
 }

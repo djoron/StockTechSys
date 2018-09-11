@@ -51,10 +51,10 @@ public class IexDaoImpl implements IexDao {
     @Override
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
+	// https://api.iextrading.com/1.0/ref-data/symbols
 	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
 	List<Symbol> symbolList = new ArrayList<>();
-	// logger.debug("getSymbolList - Launching Symbol download - IEX Url
-	// {}",urlstr);
+	logger.debug("getSymbolList - Launching Symbol download with - {}",urlstr);
 
 	ObjectMapper objectMapper = new ObjectMapper();
 	try {
@@ -65,7 +65,7 @@ public class IexDaoImpl implements IexDao {
 		Symbol symbol = new Symbol(resource);
 		symbolList.add(symbol);
 	    }
-	    // logger.info("getSymbolList - Read {} symbols",size);
+	    logger.info("getSymbolList - Read {} symbols",symbolList.size());
 
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block

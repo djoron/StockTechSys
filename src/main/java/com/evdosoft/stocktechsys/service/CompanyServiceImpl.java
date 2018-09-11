@@ -119,7 +119,7 @@ public class CompanyServiceImpl implements CompanyService {
      * @see com.evdosoft.stocktechsys.service.CompanyService#getCompanyListFromDb()
      */
     @Override
-    public List<Company> getCompanyListFromDb() throws Exception {
+    public List<Company> getCompanyListFromDb() {
     
         List<Company> companyList = new ArrayList<>();
 
