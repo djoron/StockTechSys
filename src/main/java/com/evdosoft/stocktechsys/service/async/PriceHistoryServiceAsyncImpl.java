@@ -49,7 +49,8 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     /**
      * Build List of Strings containing symbols taken from Company List. Then call async download with list.
      */
-    public void prepareSymbolListDownload() {
+     public void prepareAndDownloadPriceHistory() 
+     {
     
 	List<Company> companyList;
 	List<String> symbolList = null;
@@ -57,8 +58,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
 	int maxToDownload = parameters.getmaxChartListToDownload();
 	int count = 0;
 	int period = StockTechSysConstants.DAILY;
-	
-	
+
 	int totalSymbols = companyList.size();
         
         for (Company company: companyList ) {    
@@ -66,20 +66,26 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
              symbolList.add(company.getSymbol());
 
              if ((count % maxToDownload) == 0) {
-        	 // Call Async Download
-        	
-             }   
+        	 fetchAndSavePriceHistoryList(symbolList, period);
+        	symbolList.clear();
+             }  
+        
         } // for
-    
-    
+        if (symbolList.size() > 0) {
+            // Complete download of last list which is smaller than % maxToDownload
+            fetchAndSavePriceHistoryList(symbolList, period);
+            symbolList.clear();
+        }
+        
     }
     
     @Override
-    public void fetchAndSavePriceHistoryList(List<String> symbols, int period) {
+    public void fetchAndSavePriceHistoryList(List<String> symbolList, int period) {
 	Future<Void> defaultFuture = Future.future(); 
 	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
+
 	
-	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period);
+	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbolList, period);
 	future.compose(chartList -> {
 	    logger.info("Save companies synchronously...");
 	    saveChartList(chartList);

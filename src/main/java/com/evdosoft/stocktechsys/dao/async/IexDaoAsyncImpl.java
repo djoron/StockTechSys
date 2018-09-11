@@ -128,12 +128,12 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
      * @throws MalformedURLException
      */
     @Override
-    public Map<String, List<Chart>> getDailyChartList(List<String> symbolList, int period) {
+    public Future<Map<String,List<Chart>>> getDailyChartList(List<String> symbolList, int period) {
 
 	LocalTime t1 = LocalTime.now();
 	WebClient client = WebClient.create(vertx);
 	List<Chart> charts = new ArrayList<>();
-	Future<List<Company>> future = Future.future();
+	Future<List<Chart>> future = Future.future();
 	int lastIndex = symbolList.size();
 
 	logger.info("-------------- http GET Chart list ASYNC --------------");
@@ -146,19 +146,19 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 		if(count++ == totalElements - 1){
 		        // Last iteration
 		    }
-		if (index == lastIndex) { // Last index ? Exit after with future.complete
+/*		if (index == lastIndex) { // Last index ? Exit after with future.complete
 		    LocalTime t2 = LocalTime.now();
 		    logger.info("Added " + companies.size() + " companies.");
 		    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS)
 			    + " seconds.");
 		    future.complete(companies);
 		}
-
+*/
 		if (aar.succeeded()) {
 		    HttpResponse<JsonObject> jsonResponse = aar.result();
-		    JsonObject jsonCompany = jsonResponse.body();
-		    if (jsonCompany != null) {
-			Company company = readCompany(jsonCompany);
+		    JsonObject jsonChartList = jsonResponse.body();
+		    if (jsonChartList != null) {
+			Company company = readCompany(jsonChartList);
 			if (company.getCompanyName() != null) {
 			    companies.add(company);
 			}
@@ -166,13 +166,12 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 		    // logger.info("Got HTTP response with status " + jsonResponse.statusCode() + "
 		    // from i=" + index);
 		} else {
-		    logger.warn("Something went wrong url {}", companyUrl);
-		    logger.warn("Something went wrong symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
+		    logger.warn("getDailyChartList: Something went wrong url {}", chartUrl);
+		    logger.warn("getDailyChartList: Something went wrong symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
 		    aar.cause().printStackTrace();
 		}
 	    });
 	}
-    }
 
     return future;
 
@@ -190,6 +189,20 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 	company.setSector(jsonCompany.getString("sector"));
 	company.setWebsite(jsonCompany.getString("website"));
 	return company;
+    }
+
+    private List<Chart> readChartList(JsonObject jsonChartList) {
+	Company company = new Company();
+	company.setSymbol(jsonCompany.getString("symbol"));
+	company.setCompanyName(jsonCompany.getString("companyName"));
+	company.setCeo(jsonCompany.getString("CEO"));
+	company.setDescription(jsonCompany.getString("description"));
+	company.setExchange(jsonCompany.getString("exchange"));
+	company.setIndustry(jsonCompany.getString("industry"));
+	company.setIssueType(jsonCompany.getString("issueType"));
+	company.setSector(jsonCompany.getString("sector"));
+	company.setWebsite(jsonCompany.getString("website"));
+	return ;
     }
 
 }

@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface PriceHistoryServiceAsync {
 
-    void prepareSymbolListDownload();
+    void prepareAndDownloadPriceHistory();
     void fetchAndSavePriceHistoryList(List<String> symbols, int period);
 }
