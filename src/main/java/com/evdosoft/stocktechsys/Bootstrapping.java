@@ -44,9 +44,7 @@ public class Bootstrapping {
     	    
     	    priceHistoryService.createChartlist();
     	    
-    	    
-    	    
-    	System.out.println("!! DONE !!");
+    	    System.out.println("!! DONE !!");
     	    
     	}
 }

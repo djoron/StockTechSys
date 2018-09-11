@@ -51,6 +51,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
 	    future.complete();
 	  }, res -> {
 	    System.out.println("Company list saved synchronously.");
+	    System.exit(0);
 	  });
     }
 
