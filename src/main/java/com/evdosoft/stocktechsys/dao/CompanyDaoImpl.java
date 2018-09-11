@@ -103,7 +103,7 @@ public class CompanyDaoImpl implements CompanyDao {
      * @return true if successful.
      * @throws java.sql.SQLException
      */
-    public List<Company> loadCompanyListFromDb() throws SQLException {
+    public List<Company> loadCompanyListFromDb() {
 
 	logger.info("loadCompanyListFromDb - Loading list from DB ... Standby");
 

@@ -32,6 +32,6 @@ public interface CompanyService {
      * @return List of Companies.
      * @throws Exception
      */
-    List<Company> getCompanyListFromDb() throws Exception;
+    List<Company> getCompanyListFromDb();
 
 }

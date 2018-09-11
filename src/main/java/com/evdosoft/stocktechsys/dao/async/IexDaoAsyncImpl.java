@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.evdosoft.stocktechsys.Parameters;
+import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
 
 import io.vertx.core.Future;
@@ -133,6 +135,14 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 	company.setSector(jsonCompany.getString("sector"));
 	company.setWebsite(jsonCompany.getString("website"));		
 	return company;
+    }
+
+    @Override
+    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, int period) {
+	// TODO Auto-generated method stub
+	return null;
     }   
+    
+    
 
 }
