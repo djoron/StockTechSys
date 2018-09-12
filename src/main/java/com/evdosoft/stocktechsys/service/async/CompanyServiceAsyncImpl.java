@@ -43,7 +43,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
     private void saveCompanyList(List<Company> companyList) {
 	vertx.executeBlocking(future -> {
 	    try {
-		companyDao.saveCompanyList(companyList);
+		companyDao.saveCompanyListToDb(companyList);
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

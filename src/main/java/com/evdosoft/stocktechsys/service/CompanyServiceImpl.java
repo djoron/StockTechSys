@@ -53,7 +53,7 @@ public class CompanyServiceImpl implements CompanyService {
                 // Save in SQL DB.
                 logger.info("createCompanyList: Downloaded {} elements.",companyList.size());
                 logger.info("createCompanyList: getCompanyList. Saving into DB.",companyList.size());                
-                companyDao.saveCompanyList(companyList);
+                companyDao.saveCompanyListToDb(companyList);
 
             } else {
                 // If returns 0 no data so cannot build stocklist. Must exit
