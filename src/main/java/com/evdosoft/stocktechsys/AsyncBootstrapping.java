@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.evdosoft.stocktechsys.StockTechSysConstants.TypeListDownload;
 import com.evdosoft.stocktechsys.models.Symbol;
-import com.evdosoft.stocktechsys.service.PriceHistoryService;
 import com.evdosoft.stocktechsys.service.SqlDatabaseService;
 import com.evdosoft.stocktechsys.service.SymbolService;
 import com.evdosoft.stocktechsys.service.async.CompanyServiceAsync;
+import com.evdosoft.stocktechsys.service.async.PriceHistoryServiceAsync;
 
 @Component
 public class AsyncBootstrapping {
@@ -23,7 +23,7 @@ public class AsyncBootstrapping {
     private SymbolService symbolService;
 	
     @Autowired
-    private PriceHistoryService priceHistoryService;
+    private PriceHistoryServiceAsync priceHistoryServiceAsync;
 	
     @Autowired
     private CompanyServiceAsync companyServiceAsync;
@@ -40,5 +40,9 @@ public class AsyncBootstrapping {
 	
 	companyServiceAsync.fetchAndSaveCompanyList();
 	
+	priceHistoryServiceAsync.prepareAndDownloadPriceHistory();
+	
+	// System.exit(0);
+
     }
 }

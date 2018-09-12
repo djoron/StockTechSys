@@ -8,8 +8,10 @@ package com.evdosoft.stocktechsys.dao;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,11 +109,15 @@ public class ChartDaoImpl implements ChartDao {
 	return date;
     }
     
-   @Override
-   public void saveMultipleChartListToDb(Map<String,List<Chart>> mapChartList) {
- 
-       
-   
+   @Override                           
+   public void saveMultipleChartListToDb(Map<String,List<Chart>> chartListMap) {
+       Map<String, List<Chart>> map = new HashMap<String, List<Chart>>(); 
+              
+       for (Entry<String, List<Chart>> ee : map.entrySet()) {
+	    String symbol = ee.getKey();
+	    List<Chart> values = ee.getValue();
+	    saveChartListToDb(values, symbol);
+       }
    
    }
     

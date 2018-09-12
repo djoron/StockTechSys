@@ -1,6 +1,7 @@
 package com.evdosoft.stocktechsys.service.async;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
 import com.evdosoft.stocktechsys.service.CompanyService;
 
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 
 @Service
@@ -76,31 +78,34 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     }
     
     @Override
+    /**
+     * Call Vertx to download Price history (DailyChartList) for each symbol.
+     */
     public void fetchAndSavePriceHistoryList(List<String> symbolList, int period) {
-//	Future<Void> defaultFuture = Future.future(); 
-//	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
-//
-//	
-//	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbolList, period);
-//	future.compose(chartList -> {
-//	    logger.info("Save companies synchronously...");
-//	    saveChartList(chartList);
-//	}, defaultFuture);
+	Future<Void> defaultFuture = Future.future(); 
+	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
+
+	
+	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbolList, period);
+	future.compose(chartListMap -> {
+	    logger.info("Save companies synchronously...");
+	    saveChartList(chartListMap);
+	}, defaultFuture);
 
     }
 
-    private void saveChartList(List<Chart> chartList) {
-//	vertx.executeBlocking(future -> {
-//	    try {
-//		chartDao.saveChartListToDb(chartList, symbol);
-//	    } catch (Exception e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	    }
-//	    future.complete();
-//	  }, res -> {
-//	    System.out.println("Company list saved synchronously.");
-//	  });
+    private void saveChartList(Map<String, List<Chart>> chartListMap ) {
+	vertx.executeBlocking(future -> {
+	    try {
+		chartDao.saveMultipleChartListToDb(chartListMap);
+	    } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    future.complete();
+	  }, res -> {
+	    System.out.println("Company list saved synchronously.");
+	  });
 
     }
 }

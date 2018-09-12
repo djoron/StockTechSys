@@ -63,7 +63,6 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             WebClient client2 = WebClient.create(vertx);   
             int lastIndex = body.size() - 1;
             for(int i=0; i<body.size() ; i++ ) {
-               //  if (isBadSymbol(body.getJsonObject(i),i)) {continue;}
         	final int index = i;
             	JsonObject json = body.getJsonObject(i);
             	if(json.containsKey("symbol")) {
@@ -91,7 +90,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             			    	} catch(DecodeException e) {
             			    	    logger.warn("Failed to decode company for symbol {}, element #= {}", symbol, index);
             			    	} finally {
-                			    	if(index == lastIndex) {
+                			    	if ((index == lastIndex) /* || (index > (parameters.getMaxStocktoProcess()-1))*/ ){
                 			    	    LocalTime t2 = LocalTime.now();
                 			    	    logger.info("Added " + companies.size() + " companies.");
                 			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
