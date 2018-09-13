@@ -3,6 +3,7 @@ package com.evdosoft.stocktechsys.dao.async;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
             
             WebClient client2 = WebClient.create(vertx);   
-            int lastIndex = body.size() - 1;
+            int lastIndex = body.size() - 8400;
             for(int i=0; i<body.size() ; i++ ) {
         	final int index = i;
             	JsonObject json = body.getJsonObject(i);
@@ -117,10 +118,10 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         return future;
     }
 
-    private boolean isBadSymbol(JsonObject json, int i) {
-	logger.info("isBadSymbol {}",i);
-	return json.containsKey("symbol") && json.getString("symbol") != null && json.getString("symbol").equals("GVC^#");
-    }
+//    private boolean isBadSymbol(JsonObject json, int i) {
+//	logger.info("isBadSymbol {}",i);
+//	return json.containsKey("symbol") && json.getString("symbol") != null && json.getString("symbol").equals("GVC^#");
+//    }
 
     private Company readCompany(JsonObject jsonCompany) {
 	Company company = new Company();
@@ -137,9 +138,74 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     }
 
     @Override
-    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, int period) {
-	// TODO Auto-generated method stub
-	return null;
+    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, int period, int maxNumResults) {
+	 
+	 WebClient client2 = WebClient.create(vertx);
+	 LocalTime t1 = LocalTime.now();
+	 
+	 // Init map and future
+	 Map<String, List<Chart>> chartMap = new HashMap<>();
+	 Future<Map<String, List<Chart>>> future = Future.future();
+         int lastIndex = Math.min(maxNumResults-1, symbols.size()-1);
+         
+         for(int i=0; i<= lastIndex ; i++ ) {
+     		final int index = i;
+     		String symbol = symbols.get(index);           		    		
+    		String chartUrl = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" + period;
+    		
+    		// Vertx async http request
+    		client2
+    		.getAbs(chartUrl) // Get company info here.
+    		.send(aar -> {
+    			if(aar.succeeded()) { 
+    			    	HttpResponse<Buffer> response = aar.result();
+    			    	try {
+    			    	    	JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
+    			    	    	logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
+        				if(body != null) {
+        					List<Chart> charts = readCharts(body); 
+        					chartMap.put(symbol, charts);
+        				}
+//        				if (index % 500 == 1) { // Logger to see where we are only
+//        				    logger.info("Got HTTP response with status " + response.statusCode() + " from i=" + index);
+//        				}
+        				
+    			    	} catch(DecodeException e) {
+    			    	    logger.warn("Failed to decode chart for symbol {}, element #= {}", symbol, index);
+    			    	} finally {
+        			    	if ((index == lastIndex)){
+        			    	    LocalTime t2 = LocalTime.now();
+        			    	    logger.info("Added " + chartMap.size() + " charts.");
+        			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
+        			    	    future.complete(chartMap);
+        			    	}
+    			    	}
+    			    	
+    			} else {
+    			    logger.warn("Something went wrong url {}", chartUrl);
+    			    logger.warn("Something went wrong with chart symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
+    			    aar.cause().printStackTrace();
+    			}
+    		});            		
+         }
+          
+         return future;
+    }
+
+    private List<Chart> readCharts(JsonArray body) {
+	List<Chart> chartList = new ArrayList<>();
+	for(int j=0; j<body.size(); j++) {
+	    JsonObject json = body.getJsonObject(j);
+	    Chart chart = readChart(json);
+	    chartList.add(chart);
+	}
+	return chartList;
+    }
+
+    private Chart readChart(JsonObject json) {
+	Chart chart = new Chart();
+	// TODO : fill chart
+	return chart;
     }   
     
     

@@ -26,24 +26,17 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
     private Vertx vertx;
     
     @Autowired
-    private CompanyDao companyDao;
-    
-    @Autowired
-    private PriceHistoryServiceAsync priceHistoryServiceAsync;
+    private CompanyDao companyDao;    
     
     @Override
-    public void fetchAndSaveCompanyList() {
-	Future<Void> defaultFuture = Future.future(); 
+    public Future<List<Company>> fetchAndSaveCompanyList() {	
 	logger.info("Fetch companies asynchronously...");
 	Future<List<Company>> future = iexDaoAsync.getCompanyList();
-	future.compose(companyList -> {
-	    logger.info("Save companies synchronously...");
-	    saveCompanyList(companyList);
-	    
-	}, defaultFuture);
+	return future;
     }
 
-    private void saveCompanyList(List<Company> companyList) {
+    @Override
+    public void saveCompanyList(List<Company> companyList) {
 	vertx.executeBlocking(future -> {
 	    try {
 		companyDao.saveCompanyListToDb(companyList);		
@@ -51,7 +44,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
-	    future.complete();
+	    future.complete();	    	    
 	  }, res -> {
 	    System.out.println("Company list saved synchronously.");
 	    // priceHistoryServiceAsync.prepareAndDownloadPriceHistory();

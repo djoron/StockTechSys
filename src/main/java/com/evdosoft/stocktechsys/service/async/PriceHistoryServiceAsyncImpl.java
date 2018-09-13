@@ -2,6 +2,7 @@ package com.evdosoft.stocktechsys.service.async;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,52 +48,22 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     /**
      * Build List of Strings containing symbols taken from Company List. Then call async download with list.
      */
-     public void prepareAndDownloadPriceHistory()  
+     public void prepareAndDownloadPriceHistory(List<Company> companyList)  
      {
-    
-	List<Company> companyList;
-	List<String> symbolList = null;
-	companyList = companyService.getCompanyListFromDb();
-	int maxToDownload = parameters.getmaxChartListToDownload();
-	int count = 0;
-	int period = StockTechSysConstants.DAILY;
-
-	int totalSymbols = companyList.size();
+	int maxToDownload = parameters.getmaxChartListToDownload();	
+	int period = StockTechSysConstants.DAILY;	
         
-        for (Company company: companyList ) {    
-             count++;
-             symbolList.add(company.getSymbol());
-
-             if ((count % maxToDownload) == 0) {
-        	 fetchAndSavePriceHistoryList(symbolList, period);
-        	symbolList.clear();
-             }  
-        
-        } // for
-        if (symbolList.size() > 0) {
-            // Complete download of last list which is smaller than % maxToDownload
-            fetchAndSavePriceHistoryList(symbolList, period);
-            symbolList.clear();
-        }
-        
-    }
-    
-    @Override
-    /**
-     * Call Vertx to download Price history (DailyChartList) for each symbol.
-     */
-    public void fetchAndSavePriceHistoryList(List<String> symbolList, int period) {
-	Future<Void> defaultFuture = Future.future(); 
 	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
-
-	
-	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbolList, period);
+	List<String> symbols = companyList.stream().map(Company::getSymbol).collect(Collectors.toList());
+	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period, maxToDownload);
+        
+	Future<Void> defaultFuture = Future.future(); 
 	future.compose(chartListMap -> {
 	    logger.info("Save companies synchronously...");
 	    saveChartList(chartListMap);
 	}, defaultFuture);
-
     }
+       
 
     private void saveChartList(Map<String, List<Chart>> chartListMap ) {
 	vertx.executeBlocking(future -> {
