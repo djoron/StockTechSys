@@ -96,13 +96,11 @@ public class Parameters {
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
-
-    public int getmaxChartListToDownload() {
+    public int getGetMaxChartListToDownload() {
         return getMaxChartListToDownload;
     }
-    public void getmaxChartListToDownload(int getmaxChartListToDownload) {
-        this.getMaxChartListToDownload = getmaxChartListToDownload;
+    public void setGetMaxChartListToDownload(int getMaxChartListToDownload) {
+        this.getMaxChartListToDownload = getMaxChartListToDownload;
     }
-    
-   
+ 
 }

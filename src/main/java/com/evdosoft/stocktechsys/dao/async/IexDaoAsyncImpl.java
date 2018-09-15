@@ -1,5 +1,8 @@
 package com.evdosoft.stocktechsys.dao.async;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -44,6 +47,8 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     @Override
     public Future<List<Company>> getCompanyList() {
 	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
+        int maxtoDownload = parameters.getGetMaxChartListToDownload();
+        
 	LocalTime t1 = LocalTime.now();
     	WebClient client = WebClient.create(vertx);
     	List<Company> companies = new ArrayList<>();
@@ -59,10 +64,21 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
             // Decode the body as a json object
             JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
-            logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
+            logger.info("Downloading Company, got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
             
             WebClient client2 = WebClient.create(vertx);   
-            int lastIndex = body.size() - 8400;
+            
+            int totalElements = body.size();
+            // Debug mode, can reduce size of what's being downloaded
+            
+            if ( (totalElements > maxtoDownload) && (maxtoDownload > 0) ) {
+        	totalElements = maxtoDownload - 1;
+        	logger.info("Reducing download from {} to {} elements",body.size(),maxtoDownload);
+            }
+           
+          
+            final int lastIndex = totalElements;
+            
             for(int i=0; i<body.size() ; i++ ) {
         	final int index = i;
             	JsonObject json = body.getJsonObject(i);
@@ -85,11 +101,11 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
                 					}
                 				}
                 				if (index % 500 == 1) { // Logger to see where we are only
-                				    logger.info("Got HTTP response with status " + response2.statusCode() + " from i=" + index);
+                				    logger.info("Downloading company for symbol "+symbol+", got HTTP response with status " + response2.statusCode() + " from i=" + index);
                 				}
                 				
             			    	} catch(DecodeException e) {
-            			    	    logger.warn("Failed to decode company for symbol {}, element #= {}", symbol, index);
+            			    	    logger.warn("Failed to decode symbol {}, element #= {}", symbol, index);
             			    	} finally {
                 			    	if ((index == lastIndex) /* || (index > (parameters.getMaxStocktoProcess()-1))*/ ){
                 			    	    LocalTime t2 = LocalTime.now();
@@ -161,9 +177,17 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     			    	HttpResponse<Buffer> response = aar.result();
     			    	try {
     			    	    	JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
-    			    	    	logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
+    			    	        logger.info("Downloading chartlist for symbol "+symbol+", got HTTP response with status " + response.statusCode() + " from i=" + index);
+    			    	    	// logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
         				if(body != null) {
-        					List<Chart> charts = readCharts(body); 
+        					List<Chart> charts = null;
+						try {
+						    charts = readCharts(body);
+						} catch (ParseException e) {
+						    // TODO Auto-generated catch block
+						    logger.warn("Failed to decode chartlist for symbol {}", symbol);
+						    e.printStackTrace();
+						} 
         					chartMap.put(symbol, charts);
         				}
 //        				if (index % 500 == 1) { // Logger to see where we are only
@@ -192,7 +216,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
          return future;
     }
 
-    private List<Chart> readCharts(JsonArray body) {
+    private List<Chart> readCharts(JsonArray body) throws ParseException {
 	List<Chart> chartList = new ArrayList<>();
 	for(int j=0; j<body.size(); j++) {
 	    JsonObject json = body.getJsonObject(j);
@@ -202,9 +226,25 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 	return chartList;
     }
 
-    private Chart readChart(JsonObject json) {
+    
+    @SuppressWarnings("deprecation")
+    private Chart readChart(JsonObject json) throws ParseException {
 	Chart chart = new Chart();
-	// TODO : fill chart
+
+	chart.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(json.getString("date")));
+
+	chart.setOpen(new BigDecimal (json.getString("open")));
+	chart.setHigh(new BigDecimal (json.getString("high")));
+	chart.setLow(new BigDecimal (json.getString("Low")));
+	chart.setClose(new BigDecimal (json.getString("close")));
+	chart.setVolume(new Long (json.getString("volume")));
+	chart.setUnadjustedVolume(new Long (json.getString("unadjustedVolume")));
+	chart.setChange(new BigDecimal (json.getString("change")));
+	chart.setChangePercent(new BigDecimal (json.getString("changePercent")));
+	chart.setVwap(new BigDecimal (json.getString("vwap")));
+	chart.setLabel(json.getString("label"));
+	chart.setChangeOverTime(new BigDecimal (json.getString("changeOverTime")));
+	    
 	return chart;
     }   
     

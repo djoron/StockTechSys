@@ -50,7 +50,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
      */
      public void prepareAndDownloadPriceHistory(List<Company> companyList)  
      {
-	int maxToDownload = parameters.getmaxChartListToDownload();	
+	int maxToDownload = parameters.getGetMaxChartListToDownload();	
 	int period = StockTechSysConstants.DAILY;	
         
 	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
