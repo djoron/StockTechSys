@@ -50,13 +50,14 @@ public class AsyncBootstrapping {
 	futureCompanyList.compose(companyList -> {
 	    logger.info("Save companies synchronously...");	    
 	    companyServiceAsync.saveCompanyList(companyList);
+	    logger.info("DONE Save companies synchronously...");	    
+	    
 	    return futureCompanyList;
 	}).compose(companyList -> {
 	    logger.info("Calling price history download...");
-	    priceHistoryServiceAsync.prepareAndDownloadPriceHistory(companyList);
+	    priceHistoryServiceAsync.prepareAndDownloadPriceHistory(companyList);   
+	    
 	}, defaultFuture);
-	
-	
 	
 	// System.exit(0);
 

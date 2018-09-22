@@ -77,7 +77,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             }
            
           
-            final int lastIndex = totalElements;
+            final int lastIndex = totalElements-1;
             
             for(int i=0; i<body.size() ; i++ ) {
         	final int index = i;
@@ -154,7 +154,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     }
 
     @Override
-    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, int period, int maxNumResults) {
+    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, String period, int maxNumResults) {
 	 
 	 WebClient client2 = WebClient.create(vertx);
 	 LocalTime t1 = LocalTime.now();
@@ -167,7 +167,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
          for(int i=0; i<= lastIndex ; i++ ) {
      		final int index = i;
      		String symbol = symbols.get(index);           		    		
-    		String chartUrl = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" + period;
+    		String chartUrl = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" +period;
     		
     		// Vertx async http request
     		client2
@@ -178,21 +178,27 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     			    	try {
     			    	    	JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
     			    	        logger.info("Downloading chartlist for symbol "+symbol+", got HTTP response with status " + response.statusCode() + " from i=" + index);
-    			    	    	// logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
+    			    	        logger.info("{}",chartUrl);
+    			    	        /*if (index % 500 == 1) { // Logger to see where we are only
+				    		logger.info("Downloading chartlist for symbol "+symbol+", got HTTP response with status " + response.statusCode() + " from i=" + index);
+        			    	}*/
+    			    	        // logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
         				if(body != null) {
         					List<Chart> charts = null;
 						try {
 						    charts = readCharts(body);
-						} catch (ParseException e) {
+						    // xxx more checks here before put ?
+						    chartMap.put(symbol, charts);
+						} catch (Exception e) {
 						    // TODO Auto-generated catch block
 						    logger.warn("Failed to decode chartlist for symbol {}", symbol);
-						    e.printStackTrace();
-						} 
-        					chartMap.put(symbol, charts);
+						    logger.warn("url: {}", chartUrl);
+						}
+        				} else {
+        				    logger.warn("---------------> Empty body :(");
         				}
-//        				if (index % 500 == 1) { // Logger to see where we are only
-//        				    logger.info("Got HTTP response with status " + response.statusCode() + " from i=" + index);
-//        				}
+        				
+        				
         				
     			    	} catch(DecodeException e) {
     			    	    logger.warn("Failed to decode chart for symbol {}, element #= {}", symbol, index);
@@ -218,6 +224,9 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
     private List<Chart> readCharts(JsonArray body) throws ParseException {
 	List<Chart> chartList = new ArrayList<>();
+	if (body.size() == 0) {
+	    logger.info("readCharts size = 0");
+	}
 	for(int j=0; j<body.size(); j++) {
 	    JsonObject json = body.getJsonObject(j);
 	    Chart chart = readChart(json);
@@ -233,17 +242,17 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
 	chart.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(json.getString("date")));
 
-	chart.setOpen(new BigDecimal (json.getString("open")));
-	chart.setHigh(new BigDecimal (json.getString("high")));
-	chart.setLow(new BigDecimal (json.getString("Low")));
-	chart.setClose(new BigDecimal (json.getString("close")));
-	chart.setVolume(new Long (json.getString("volume")));
-	chart.setUnadjustedVolume(new Long (json.getString("unadjustedVolume")));
-	chart.setChange(new BigDecimal (json.getString("change")));
-	chart.setChangePercent(new BigDecimal (json.getString("changePercent")));
-	chart.setVwap(new BigDecimal (json.getString("vwap")));
-	chart.setLabel(json.getString("label"));
-	chart.setChangeOverTime(new BigDecimal (json.getString("changeOverTime")));
+	chart.setOpen	(BigDecimal.valueOf(json.getDouble("open")));
+	chart.setHigh	(BigDecimal.valueOf(json.getDouble("high")));
+	chart.setLow	(BigDecimal.valueOf(json.getDouble("low")));
+	chart.setClose	(BigDecimal.valueOf(json.getDouble("close")));
+	chart.setVolume	(Long.valueOf(json.getLong("volume")));
+	chart.setUnadjustedVolume(Long.valueOf(json.getLong("unadjustedVolume")));
+	chart.setChange	(BigDecimal.valueOf(json.getDouble("change")));
+	chart.setChangePercent(BigDecimal.valueOf(json.getDouble("changePercent")));
+	chart.setVwap	(BigDecimal.valueOf(json.getDouble("vwap")));
+	chart.setLabel	(json.getString("label"));
+	chart.setChangeOverTime(BigDecimal.valueOf(json.getDouble("changeOverTime")));
 	    
 	return chart;
     }   

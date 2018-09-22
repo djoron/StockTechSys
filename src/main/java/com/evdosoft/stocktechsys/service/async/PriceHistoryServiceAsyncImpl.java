@@ -51,7 +51,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
      public void prepareAndDownloadPriceHistory(List<Company> companyList)  
      {
 	int maxToDownload = parameters.getGetMaxChartListToDownload();	
-	int period = StockTechSysConstants.DAILY;	
+	String period = StockTechSysConstants.FIVEYEARS;	
         
 	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
 	List<String> symbols = companyList.stream().map(Company::getSymbol).collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
         
 	Future<Void> defaultFuture = Future.future(); 
 	future.compose(chartListMap -> {
-	    logger.info("Save companies synchronously...");
+	    logger.info("Save chartlist synchronously...");
 	    saveChartList(chartListMap);
 	}, defaultFuture);
     }
@@ -75,7 +75,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
 	    }
 	    future.complete();
 	  }, res -> {
-	    System.out.println("Company list saved synchronously.");
+	      logger.info("Save chartlist synchronously...");
 	  });
 
     }
