@@ -48,24 +48,25 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     /**
      * Build List of Strings containing symbols taken from Company List. Then call async download with list.
      */
-     public void prepareAndDownloadPriceHistory(List<Company> companyList)  
+     public Future<Map<String, List<Chart>>> prepareAndDownloadPriceHistory(List<Company> companyList)  
      {
-	int maxToDownload = parameters.getGetMaxChartListToDownload();	
+	// int maxToDownload = parameters.getGetMaxChartListToDownload();	
 	String period = StockTechSysConstants.FIVEYEARS;	
         
 	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
 	List<String> symbols = companyList.stream().map(Company::getSymbol).collect(Collectors.toList());
-	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period, maxToDownload);
+	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartListsFromSymbolList(symbols, period);
         
 	Future<Void> defaultFuture = Future.future(); 
 	future.compose(chartListMap -> {
 	    logger.info("Save chartlist synchronously...");
-	    saveChartList(chartListMap);
+	    saveMultipleChartListSync(chartListMap);
 	}, defaultFuture);
+	return future;
     }
        
 
-    private void saveChartList(Map<String, List<Chart>> chartListMap ) {
+    public void saveMultipleChartListSync(Map<String, List<Chart>> chartListMap ) {
 	vertx.executeBlocking(future -> {
 	    try {
 		chartDao.saveMultipleChartListToDb(chartListMap);

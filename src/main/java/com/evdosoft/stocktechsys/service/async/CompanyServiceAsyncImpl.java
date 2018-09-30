@@ -29,7 +29,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
     private CompanyDao companyDao;    
     
     @Override
-    public Future<List<Company>> fetchAndSaveCompanyList() {	
+    public Future<List<Company>> fetchCompanyListAsync() {	
 	logger.info("Fetch companies asynchronously...");
 	Future<List<Company>> future = iexDaoAsync.getCompanyList();
 	return future;

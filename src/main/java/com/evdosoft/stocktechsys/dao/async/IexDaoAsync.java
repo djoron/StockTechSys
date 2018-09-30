@@ -16,6 +16,6 @@ import io.vertx.core.Future;
 public interface IexDaoAsync {
 
     public Future<List<Company>>  getCompanyList();
-    public Future<Map<String,List<Chart>>> getDailyChartList(List<String> symbols, String period, int maxNumResults);
+    public Future<Map<String,List<Chart>>> getDailyChartListsFromSymbolList(List<String> symbols, String period);
 }
 
