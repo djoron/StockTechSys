@@ -162,7 +162,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 	 // Init map and future
 	 Map<String, List<Chart>> chartMap = new HashMap<>();
 	 Future<Map<String, List<Chart>>> future = Future.future();
-         int lastIndex = Math.min(maxNumResults-1, symbols.size()-1);
+         int lastIndex = symbols.size()-1;// Math.min(maxNumResults-1, symbols.size()-1);
          
          for(int i=0; i<= lastIndex ; i++ ) {
      		final int index = i;
