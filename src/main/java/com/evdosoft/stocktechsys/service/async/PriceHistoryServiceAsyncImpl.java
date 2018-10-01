@@ -48,7 +48,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     /**
      * Build List of Strings containing symbols taken from Company List. Then call async download with list.
      */
-     public void prepareAndDownloadPriceHistory(List<Company> companyList)  
+     public void prepareAndDownloadPriceHistory(List<Company> companyList)       
      {
 	int maxToDownload = parameters.getGetMaxChartListToDownload();	
 	String period = StockTechSysConstants.FIVEYEARS;	
@@ -59,6 +59,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
         
 	Future<Void> defaultFuture = Future.future(); 
 	future.compose(chartListMap -> {
+	    logger.info("In compose future with Map {}", chartListMap.toString());
 	    logger.info("Save chartlist synchronously...");
 	    saveChartList(chartListMap);
 	}, defaultFuture);
@@ -68,6 +69,7 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     private void saveChartList(Map<String, List<Chart>> chartListMap ) {
 	vertx.executeBlocking(future -> {
 	    try {
+		logger.info("In blocking save with Map {}", chartListMap.toString());
 		chartDao.saveMultipleChartListToDb(chartListMap);
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
