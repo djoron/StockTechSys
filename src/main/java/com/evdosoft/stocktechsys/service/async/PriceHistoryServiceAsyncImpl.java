@@ -61,12 +61,12 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
 	future.compose(chartListMap -> {
 	    logger.info("In compose future with Map {}", chartListMap.toString());
 	    logger.info("Save chartlist synchronously...");
-	    saveChartList(chartListMap);
+	    saveMultipleChartListSync(chartListMap);
 	}, defaultFuture);
     }
        
 
-    private void saveChartList(Map<String, List<Chart>> chartListMap ) {
+    private void saveMultipleChartListSync(Map<String, List<Chart>> chartListMap ) {
 	vertx.executeBlocking(future -> {
 	    try {
 		logger.info("In blocking save with Map {}", chartListMap.toString());
