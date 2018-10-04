@@ -6,10 +6,13 @@
 package com.evdosoft.stocktechsys.dao;
 
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,6 +32,9 @@ public class StkDbDaoImpl implements StkDbDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+	private Environment env;
+    
     private static final Logger logger = LoggerFactory.getLogger(StkDbDaoImpl.class);
 
     /**
@@ -43,16 +49,54 @@ public class StkDbDaoImpl implements StkDbDao {
 
     @Override
     public Boolean execStatement(String strsql) throws SQLException {
-	try {
-	    jdbcTemplate.execute(strsql);
-	    return true;
-	} catch (DataAccessException e) {
-	    logger.error("execStatement: returned an error on {}", strsql);
-	    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
-	    return false;
-	}
+		try {
+		    jdbcTemplate.execute(strsql);
+		    return true;
+		} catch (DataAccessException e) {
+		    logger.error("execStatement: returned an error on {}", strsql);
+		    logger.error("{} : {}", e.getClass().getName(), e.getMessage());
+		    return false;
+		}
     }
 
+    /**
+    *
+    * Create Database if it doesn't already exist
+    * 
+    * @version 1.0
+    * @author : dj
+    * @return true if successful.
+    * @throws java.sql.SQLException
+    */
+   @Override
+   public boolean createDatabase() throws SQLException {
+	
+	logger.info("createSchema Symbol starting");
+	
+	String datasourceUrl = env.getProperty("spring.datasource.url");
+	logger.info("sourceurl extracted {}",datasourceUrl );
+
+	// Assuming something like: jdbc:mysql://localhost:3306/stkdb
+	// [.]*\/\w*
+/*	Pattern pattern = Pattern.compile("'[.]*\\/\\w*'");
+	Matcher matcher = pattern.matcher(datasourceUrl);
+	String dbName = ""; //"stkdb";
+	if (matcher.find())
+	{
+		logger.info("1 {}",matcher.group(1) );
+	    // System.out.println(matcher.group(1));
+	    dbName = matcher.group(1);
+	}
+*/
+//	String dbName = datasourceUrl.replaceAll("'[.]*\\/\\w*'", "");
+
+//	logger.info("dbname extracted {}",dbName);
+	
+	String query = "CREATE DATABASE IF NOT EXISTS stkdb;";
+
+	return execStatement(query);
+   }
+      
     /**
      *
      * Create CompanyList Table to contain company info.
