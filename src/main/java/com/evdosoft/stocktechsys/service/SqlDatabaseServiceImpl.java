@@ -32,6 +32,9 @@ public class SqlDatabaseServiceImpl implements SqlDatabaseService {
  
         logger.info("createSqlDb: Starting");
         
+        // Create DB if it doesn't exist already
+        status = status && stkDbDao.createDatabase();
+ 
         // First drop any table
         status = status && stkDbDao.dropAllTables();
  

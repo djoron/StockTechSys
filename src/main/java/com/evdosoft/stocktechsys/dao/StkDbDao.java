@@ -13,6 +13,7 @@ import java.sql.SQLException;
  */
 public interface StkDbDao {
     public Boolean execStatement(String strsql) throws SQLException;
+    public boolean createDatabase() throws SQLException;
     public boolean createCompanyTables () throws SQLException;
     public boolean createSymbolTable () throws SQLException;
     public boolean createQuoteTable () throws SQLException; 
