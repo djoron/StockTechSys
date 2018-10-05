@@ -8,7 +8,7 @@ import io.vertx.core.Future;
 
 public interface CompanyServiceAsync {
 
-    Future<List<Company>>  fetchAndSaveCompanyList();
+    Future<List<Company>>  fetchCompanyList();
     
     void saveCompanyList(List<Company> companyList);
 }

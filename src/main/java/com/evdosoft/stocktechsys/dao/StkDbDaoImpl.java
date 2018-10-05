@@ -6,8 +6,6 @@
 package com.evdosoft.stocktechsys.dao;
 
 import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,7 +183,7 @@ public class StkDbDaoImpl implements StkDbDao {
 			+ " MARKETCAP              TEXT, " + " PERATIO                TEXT, "
 			+ " WEEK52HIGH             TEXT, " + " WEEK52LOW              TEXT, "
 			+ " YTDCHANGE              TEXT, "
-			+ "UNIQUE (SYMBOL, PRIMARYEXCHANGE, CLOSETIME) ON CONFLICT REPLACE, "
+			+ "UNIQUE (SYMBOL, PRIMARYEXCHANGE, CLOSETIME), "
 			+ "FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)" + ");"
 			+ "CREATE INDEX DATE_IDX ON QUOTE (SYMBOL, PRIMARYEXCHANGE, CLOSETIME);";
 
