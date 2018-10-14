@@ -7,6 +7,7 @@ package com.evdosoft.stocktechsys.dao;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.evdosoft.stocktechsys.models.Chart;
 
@@ -17,6 +18,7 @@ import com.evdosoft.stocktechsys.models.Chart;
 public interface ChartDao {
 
     public int saveChartListToDb(List<Chart> chartList, String symbol);
+    void saveMultipleChartListToDb(Map<String,List<Chart>> mapChartList);
 
     public LocalDate getLastSavedDownloadChartDate(String symbol);
 

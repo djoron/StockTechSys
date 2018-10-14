@@ -1,8 +1,12 @@
 package com.evdosoft.stocktechsys.dao.async;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +47,8 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     @Override
     public Future<List<Company>> getCompanyList() {
 	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
+        int maxtoDownload = parameters.getGetMaxChartListToDownload();
+        
 	LocalTime t1 = LocalTime.now();
     	WebClient client = WebClient.create(vertx);
     	List<Company> companies = new ArrayList<>();
@@ -58,12 +64,22 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
             // Decode the body as a json object
             JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
-            logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
+            logger.info("Downloading Company, got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
             
             WebClient client2 = WebClient.create(vertx);   
-            int lastIndex = body.size() - 1;
+            
+            int totalElements = body.size();
+            // Debug mode, can reduce size of what's being downloaded
+            
+            if ( (totalElements > maxtoDownload) && (maxtoDownload > 0) ) {
+        	totalElements = maxtoDownload - 1;
+        	logger.info("Reducing download from {} to {} elements",body.size(),maxtoDownload);
+            }
+           
+          
+            final int lastIndex = totalElements-1;
+            
             for(int i=0; i<body.size() ; i++ ) {
-               //  if (isBadSymbol(body.getJsonObject(i),i)) {continue;}
         	final int index = i;
             	JsonObject json = body.getJsonObject(i);
             	if(json.containsKey("symbol")) {
@@ -85,13 +101,13 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
                 					}
                 				}
                 				if (index % 500 == 1) { // Logger to see where we are only
-                				    logger.info("Got HTTP response with status " + response2.statusCode() + " from i=" + index);
+                				    logger.info("Downloading company for symbol "+symbol+", got HTTP response with status " + response2.statusCode() + " from i=" + index);
                 				}
                 				
             			    	} catch(DecodeException e) {
-            			    	    logger.warn("Failed to decode company for symbol {}, element #= {}", symbol, index);
+            			    	    logger.warn("Failed to decode symbol {}, element #= {}", symbol, index);
             			    	} finally {
-                			    	if(index == lastIndex) {
+                			    	if ((index == lastIndex) /* || (index > (parameters.getMaxStocktoProcess()-1))*/ ){
                 			    	    LocalTime t2 = LocalTime.now();
                 			    	    logger.info("Added " + companies.size() + " companies.");
                 			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
@@ -118,24 +134,122 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         return future;
     }
 
-    private Company readCompany(JsonObject jsonCompany) {
-	Company company = new Company();
-	company.setSymbol(jsonCompany.getString("symbol"));
-	company.setCompanyName(jsonCompany.getString("companyName"));
-	company.setCeo(jsonCompany.getString("CEO"));
-	company.setDescription(jsonCompany.getString("description"));
-	company.setExchange(jsonCompany.getString("exchange"));
-	company.setIndustry(jsonCompany.getString("industry"));
-	company.setIssueType(jsonCompany.getString("issueType"));
-	company.setSector(jsonCompany.getString("sector"));
-	company.setWebsite(jsonCompany.getString("website"));		
-	return company;
+     private Company readCompany(JsonObject jsonCompany) {
+	   Company company = new Company();
+	   company.setSymbol(jsonCompany.getString("symbol"));
+	   company.setCompanyName(jsonCompany.getString("companyName"));
+	   company.setCeo(jsonCompany.getString("CEO"));
+	   company.setDescription(jsonCompany.getString("description"));
+	   company.setExchange(jsonCompany.getString("exchange"));
+	   company.setIndustry(jsonCompany.getString("industry"));
+	   company.setIssueType(jsonCompany.getString("issueType"));
+	   company.setSector(jsonCompany.getString("sector"));
+	   company.setWebsite(jsonCompany.getString("website"));		
+	   return company;
     }
 
     @Override
-    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, int period) {
-	// TODO Auto-generated method stub
-	return null;
+    public Future<Map<String, List<Chart>>> getDailyChartList(List<String> symbols, String period, int maxNumResults) {
+	 
+	 WebClient client2 = WebClient.create(vertx);
+	 LocalTime t1 = LocalTime.now();
+	 
+	 // Init map and future
+	 Map<String, List<Chart>> chartMap = new HashMap<>();
+	 Future<Map<String, List<Chart>>> future = Future.future();
+         int lastIndex = symbols.size()-1;// Math.min(maxNumResults-1, symbols.size()-1);
+         
+         for(int i=0; i<= lastIndex ; i++ ) {
+     		final int index = i;
+     		String symbol = symbols.get(index);           		    		
+    		String chartUrl = parameters.getIexPrefix() + "stock/" + symbol + "/chart/" +period;
+    		
+    		// Vertx async http request
+    		client2
+    		.getAbs(chartUrl) // Get company info here.
+    		.send(aar -> {
+    			if(aar.succeeded()) { 
+    			    	HttpResponse<Buffer> response = aar.result();
+    			    	try {
+    			    	    	JsonArray body = response.bodyAsJsonArray();  // Contains complete list          
+    			    	        logger.info("Downloading chartlist for symbol "+symbol+", got HTTP response with status " + response.statusCode() + " from i=" + index);
+    			    	        logger.info("{}",chartUrl);
+    			    	        /*if (index % 500 == 1) { // Logger to see where we are only
+				    		logger.info("Downloading chartlist for symbol "+symbol+", got HTTP response with status " + response.statusCode() + " from i=" + index);
+        			    	}*/
+    			    	        // logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
+        				if(body != null) {
+        					List<Chart> charts = null;
+						try {
+						    charts = readCharts(body);
+						    // xxx more checks here before put ?
+						    chartMap.put(symbol, charts);
+						} catch (Exception e) {
+						    // TODO Auto-generated catch block
+						    logger.warn("Failed to decode chartlist for symbol {}", symbol);
+						    logger.warn("url: {}", chartUrl);
+						}
+        				} else {
+        				    logger.warn("---------------> Empty body :(");
+        				}
+        				
+        				
+        				
+    			    	} catch(DecodeException e) {
+    			    	    logger.warn("Failed to decode chart for symbol {}, element #= {}", symbol, index);
+    			    	} finally {
+        			    	if ((index == lastIndex)){
+        			    	    LocalTime t2 = LocalTime.now();
+        			    	    logger.info("Added " + chartMap.size() + " charts.");
+        			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
+        			    	    future.complete(chartMap);
+        			    	}
+    			    	}
+    			    	
+    			} else {
+    			    logger.warn("Something went wrong url {}", chartUrl);
+    			    logger.warn("Something went wrong with chart symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
+    			    aar.cause().printStackTrace();
+    			}
+    		});            		
+         }
+          
+         return future;
+    }
+
+    private List<Chart> readCharts(JsonArray body) throws ParseException {
+	List<Chart> chartList = new ArrayList<>();
+	if (body.size() == 0) {
+	    logger.info("readCharts size = 0");
+	}
+	for(int j=0; j<body.size(); j++) {
+	    JsonObject json = body.getJsonObject(j);
+	    Chart chart = readChart(json);
+	    chartList.add(chart);
+	}
+	return chartList;
+    }
+
+    
+    @SuppressWarnings("deprecation")
+    private Chart readChart(JsonObject json) throws ParseException {
+	Chart chart = new Chart();
+
+	chart.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(json.getString("date")));
+
+	chart.setOpen	(BigDecimal.valueOf(json.getDouble("open")));
+	chart.setHigh	(BigDecimal.valueOf(json.getDouble("high")));
+	chart.setLow	(BigDecimal.valueOf(json.getDouble("low")));
+	chart.setClose	(BigDecimal.valueOf(json.getDouble("close")));
+	chart.setVolume	(Long.valueOf(json.getLong("volume")));
+	chart.setUnadjustedVolume(Long.valueOf(json.getLong("unadjustedVolume")));
+	chart.setChange	(BigDecimal.valueOf(json.getDouble("change")));
+	chart.setChangePercent(BigDecimal.valueOf(json.getDouble("changePercent")));
+	chart.setVwap	(BigDecimal.valueOf(json.getDouble("vwap")));
+	chart.setLabel	(json.getString("label"));
+	chart.setChangeOverTime(BigDecimal.valueOf(json.getDouble("changeOverTime")));
+	    
+	return chart;
     }   
     
     

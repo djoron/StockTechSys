@@ -16,7 +16,7 @@ import com.evdosoft.stocktechsys.models.Company;
  */
 public interface CompanyDao {
 
-    public boolean saveCompanyList(List<Company> companyListSql) throws Exception;
+    public boolean saveCompanyListToDb(List<Company> companyListSql) throws Exception;
     public List<Company> loadCompanyListFromDb ();
     public boolean updateCompanyList(List<Company> companyList) throws Exception;
     

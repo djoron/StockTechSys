@@ -40,7 +40,7 @@ public class CompanyDaoImpl implements CompanyDao {
      * @throws Exception
      */
     @Override
-    public boolean saveCompanyList(List<Company> companyList) throws Exception {
+    public boolean saveCompanyListToDb(List<Company> companyList) throws Exception {
 
 	String sql = "SET FOREIGN_KEY_CHECKS=0;";
 	jdbcTemplate.execute(sql);

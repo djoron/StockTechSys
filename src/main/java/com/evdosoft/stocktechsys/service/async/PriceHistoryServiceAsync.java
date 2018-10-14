@@ -2,8 +2,10 @@ package com.evdosoft.stocktechsys.service.async;
 
 import java.util.List;
 
+import com.evdosoft.stocktechsys.models.Company;
+
 public interface PriceHistoryServiceAsync {
 
-    void prepareAndDownloadPriceHistory();
-    void fetchAndSavePriceHistoryList(List<String> symbols, int period);
+    void prepareAndDownloadPriceHistory(List<Company> companyList);    
+//    void prepareAndDownloadPriceHistory();
 }

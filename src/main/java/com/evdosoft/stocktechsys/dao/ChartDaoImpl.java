@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +107,18 @@ public class ChartDaoImpl implements ChartDao {
 	
 	return date;
     }
+    
+   @Override                           
+   public void saveMultipleChartListToDb(Map<String,List<Chart>> chartListMap) {
+                    
+       for (Entry<String, List<Chart>> ee : chartListMap.entrySet()) {
+	    String symbol = ee.getKey();
+	    List<Chart> values = ee.getValue();
+	    saveChartListToDb(values, symbol);
+       }
+   
+   }
+    
     
 }
 /*
