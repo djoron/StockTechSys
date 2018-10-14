@@ -134,23 +134,18 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         return future;
     }
 
-//    private boolean isBadSymbol(JsonObject json, int i) {
-//	logger.info("isBadSymbol {}",i);
-//	return json.containsKey("symbol") && json.getString("symbol") != null && json.getString("symbol").equals("GVC^#");
-//    }
-
-    private Company readCompany(JsonObject jsonCompany) {
-	Company company = new Company();
-	company.setSymbol(jsonCompany.getString("symbol"));
-	company.setCompanyName(jsonCompany.getString("companyName"));
-	company.setCeo(jsonCompany.getString("CEO"));
-	company.setDescription(jsonCompany.getString("description"));
-	company.setExchange(jsonCompany.getString("exchange"));
-	company.setIndustry(jsonCompany.getString("industry"));
-	company.setIssueType(jsonCompany.getString("issueType"));
-	company.setSector(jsonCompany.getString("sector"));
-	company.setWebsite(jsonCompany.getString("website"));		
-	return company;
+     private Company readCompany(JsonObject jsonCompany) {
+	   Company company = new Company();
+	   company.setSymbol(jsonCompany.getString("symbol"));
+	   company.setCompanyName(jsonCompany.getString("companyName"));
+	   company.setCeo(jsonCompany.getString("CEO"));
+	   company.setDescription(jsonCompany.getString("description"));
+	   company.setExchange(jsonCompany.getString("exchange"));
+	   company.setIndustry(jsonCompany.getString("industry"));
+	   company.setIssueType(jsonCompany.getString("issueType"));
+	   company.setSector(jsonCompany.getString("sector"));
+	   company.setWebsite(jsonCompany.getString("website"));		
+	   return company;
     }
 
     @Override
