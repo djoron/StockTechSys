@@ -30,9 +30,7 @@ public class Bootstrapping {
     	@Autowired
     	private PriceHistoryService priceHistoryService;
     	
-    	@Autowired
-    	private DialogWindow dialogWindow;
-    	
+  	
     	public void prepareAndFetchData() throws Exception {
     	
     	    // Will contain only new stocks to add while updating from Bloomberg an existing DB

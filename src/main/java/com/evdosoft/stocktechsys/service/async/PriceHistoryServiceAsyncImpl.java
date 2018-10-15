@@ -48,37 +48,37 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     /**
      * Build List of Strings containing symbols taken from Company List. Then call async download with list.
      */
-     public void prepareAndDownloadPriceHistory(List<Company> companyList)       
+     public void prepareAndDownloadPriceHistoryAsync(List<Company> companyList)       
      {
-	int maxToDownload = parameters.getGetMaxChartListToDownload();	
-	String period = StockTechSysConstants.FIVEYEARS;	
-        
-	logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
-	List<String> symbols = companyList.stream().map(Company::getSymbol).collect(Collectors.toList());
-	Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period, maxToDownload);
-        
-	Future<Void> defaultFuture = Future.future(); 
-	future.compose(chartListMap -> {
-	    logger.info("In compose future with Map {}", chartListMap.toString());
-	    logger.info("Save chartlist synchronously...");
-	    saveMultipleChartListSync(chartListMap);
-	}, defaultFuture);
+		int maxToDownload = parameters.getGetMaxChartListToDownload();	
+		String period = StockTechSysConstants.FIVEYEARS;	
+	        
+		logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
+		List<String> symbols = companyList.stream().map(Company::getSymbol).collect(Collectors.toList());
+		Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period, maxToDownload);
+	        
+		Future<Void> defaultFuture = Future.future(); 
+		future.compose(chartListMap -> {
+		    logger.info("In compose future with Map {}", chartListMap.toString());
+		    logger.info("Save chartlist synchronously...");
+		    saveMultipleChartListSync(chartListMap);
+		}, defaultFuture);
     }
        
 
     private void saveMultipleChartListSync(Map<String, List<Chart>> chartListMap ) {
-	vertx.executeBlocking(future -> {
-	    try {
-		logger.info("In blocking save with Map {}", chartListMap.toString());
-		chartDao.saveMultipleChartListToDb(chartListMap);
-	    } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	    future.complete();
-	  }, res -> {
-	      logger.info("Save chartlist synchronously...");
-	  });
-
-    }
+		vertx.executeBlocking(future -> {
+		    try {
+			logger.info("In blocking save with Map {}", chartListMap.toString());
+			chartDao.saveMultipleChartListToDb(chartListMap);
+		    } catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
+		    future.complete();
+		  }, res -> {
+		      logger.info("Save chartlist synchronously...");
+		  });
+	
+	    } //vertx.executeblocking...
 }

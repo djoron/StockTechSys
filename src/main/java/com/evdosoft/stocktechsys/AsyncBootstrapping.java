@@ -46,18 +46,16 @@ public class AsyncBootstrapping {
         symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);
 	
         Future<Void> defaultFuture = Future.future(); 
-	Future<List<Company>> futureCompanyList = companyServiceAsync.fetchCompanyList();	
-	futureCompanyList.compose(companyList -> {
-	    logger.info("Save companies synchronously...");	    
-	    companyServiceAsync.saveCompanyList(companyList);
-	    logger.info("DONE Save companies synchronously...");	    
-	    
-	    return futureCompanyList;
-	}).compose(companyList -> {
-	    logger.info("Calling price history download...");
-	    priceHistoryServiceAsync.prepareAndDownloadPriceHistory(companyList);   
-	    
-	}, defaultFuture);
+        Future<List<Company>> futureCompanyList = companyServiceAsync.fetchCompanyListAsync();	
+        futureCompanyList.compose(companyList -> {
+        	logger.info("Save companies synchronously...");	    
+        	companyServiceAsync.saveCompanyList(companyList);
+        	logger.info("DONE Save companies synchronously...");	    
+        	return futureCompanyList;
+        }).compose(companyList -> {
+        	logger.info("Calling price history download...");
+        	priceHistoryServiceAsync.prepareAndDownloadPriceHistoryAsync(companyList);   
+        }, defaultFuture);
 	
 	// System.exit(0);
 

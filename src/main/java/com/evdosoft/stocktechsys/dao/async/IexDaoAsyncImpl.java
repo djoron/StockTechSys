@@ -46,10 +46,10 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
     @Override
     public Future<List<Company>> getCompanyList() {
-	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
+    	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
         int maxtoDownload = parameters.getGetMaxChartListToDownload();
         
-	LocalTime t1 = LocalTime.now();
+        LocalTime t1 = LocalTime.now();
     	WebClient client = WebClient.create(vertx);
     	List<Company> companies = new ArrayList<>();
     	Future<List<Company>> future = Future.future();
