@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.evdosoft.stocktechsys.StockTechSysConstants.TypeListDownload;
-import com.evdosoft.stocktechsys.models.Company;
 import com.evdosoft.stocktechsys.models.Symbol;
 import com.evdosoft.stocktechsys.service.SqlDatabaseService;
 import com.evdosoft.stocktechsys.service.SymbolService;
 import com.evdosoft.stocktechsys.service.async.CompanyServiceAsync;
 import com.evdosoft.stocktechsys.service.async.PriceHistoryServiceAsync;
-
-import io.vertx.core.Future;
 
 @Component
 public class AsyncBootstrapping {
@@ -45,17 +42,18 @@ public class AsyncBootstrapping {
         symbolList = symbolService.getSymbolList();
         symbolService.saveSymbolList(TypeListDownload.ORIGINAL, symbolList);
 	
-        Future<Void> defaultFuture = Future.future(); 
-        Future<List<Company>> futureCompanyList = companyServiceAsync.fetchCompanyListAsync();	
-        futureCompanyList.compose(companyList -> {
-        	logger.info("Save companies synchronously...");	    
-        	companyServiceAsync.saveCompanyList(companyList);
-        	logger.info("DONE Save companies synchronously...");	    
-        	return futureCompanyList;
-        }).compose(companyList -> {
-        	logger.info("Calling price history download...");
-        	priceHistoryServiceAsync.prepareAndDownloadPriceHistoryAsync(companyList);   
-        }, defaultFuture);
+//        Future<Void> defaultFuture = Future.future(); 
+//        Future<List<Company>> futureCompanyList = 
+          companyServiceAsync.fetchCompanyListAsync();	
+//        futureCompanyList.compose(companyList -> {
+//        	logger.info("Save companies synchronously...");	    
+//        	companyServiceAsync.saveCompanyList(companyList);
+//        	logger.info("DONE Save companies synchronously...");	    
+//        	return futureCompanyList;
+//        }).compose(companyList -> {
+//        	logger.info("Calling price history download...");
+//        	priceHistoryServiceAsync.prepareAndDownloadPriceHistoryAsync(companyList);   
+//        }, defaultFuture);
 	
 	// System.exit(0);
 

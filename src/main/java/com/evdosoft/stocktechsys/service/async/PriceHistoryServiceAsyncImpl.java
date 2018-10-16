@@ -17,7 +17,6 @@ import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
 import com.evdosoft.stocktechsys.service.CompanyService;
 
-import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 
 @Service
@@ -48,24 +47,26 @@ public class PriceHistoryServiceAsyncImpl implements PriceHistoryServiceAsync {
     /**
      * Build List of Strings containing symbols taken from Company List. Then call async download with list.
      */
-     public void prepareAndDownloadPriceHistoryAsync(List<Company> companyList)       
+     public void fetchMultiplePriceHistoryAsync(List<Company> companyList)       
      {
 		int maxToDownload = parameters.getGetMaxChartListToDownload();	
 		String period = StockTechSysConstants.FIVEYEARS;	
 	        
 		logger.info("Fetch PriceHistory (Chartlist) asynchronously...");
 		List<String> symbols = companyList.stream().map(Company::getSymbol).collect(Collectors.toList());
-		Future<Map<String,List<Chart>>> future = iexDaoAsync.getDailyChartList(symbols, period, maxToDownload);
+//		Future<Map<String,List<Chart>>> future = 
+		iexDaoAsync.getDailyChartList(symbols, period, maxToDownload);
 	        
-		Future<Void> defaultFuture = Future.future(); 
-		future.compose(chartListMap -> {
-		    logger.info("In compose future with Map {}", chartListMap.toString());
-		    logger.info("Save chartlist synchronously...");
-		    saveMultipleChartListSync(chartListMap);
-		}, defaultFuture);
+//		Future<Void> defaultFuture = Future.future(); 
+//		future.compose(chartListMap -> {
+//		    logger.info("In compose future with Map {}", chartListMap.toString());
+//		    logger.info("Save chartlist synchronously...");
+//		    saveMultipleChartListSync(chartListMap);
+//		}, defaultFuture);
     }
        
 
+    
     private void saveMultipleChartListSync(Map<String, List<Chart>> chartListMap ) {
 		vertx.executeBlocking(future -> {
 		    try {

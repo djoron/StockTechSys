@@ -1,0 +1,10 @@
+
+Appel à 
+
+fetchCompanyList   --> CompanyListFetched
+
+saveCompanyList 
+
+FOR LOOP:
+	fetchPriceHistoryList   -->   PriceHistoryFetched
+	savePriceHistory

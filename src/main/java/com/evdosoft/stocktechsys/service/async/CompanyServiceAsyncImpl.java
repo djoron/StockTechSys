@@ -26,7 +26,7 @@ public class CompanyServiceAsyncImpl implements CompanyServiceAsync {
     private Vertx vertx;
     
     @Autowired
-    private CompanyDao companyDao;    
+    private CompanyDao companyDao;        
     
     @Override
     public Future<List<Company>> fetchCompanyListAsync() {	

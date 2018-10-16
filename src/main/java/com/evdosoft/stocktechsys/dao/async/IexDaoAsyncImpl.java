@@ -13,9 +13,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
 import com.evdosoft.stocktechsys.Parameters;
+import com.evdosoft.stocktechsys.events.CompanyListFetchedEvent;
+import com.evdosoft.stocktechsys.events.PriceHistoryFetchedEvent;
 import com.evdosoft.stocktechsys.models.Chart;
 import com.evdosoft.stocktechsys.models.Company;
 
@@ -44,6 +47,9 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
     @Autowired
     private Parameters parameters;      
 
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+    
     @Override
     public Future<List<Company>> getCompanyList() {
     	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
@@ -111,6 +117,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
                 			    	    LocalTime t2 = LocalTime.now();
                 			    	    logger.info("Added " + companies.size() + " companies.");
                 			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
+                			    	    publishEvent(companies);
                 			    	    future.complete(companies);
                 			    	}
             			    	}
@@ -134,7 +141,13 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         return future;
     }
 
-     private Company readCompany(JsonObject jsonCompany) {
+     private void publishEvent(List<Company> companies) {
+	 logger.info("---------- PUBLISHING EVENT CompanyListFetchedEvent with company list --------");
+	 CompanyListFetchedEvent companyListFetchedEvent = new CompanyListFetchedEvent(this, companies);
+	 applicationEventPublisher.publishEvent(companyListFetchedEvent);
+    }
+
+    private Company readCompany(JsonObject jsonCompany) {
 	   Company company = new Company();
 	   company.setSymbol(jsonCompany.getString("symbol"));
 	   company.setCompanyName(jsonCompany.getString("companyName"));
@@ -202,6 +215,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         			    	    LocalTime t2 = LocalTime.now();
         			    	    logger.info("Added " + chartMap.size() + " charts.");
         			    	    logger.info("=========> Time taken to run asynchronously : " + t1.until(t2, ChronoUnit.SECONDS) + " seconds.");
+        			    	    publishPriceHistoryFetchedEvent(chartMap);
         			    	    future.complete(chartMap);
         			    	}
     			    	}
@@ -215,6 +229,11 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
          }
           
          return future;
+    }
+
+    private void publishPriceHistoryFetchedEvent(Map<String, List<Chart>> chartMap) {
+	PriceHistoryFetchedEvent priceHistoryFetchedEvent = new PriceHistoryFetchedEvent(this, chartMap);
+	applicationEventPublisher.publishEvent(priceHistoryFetchedEvent);
     }
 
     private List<Chart> readCharts(JsonArray body) throws ParseException {

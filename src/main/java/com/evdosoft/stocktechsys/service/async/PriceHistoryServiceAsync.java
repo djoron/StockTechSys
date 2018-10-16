@@ -6,6 +6,5 @@ import com.evdosoft.stocktechsys.models.Company;
 
 public interface PriceHistoryServiceAsync {
 
-    void prepareAndDownloadPriceHistoryAsync(List<Company> companyList);    
-//    void prepareAndDownloadPriceHistory();
+    void fetchMultiplePriceHistoryAsync(List<Company> companyList);    
 }
