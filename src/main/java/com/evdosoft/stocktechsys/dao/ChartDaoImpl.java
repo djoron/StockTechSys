@@ -38,17 +38,17 @@ public class ChartDaoImpl implements ChartDao {
 
 	if (chartList.size() > 0) {
 
-	    String sql = "INSERT INTO CHART (" 
-	                + " SYMBOL, `DATE`, OPEN, HIGH, LOW, CLOSE, "
-			+ " VOLUME, UNADJUSTEDVOLUME, `CHANGE`, CHANGEPERCENT, VWAP, LABEL, CHANGEOVERTIME"
-			+ ")"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ;";
-	   //	+ "ON DUPLICATE KEY UPDATE DATE = (?), ;";
-	   
-	   // INSERT INTO mytable (col1, col2, col3) VALUES (?, ?, ?)
-	   // ON DUPLICATE KEY UPDATE col1=VALUES(col1), col2=VALUES(col2), col3=VALUES(col3);
+	    String sql = ("INSERT INTO CHART ( SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
+			+ " VOLUME, UNADJUSTEDVOLUME, CHANGEAMOUNT, CHANGEPERCENT, VWAP, LABEL, CHANGEOVERTIME )"
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) "
+	    	+ " ON DUPLICATE KEY UPDATE SYMBOL = VALUES(SYMBOL), "
+	    	+ " DATE = VALUES(DATE), OPEN = VALUES(OPEN), HIGH = VALUES(HIGH), LOW = VALUES(LOW), "
+			+ " CLOSE = VALUES(CLOSE), VOLUME = VALUES(VOLUME), UNADJUSTEDVOLUME = VALUES(UNADJUSTEDVOLUME), "
+			+ " CHANGEAMOUNT = VALUES(CHANGEAMOUNT), "
+			+ " CHANGEPERCENT = VALUES(CHANGEPERCENT), VWAP = VALUES(VWAP), LABEL = VALUES(LABEL), "
+			+ " CHANGEOVERTIME = VALUES(CHANGEOVERTIME); ");
 
-	   jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+	    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 		    
        		@Override
 	        public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -115,6 +115,7 @@ public class ChartDaoImpl implements ChartDao {
 	    String symbol = ee.getKey();
 	    List<Chart> values = ee.getValue();
 	    saveChartListToDb(values, symbol);
+	    logger.warn("saveMultipleChartListToDb - Done");
        }
    
    }

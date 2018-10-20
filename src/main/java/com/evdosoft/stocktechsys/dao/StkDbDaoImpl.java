@@ -216,7 +216,7 @@ public class StkDbDaoImpl implements StkDbDao {
 			+ " CLOSE                  DECIMAL(19,4), "
 			+ " VOLUME                 BIGINT(20), "
 			+ " UNADJUSTEDVOLUME       BIGINT(20), " 
-			+ " `CHANGE`               DECIMAL(19,2), "
+			+ " CHANGEAMOUNT           DECIMAL(19,2), "
 			+ " CHANGEPERCENT          DECIMAL(19,2), " 
 			+ " VWAP                   DECIMAL(19,2), "
 			+ " LABEL                  VARCHAR(50),   " 

@@ -47,6 +47,7 @@ public class AsyncBootstrapping {
 	
         Future<Void> defaultFuture = Future.future(); 
         Future<List<Company>> futureCompanyList = companyServiceAsync.fetchCompanyListAsync();	
+        
         futureCompanyList.compose(companyList -> {
         	logger.info("Save companies synchronously...");	    
         	companyServiceAsync.saveCompanyList(companyList);

@@ -44,7 +44,10 @@ public class SymbolDaoImpl implements SymbolDao {
         
         if (symbolList.size() > 0) {                          
             String sql = "INSERT INTO SYMBOL  (SYMBOL, NAME, "
-                    + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?);";
+                    + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?) "
+                    + "ON DUPLICATE KEY UPDATE SYMBOL = VALUES(SYMBOL), "
+                    + "NAME = VALUES(NAME), DATE = VALUES(DATE), ISENABLED = VALUES(ISENABLED),"
+                    + "TYPE = VALUES(TYPE), IEXID = VALUES(IEXID);";
 
             logger.info("saveSymbolList: Will save symbol list in DB. Be patient.");
 
