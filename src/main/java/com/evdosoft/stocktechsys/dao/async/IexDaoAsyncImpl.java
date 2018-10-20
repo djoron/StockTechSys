@@ -178,22 +178,21 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 				    		logger.info("Downloading chartlist for symbol "+symbol+", got HTTP response with status " + response.statusCode() + " from i=" + index);
         			    	}*/
     			    	        // logger.info("Got HTTP response with status " + response.statusCode() + " with body of size " + body.size());
-        				if(body != null) {
-        					List<Chart> charts = null;
-						try {
-						    charts = readCharts(body);
-						    // xxx more checks here before put ?
-						    chartMap.put(symbol, charts);
-						} catch (Exception e) {
-						    // TODO Auto-generated catch block
-						    logger.warn("Failed to decode chartlist for symbol {}", symbol);
-						    logger.warn("url: {}", chartUrl);
-						}
-        				} else {
-        				    logger.warn("---------------> Empty body :(");
-        				}
-        				
-        				
+	        				if(body != null) {
+	        					List<Chart> charts = null;
+							try {
+							    charts = readCharts(body);
+							    // xxx more checks here before put ?
+							    chartMap.put(symbol, charts);
+							} catch (Exception e) {
+							    // TODO Auto-generated catch block
+							    logger.warn("Failed to decode chartlist for symbol {}", symbol);
+							    logger.warn("url: {}", chartUrl);
+							    logger.warn("exception: ",e);
+							}
+	        				} else {
+	        				    logger.warn("---------------> Empty body :(");
+	        				}   				
         				
     			    	} catch(DecodeException e) {
     			    	    logger.warn("Failed to decode chart for symbol {}, element #= {}", symbol, index);
@@ -206,13 +205,14 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
         			    	}
     			    	}
     			    	
-    			} else {
+    			} // if(aar.succeeded()) 
+    			else {
     			    logger.warn("Something went wrong url {}", chartUrl);
     			    logger.warn("Something went wrong with chart symbol {} - {} - Stack {}", symbol, aar.cause().getMessage());
     			    aar.cause().printStackTrace();
     			}
-    		});            		
-         }
+    		}); // .send (aar -> ...            		
+         } // for
           
          return future;
     }
