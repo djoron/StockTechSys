@@ -7,7 +7,9 @@ package com.evdosoft.stocktechsys.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,8 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
     public boolean createChartlist() throws Exception {
         List<Company> companyList;
         List<Chart> chartList;
+        Map<String, List<Chart>> chartListMap = new HashMap<>();
+        
         int count=0;
         
         int daysSaved = 0;
@@ -55,22 +59,37 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
         companyList = companyService.getCompanyListFromDb();
         
         int totalSymbols = companyList.size();
+        int chartListDownloaded = 0;
         
         for (Company company: companyList ) {    
             try {
                 count++;
-                chartList = iexDao.getDailyChartList(company.getSymbol(), parameters.getYearHistoryString());
+                String symbol = company.getSymbol();
+                chartList = iexDao.getDailyChartList(symbol, parameters.getYearHistoryString());
                 if (chartList != null) {
-                    daysSaved = chartDao.saveChartListToDb(chartList, company.getSymbol());
+                	daysSaved = chartDao.saveChartListToDb(chartList, symbol);
                     if (daysSaved>0) {
-                        logger.info("createChartListToDb: {} of {} - {} days saved"
-                        + " in SqlDB for symbol {}...",count, totalSymbols, daysSaved, company.getSymbol());
+                    	chartListMap.put(company.getSymbol(), chartList);
+                    	chartListDownloaded++;
+                    	logger.info("createChartListToDb: {} of {} - {} days downloaded"
+                        + " for symbol {}...",count, totalSymbols, daysSaved, symbol);
+                    	
                     } else
                     {
-                        logger.warn("createChartlist - Symbol {} chart NOT saved",company.getSymbol());
+                        logger.warn("createChartlist - Symbol {} chart NOT saved",symbol);
                         // return false; Remove, if one symbol failed, whole thing stopped.
-                    }    
-                }    
+                    }
+                    
+                     
+                    if ( (chartListDownloaded > 10) || (company.getSymbol() == companyList.get(companyList.size() - 1).getSymbol()))  {
+                    	logger.warn("createChartlist - Saving Symbol batch");
+                    	chartDao.saveMultipleChartListToDb(chartListMap);
+                    	chartListDownloaded = 0;
+                    }
+                    
+                }
+                    
+                    
             } catch (IOException e) {
                 logger.error("createChartlist - Exception e {}",e);
                 count--;
