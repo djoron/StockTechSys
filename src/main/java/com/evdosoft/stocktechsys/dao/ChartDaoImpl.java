@@ -112,12 +112,11 @@ public class ChartDaoImpl implements ChartDao {
    public void saveMultipleChartListToDb(Map<String,List<Chart>> chartListMap) {
                     
        for (Entry<String, List<Chart>> ee : chartListMap.entrySet()) {
-	    String symbol = ee.getKey();
-	    List<Chart> values = ee.getValue();
-	    saveChartListToDb(values, symbol);
-	    logger.warn("saveMultipleChartListToDb - Done");
-       }
-   
+	      String symbol = ee.getKey();
+	      List<Chart> values = ee.getValue();
+	      saveChartListToDb(values, symbol);
+	   }
+       logger.info("saveMultipleChartListToDb - Done");
    }
     
     

@@ -60,6 +60,7 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
         
         int totalSymbols = companyList.size();
         int chartListDownloaded = 0;
+        int maxtoDownloadBeforeSave = parameters.getGetMaxChartListToDownload();
         
         for (Company company: companyList ) {    
             try {
@@ -76,14 +77,15 @@ public class PriceHistoryServiceImpl implements PriceHistoryService {
                     	
                     } else
                     {
-                        logger.warn("createChartlist - Symbol {} chart NOT saved",symbol);
+                        logger.warn("createChartlist - Symbol {} chart will NOT be saved - no data",symbol);
                         // return false; Remove, if one symbol failed, whole thing stopped.
                     }
                     
                      
-                    if ( (chartListDownloaded > 10) || (company.getSymbol() == companyList.get(companyList.size() - 1).getSymbol()))  {
-                    	logger.warn("createChartlist - Saving Symbol batch");
+                    if ( (chartListDownloaded > maxtoDownloadBeforeSave) || (company.getSymbol() == companyList.get(companyList.size() - 1).getSymbol()))  {
+                    	logger.info("createChartlist - Saving Symbol batch");
                     	chartDao.saveMultipleChartListToDb(chartListMap);
+                    	chartListMap.clear();
                     	chartListDownloaded = 0;
                     }
                     
