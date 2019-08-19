@@ -41,13 +41,12 @@ public class Earnings {
     private String      announceTime;
     private BigDecimal  numberOfEstimates;
     private BigDecimal  EPSSurpriseDollar;
-    private LocalDate    EPSReportDate;
-    private String fiscalPeriod;
-    private LocalDate  fiscalEndDate;
+    private LocalDate   EPSReportDate;
+    private String 		fiscalPeriod;
+    private LocalDate   fiscalEndDate;
     private BigDecimal  yearAgo;
     private BigDecimal  yearAgoChangePercent;
     private BigDecimal  estimatedChangePercent;
-    private Long    symbolId;
-    
+    private Integer    	symbolId;
             
 }

@@ -36,60 +36,60 @@ public class ChartDaoImpl implements ChartDao {
     @Override
     public int saveChartListToDb(List<Chart> chartList, String symbol) {
 
-	if (chartList.size() > 0) {
-
-	    String sql = ("INSERT INTO CHART ( SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
-			+ " VOLUME, UNADJUSTEDVOLUME, CHANGEAMOUNT, CHANGEPERCENT, VWAP, LABEL, CHANGEOVERTIME )"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) "
-	    	+ " ON DUPLICATE KEY UPDATE SYMBOL = VALUES(SYMBOL), "
-	    	+ " DATE = VALUES(DATE), OPEN = VALUES(OPEN), HIGH = VALUES(HIGH), LOW = VALUES(LOW), "
-			+ " CLOSE = VALUES(CLOSE), VOLUME = VALUES(VOLUME), UNADJUSTEDVOLUME = VALUES(UNADJUSTEDVOLUME), "
-			+ " CHANGEAMOUNT = VALUES(CHANGEAMOUNT), "
-			+ " CHANGEPERCENT = VALUES(CHANGEPERCENT), VWAP = VALUES(VWAP), LABEL = VALUES(LABEL), "
-			+ " CHANGEOVERTIME = VALUES(CHANGEOVERTIME); ");
-
-	    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-		    
-       		@Override
-	        public void setValues(PreparedStatement ps, int i) throws SQLException {
-       	    	Chart ch = chartList.get(i);
-		    ps.setString(1, symbol);		    
-		    // ps.setDate(2, java.sql.Date.valueOf(ch.getDate()));
-		    
-		    java.util.Date utilDate = new java.util.Date();
-		    utilDate = ch.getDate();
-		    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		    
-		    ps.setDate(2, sqlDate);
-		    //ps.setDate(2, ch.getDate());
-		    ps.setBigDecimal(3, ch.getOpen());
-		    ps.setBigDecimal(4, ch.getHigh());
-		    ps.setBigDecimal(5, ch.getLow());
-		    ps.setBigDecimal(6, ch.getClose());
-		    ps.setLong(7, ch.getVolume());
-		    ps.setLong(8, ch.getUnadjustedVolume());
-		    ps.setBigDecimal(9, ch.getChange());
-		    ps.setBigDecimal(10, ch.getChangePercent());
-		    ps.setBigDecimal(11, ch.getVwap());
-		    ps.setString(12, ch.getLabel());
-		    ps.setBigDecimal(13, ch.getChangeOverTime());
-       		}
-
-		    @Override
-		        public int getBatchSize() {
-		    		return chartList.size();
-		        }
-		    });     
-	    
-	} else {
-	    logger.error("saveChartListToDb: ChartList save FAILED in SqlDB at symbol {}.", symbol);	    
-	    return 0;
-	}
-	long freemem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		if (chartList.size() > 0) {
 	
-	long maxBytes = Runtime.getRuntime().maxMemory();
-	System.out.println("Max memory: " + maxBytes / 1024 / 1024 + " MB - Freemem "+ freemem);
-	return chartList.size();
+		    String sql = ("INSERT INTO CHART ( SYMBOL, DATE, OPEN, HIGH, LOW, CLOSE, "
+				+ " VOLUME, UNADJUSTEDVOLUME, CHANGEAMOUNT, CHANGEPERCENT, VWAP, LABEL, CHANGEOVERTIME )"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) "
+		    	+ " ON DUPLICATE KEY UPDATE SYMBOL = VALUES(SYMBOL), "
+		    	+ " DATE = VALUES(DATE), OPEN = VALUES(OPEN), HIGH = VALUES(HIGH), LOW = VALUES(LOW), "
+				+ " CLOSE = VALUES(CLOSE), VOLUME = VALUES(VOLUME), UNADJUSTEDVOLUME = VALUES(UNADJUSTEDVOLUME), "
+				+ " CHANGEAMOUNT = VALUES(CHANGEAMOUNT), "
+				+ " CHANGEPERCENT = VALUES(CHANGEPERCENT), VWAP = VALUES(VWAP), LABEL = VALUES(LABEL), "
+				+ " CHANGEOVERTIME = VALUES(CHANGEOVERTIME); ");
+	
+		    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			    
+	       		@Override
+		        public void setValues(PreparedStatement ps, int i) throws SQLException {
+	       	    	Chart ch = chartList.get(i);
+			    ps.setString(1, symbol);		    
+			    // ps.setDate(2, java.sql.Date.valueOf(ch.getDate()));
+			    
+			    java.util.Date utilDate = new java.util.Date();
+			    utilDate = ch.getDate();
+			    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+			    
+			    ps.setDate(2, sqlDate);
+			    //ps.setDate(2, ch.getDate());
+			    ps.setBigDecimal(3, ch.getOpen());
+			    ps.setBigDecimal(4, ch.getHigh());
+			    ps.setBigDecimal(5, ch.getLow());
+			    ps.setBigDecimal(6, ch.getClose());
+			    ps.setLong(7, ch.getVolume());
+			    ps.setLong(8, ch.getUnadjustedVolume());
+			    ps.setBigDecimal(9, ch.getChange());
+			    ps.setBigDecimal(10, ch.getChangePercent());
+			    ps.setBigDecimal(11, ch.getVwap());
+			    ps.setString(12, ch.getLabel());
+			    ps.setBigDecimal(13, ch.getChangeOverTime());
+	       		}
+	
+			    @Override
+			        public int getBatchSize() {
+			    		return chartList.size();
+			        }
+			    });     
+		    
+		} else {
+		    logger.error("saveChartListToDb: ChartList save FAILED in SqlDB at symbol {}.", symbol);	    
+		    return 0;
+		}
+		// long freemem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		
+		// long maxBytes = Runtime.getRuntime().maxMemory();
+		// System.out.println("Max memory: " + maxBytes / 1024 / 1024 + " MB - Freemem "+ freemem);
+		return chartList.size();
     }
 
     @Override
@@ -110,11 +110,16 @@ public class ChartDaoImpl implements ChartDao {
     
    @Override                           
    public void saveMultipleChartListToDb(Map<String,List<Chart>> chartListMap) {
-                    
+       
+	   int size = chartListMap.size();
+	   int count = 0;
+	   
        for (Entry<String, List<Chart>> ee : chartListMap.entrySet()) {
 	      String symbol = ee.getKey();
 	      List<Chart> values = ee.getValue();
 	      saveChartListToDb(values, symbol);
+	      count++;
+	      logger.info("saveMultipleChartListToDb - {} of {}", count, size);
 	   }
        logger.info("saveMultipleChartListToDb - Done");
    }

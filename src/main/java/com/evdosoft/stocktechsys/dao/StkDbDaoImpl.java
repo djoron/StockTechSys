@@ -234,6 +234,41 @@ public class StkDbDaoImpl implements StkDbDao {
 	return status; 
     }
 
+    @Override
+    public boolean createEarningsTable() throws SQLException {
+	// stmt = null;
+	// stmt = c.createStatement();
+
+	logger.info("createEarningsTable starting");	
+	String query = 
+		"CREATE TABLE EARNINGS ( "
+	                + " earningsID INTEGER PRIMARY KEY AUTO_INCREMENT," 
+	                + " SYMBOL                 VARCHAR(10) NOT NULL,"
+					+ " ACTUALEPS              DECIMAL(3,2), " 
+					+ " CONSENSUSEPS           DECIMAL(3,2), "
+					+ " ESTIMATEDEPS           DECIMAL(3,2), " 
+					+ " ANNOUNCETIME           VARCHAR(10), "
+					+ " NUMBEROFESTIMATES      INTEGER, "
+					+ " EPSSURPRISEDOLLAR      DECIMAL(3,2), "
+					+ " EPSREPORTDATE          DATE, " 
+					+ " FISCALPERIOD           VARCHAR(10), "
+					+ " FISCALENDDATE          DATE, " 
+					+ " YEARAGO                DECIMAL(3,2), "
+					+ " YEARAGOCHANGEPERCENT   DECIMAL(3,2),   " 
+					+ " ESTIMATEDCHANGEPERCENT DECIMAL(10,2), "
+					+ " SYMBOLID               INTEGER,"
+					+ " UNIQUE KEY SYMBOL (SYMBOL), "
+					+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)"
+					+ "); ";
+	
+	String query2 = "CREATE INDEX EARNINGS_IDX ON EARNINGS (SYMBOL(10));";
+	
+	boolean status = false;
+	status = execStatement(query);
+	status = status && execStatement(query2);
+
+	return status; 
+    }
 
     /**
      *
@@ -257,6 +292,8 @@ public class StkDbDaoImpl implements StkDbDao {
 	query =	"DROP TABLE IF EXISTS CHART;";
 	jdbcTemplate.execute(query);	
 	query = "DROP TABLE IF EXISTS QUOTE;";
+	jdbcTemplate.execute(query);
+	query = "DROP TABLE IF EXISTS EARNINGS;";
 	jdbcTemplate.execute(query);
 	query = "SET FOREIGN_KEY_CHECKS=1;";
 	jdbcTemplate.execute(query);
