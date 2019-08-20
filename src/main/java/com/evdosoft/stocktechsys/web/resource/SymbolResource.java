@@ -8,7 +8,10 @@ public class SymbolResource {
     private String symbol;
     private String name;
     private String date;
-    private String isEnabled;
     private String type;
     private String iexId;
+    private String region;
+    private String currency;
+    private boolean isEnabled;
+
 }

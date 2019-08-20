@@ -18,7 +18,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class Parameters {
         
     private String iexPrefix;
-    private String iexPrefixSymbols;
+    private String iexPrefixSymbolsUs;
+    private String iexPrefixSymbolsCa;
+    private String iexPublicToken;
     private int yearHistoryInt;
     private String yearHistoryString;
     private int hourBloombergDataAvail;
@@ -29,18 +31,21 @@ public class Parameters {
     private int stringBufferSize;
     private int timeout;
     private int getMaxChartListToDownload; 
-    
+        
     public String getIexPrefix() {
         return iexPrefix;
     }
     public void setIexPrefix(String iexPrefix) {
         this.iexPrefix = iexPrefix;
     }
-    public String getIexPrefixSymbols() {
-        return iexPrefixSymbols;
+    public String getIexPrefixSymbolsUs() {
+        return iexPrefixSymbolsUs;
     }
-    public void setIexPrefixSymbols(String iexPrefixSymbols) {
-        this.iexPrefixSymbols = iexPrefixSymbols;
+    public String getIexPrefixSymbolsCa() {
+        return iexPrefixSymbolsCa;
+    }
+    public String getIexPublicToken() {
+        return iexPublicToken;
     }
     public int getYearHistoryInt() {
         return yearHistoryInt;

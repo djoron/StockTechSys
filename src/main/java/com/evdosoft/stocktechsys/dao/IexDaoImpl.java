@@ -79,7 +79,7 @@ public class IexDaoImpl implements IexDao {
      * @param symbolList
      *            Internet list with only symbol name
      * @param CompanyList
-     *            Interet list with symbol and company info
+     *            Internet list with symbol and company info
      * @return
      * @throws MalformedURLException
      */

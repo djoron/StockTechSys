@@ -15,6 +15,7 @@ import lombok.Data;
 
 /**
  *
+ * Based on https://iexcloud.io/docs/api/#symbols
  * @author atlantis
  */
 @Data
@@ -24,10 +25,12 @@ public class Symbol {
     private String symbol;
     private String name;
     private LocalDate date;
-    private boolean isEnabled;
     private String type;
     private String iexId;
-
+    private String region;
+    private String currency;
+    private boolean isEnabled;
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -58,12 +61,14 @@ public class Symbol {
     }
     
     public Symbol(SymbolResource resource) {
-	this.iexId = resource.getIexId();
-	this.isEnabled = Boolean.parseBoolean(resource.getIsEnabled());
-	this.name = resource.getName();
-	this.symbol = resource.getSymbol();
-	this.type = resource.getType();
-	this.date = LocalDate.parse(resource.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    	this.symbol = resource.getSymbol();
+    	this.name = resource.getName();
+    	this.date = LocalDate.parse(resource.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    	this.type = resource.getType();
+    	this.iexId = resource.getIexId();
+    	this.region = resource.getRegion();
+        this.currency = resource.getCurrency();
+        this.isEnabled = resource.getIsEnabled();
     }
     
 }

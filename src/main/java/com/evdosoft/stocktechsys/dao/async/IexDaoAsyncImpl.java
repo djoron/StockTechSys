@@ -46,7 +46,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
     @Override
     public Future<List<Company>> getCompanyList() {
-    	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
+    	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbolsUs()+parameters.getIexPublicToken();	
         int maxtoDownload = parameters.getGetMaxChartListToDownload();
         
         LocalTime t1 = LocalTime.now();
@@ -84,7 +84,7 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
             	JsonObject json = body.getJsonObject(i);
             	if(json.containsKey("symbol")) {
             		String symbol = json.getString("symbol");            		
-            		String companyUrl = parameters.getIexPrefix() + "stock/" + symbol + "/company";
+            		String companyUrl = parameters.getIexPrefix() + "stock/" + symbol + "/company" + parameters.getIexPublicToken();
             		
             		// Vertx async http request
             		client2
