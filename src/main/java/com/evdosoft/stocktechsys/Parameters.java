@@ -41,11 +41,20 @@ public class Parameters {
     public String getIexPrefixSymbolsUs() {
         return iexPrefixSymbolsUs;
     }
+    public void setIexPrefixSymbolUs(String iexPrefixSymbolsUs) {
+        this.iexPrefixSymbolsUs = iexPrefixSymbolsUs;
+    }
     public String getIexPrefixSymbolsCa() {
         return iexPrefixSymbolsCa;
     }
+    public void setIexPrefixSymbolsCa(String iexPrefixSymbolsCa) {
+        this.iexPrefixSymbolsCa = iexPrefixSymbolsCa;
+    }
     public String getIexPublicToken() {
         return iexPublicToken;
+    }
+    public void setIexPublicToken(String iexPublicToken) {
+        this.iexPublicToken = iexPublicToken;
     }
     public int getYearHistoryInt() {
         return yearHistoryInt;

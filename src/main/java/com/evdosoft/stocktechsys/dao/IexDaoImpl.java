@@ -52,7 +52,7 @@ public class IexDaoImpl implements IexDao {
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
 	// https://api.iextrading.com/1.0/ref-data/symbols
-	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbols();	
+	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbolsUs()+parameters.getIexPublicToken();	
 	List<Symbol> symbolList = new ArrayList<>();
 	logger.debug("getSymbolList - Launching Symbol download with - {}",urlstr);
 

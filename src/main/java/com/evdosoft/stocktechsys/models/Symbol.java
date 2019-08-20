@@ -68,7 +68,7 @@ public class Symbol {
     	this.iexId = resource.getIexId();
     	this.region = resource.getRegion();
         this.currency = resource.getCurrency();
-        this.isEnabled = resource.getIsEnabled();
+// xxx to fix        this.isEnabled = resource.getIsEnabled();
     }
     
 }
