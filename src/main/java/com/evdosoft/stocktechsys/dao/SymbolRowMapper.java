@@ -15,7 +15,7 @@ public class SymbolRowMapper implements RowMapper<Symbol> {
 	
 	symbol.setDate(rs.getDate("DATE").toLocalDate());
 	symbol.setIexId(rs.getString("IEXID"));
-	symbol.setEnabled(rs.getBoolean("ISENABLED"));
+	symbol.setIsEnabled(rs.getBoolean("ISENABLED"));
 	symbol.setName(rs.getString("NAME"));
 	symbol.setSymbol(rs.getString("SYMBOL"));
 	symbol.setType(rs.getString("TYPE"));

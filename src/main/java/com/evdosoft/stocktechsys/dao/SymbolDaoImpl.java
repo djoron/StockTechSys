@@ -59,7 +59,7 @@ public class SymbolDaoImpl implements SymbolDao {
 	    		ps.setString(1,symbol.getSymbol());
 	                ps.setString(2,symbol.getName());
 	                ps.setDate(3, java.sql.Date.valueOf(symbol.getDate()));
-	                ps.setBoolean(4,symbol.isEnabled());
+	                ps.setBoolean(4,symbol.getIsEnabled());
 	                ps.setString(5,symbol.getType());
 	                ps.setString(6,symbol.getIexId());	    	
 	        }

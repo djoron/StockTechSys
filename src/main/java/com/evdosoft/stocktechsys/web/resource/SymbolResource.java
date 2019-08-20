@@ -13,6 +13,6 @@ public class SymbolResource {
     private String iexId;
     private String region;
     private String currency;
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
 }

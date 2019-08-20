@@ -30,7 +30,7 @@ public class Symbol {
     private String iexId;
     private String region;
     private String currency;
-    private boolean isEnabled;
+    private Boolean isEnabled;
     
     @Override
     public int hashCode() {
