@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class SymbolResource {
 
-    private String symbol;
+	private String symbol;
+	private String exchange;
     private String name;
     private String date;
     private String type;

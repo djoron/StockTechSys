@@ -23,6 +23,7 @@ public class Symbol {
 
  // xxxx a verifier les types. DOuble pour entiers, Big decimal pour float
     private String symbol;
+    private String exchange;
     private String name;
     private LocalDate date;
     private String type;
@@ -62,13 +63,14 @@ public class Symbol {
     
     public Symbol(SymbolResource resource) {
     	this.symbol = resource.getSymbol();
+    	this.exchange = resource.getExchange();
     	this.name = resource.getName();
     	this.date = LocalDate.parse(resource.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     	this.type = resource.getType();
     	this.iexId = resource.getIexId();
     	this.region = resource.getRegion();
         this.currency = resource.getCurrency();
-// xxx to fix        this.isEnabled = resource.getIsEnabled();
+        this.isEnabled = resource.getIsEnabled();
     }
     
 }

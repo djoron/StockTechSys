@@ -41,7 +41,7 @@ public class Parameters {
     public String getIexPrefixSymbolsUs() {
         return iexPrefixSymbolsUs;
     }
-    public void setIexPrefixSymbolUs(String iexPrefixSymbolsUs) {
+    public void setIexPrefixSymbolsUs(String iexPrefixSymbolsUs) {
         this.iexPrefixSymbolsUs = iexPrefixSymbolsUs;
     }
     public String getIexPrefixSymbolsCa() {
