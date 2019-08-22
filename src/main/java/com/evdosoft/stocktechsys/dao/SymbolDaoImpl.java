@@ -43,11 +43,12 @@ public class SymbolDaoImpl implements SymbolDao {
     public boolean saveSymbolList(List<Symbol> symbolList, TypeListDownload val) throws Exception{           
         
         if (symbolList.size() > 0) {                          
-            String sql = "INSERT INTO SYMBOL  (SYMBOL, NAME, "
-                    + "DATE, ISENABLED, TYPE, IEXID) VALUES (?,?,?,?,?,?) "
+            String sql = "INSERT INTO SYMBOL  (SYMBOL, EXCHANGE, NAME, "
+                    + "DATE, TYPE, IEXID, REGION, CURRENCY, ISENABLED) VALUES (?,?,?,?,?,?,?,?,?) "
                     + "ON DUPLICATE KEY UPDATE SYMBOL = VALUES(SYMBOL), "
-                    + "NAME = VALUES(NAME), DATE = VALUES(DATE), ISENABLED = VALUES(ISENABLED),"
-                    + "TYPE = VALUES(TYPE), IEXID = VALUES(IEXID);";
+                    + "NAME = VALUES(NAME), DATE = VALUES(DATE), TYPE = VALUES(DATE) ,"
+                    + "IEXID = VALUES(IEXID), REGION = VALUES(REGION), CURRENCY = VALUES(CURRENCY), "
+                    + "ISENABLED = VALUES(ISENABLED);";
 
             logger.info("saveSymbolList: Will save symbol list in DB. Be patient.");
 
@@ -57,11 +58,14 @@ public class SymbolDaoImpl implements SymbolDao {
 	        public void setValues(PreparedStatement ps, int i) throws SQLException {
 	    		Symbol symbol = symbolList.get(i);
 	    		ps.setString(1,symbol.getSymbol());
-	                ps.setString(2,symbol.getName());
-	                ps.setDate(3, java.sql.Date.valueOf(symbol.getDate()));
-	                ps.setBoolean(4,symbol.getIsEnabled());
-	                ps.setString(5,symbol.getType());
-	                ps.setString(6,symbol.getIexId());	    	
+	    		ps.setString(2,symbol.getExchange());
+	            ps.setString(3,symbol.getName());
+	            ps.setDate  (4,java.sql.Date.valueOf(symbol.getDate()));
+	            ps.setString(5,symbol.getType());
+	            ps.setString(6,symbol.getIexId());
+	            ps.setString(7,symbol.getRegion());
+	            ps.setString(8,symbol.getCurrency());
+	            ps.setBoolean(9,symbol.getIsEnabled());
 	        }
 	        
 	        @Override

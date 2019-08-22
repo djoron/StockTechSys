@@ -139,12 +139,15 @@ public class StkDbDaoImpl implements StkDbDao {
 	
 	String query = "CREATE TABLE SYMBOL   ( " + 
 		"  SYMBOL             VARCHAR(10) NOT NULL PRIMARY KEY, " + 
+		"  EXCHANGE           VARCHAR(5) NOT NULL, " +
 		"  NAME               VARCHAR(255) NOT NULL, " + 
 		"  DATE               DATE, "    + 
-		"  ISENABLED          BIT, "  + 
 		"  TYPE               VARCHAR(10), " + 
-		"  IEXID              INTEGER, " + 
-		"  UNIQUE KEY (SYMBOL) );";
+		"  IEXID              VARCHAR(25), " +
+		"  REGION             VARCHAR(4), " +
+		"  CURRENCY           VARCHAR(5), " +
+		"  ISENABLED          BIT, "  + 
+		"  UNIQUE KEY (SYMBOL, EXCHANGE) );";
 
 	return execStatement(query);
     }
