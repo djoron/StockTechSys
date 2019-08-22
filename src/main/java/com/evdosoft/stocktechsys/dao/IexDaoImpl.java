@@ -51,7 +51,7 @@ public class IexDaoImpl implements IexDao {
     @Override
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
-	// https://api.iextrading.com/1.0/ref-data/symbols
+	// https://cloud.iexapis.com/stable/ref-data/region/ca/symbols?token=pk_18d74cb6232f43f9b36fc9a09023ae84
 	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbolsUs()+parameters.getIexPublicToken();	
 	List<Symbol> symbolList = new ArrayList<>();
 	logger.debug("getSymbolList - Launching Symbol download with - {}",urlstr);
@@ -91,12 +91,12 @@ public class IexDaoImpl implements IexDao {
 	List<Company> companyList = new ArrayList<>();
 	int totalsize = symbolList.size();
 
-	// https://api.iextrading.com/1.0/stock/aapl/company
+	// https://cloud.iexapis.com/stable/stock/AABA/company?token=pk_18d74cb6232f43f9b36fc9a09023ae84
 	int count = 0;
 
 	for (Symbol symbol : symbolList) {
 
-	    urlstr = parameters.getIexPrefix() + "stock/" + symbol.getSymbol() + "/company";
+	    urlstr = parameters.getIexPrefix() + "stock/" + symbol.getSymbol() + "/company"+ parameters.getIexPublicToken();
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    Company company = null;
 
