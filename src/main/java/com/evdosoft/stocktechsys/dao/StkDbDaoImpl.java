@@ -108,7 +108,7 @@ public class StkDbDaoImpl implements StkDbDao {
     public boolean createCompanyTables() throws SQLException {
 	logger.info("createCompanyTable Company starting");
 	String query = "CREATE TABLE COMPANY   (ID INTEGER PRIMARY KEY AUTO_INCREMENT," + 
-		"  SYMBOL             VARCHAR(10) NOT NULL, " + 
+		"  SYMBOL             VARCHAR(15) NOT NULL, " + 
 		"  COMPANYNAME        VARCHAR(255) NOT NULL, " + 
 		"  EXCHANGE    	      VARCHAR(80),  " + 
 		"  INDUSTRY           VARCHAR(255), " + 
@@ -138,7 +138,7 @@ public class StkDbDaoImpl implements StkDbDao {
 	logger.info("createSymbolTable Symbol starting");
 	
 	String query = "CREATE TABLE SYMBOL   ( " + 
-		"  SYMBOL             VARCHAR(10) NOT NULL PRIMARY KEY, " + 
+		"  SYMBOL             VARCHAR(15) NOT NULL PRIMARY KEY, " + 
 		"  EXCHANGE           VARCHAR(5) NOT NULL, " +
 		"  NAME               VARCHAR(255) NOT NULL, " + 
 		"  DATE               DATE, "    + 
@@ -210,25 +210,25 @@ public class StkDbDaoImpl implements StkDbDao {
 	logger.info("createChartTable starting");	
 	String query = 
 		"CREATE TABLE CHART ( "
-	                + " chartID INTEGER PRIMARY KEY AUTO_INCREMENT," 
-	                + " SYMBOL                 VARCHAR(10) NOT NULL,"
-			+ " `DATE`                 DATE, " 
-			+ " OPEN                   DECIMAL(19,4), "
-			+ " HIGH                   DECIMAL(19,4), " 
-			+ " LOW                    DECIMAL(19,4), "
-			+ " CLOSE                  DECIMAL(19,4), "
-			+ " VOLUME                 BIGINT(20), "
-			+ " UNADJUSTEDVOLUME       BIGINT(20), " 
-			+ " CHANGEAMOUNT           DECIMAL(19,2), "
-			+ " CHANGEPERCENT          DECIMAL(19,2), " 
-			+ " VWAP                   DECIMAL(19,2), "
-			+ " LABEL                  VARCHAR(50),   " 
-			+ " CHANGEOVERTIME         DECIMAL(19,2), "
-			+ " UNIQUE KEY SYMBOL_DATE (SYMBOL, `DATE`), "
-			+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)"
-			+ "); ";
-	
-	String query2 = "CREATE INDEX CHART_IDX ON CHART (SYMBOL(10), `DATE`);";
+	            + " chartID INTEGER PRIMARY KEY AUTO_INCREMENT," 
+	            + " SYMBOL                 VARCHAR(15) NOT NULL,"
+				+ " `DATE`                 DATE, " 
+				+ " OPEN                   DECIMAL(19,4), "
+				+ " HIGH                   DECIMAL(19,4), " 
+				+ " LOW                    DECIMAL(19,4), "
+				+ " CLOSE                  DECIMAL(19,4), "
+				+ " VOLUME                 BIGINT(20), "
+				+ " UNADJUSTEDVOLUME       BIGINT(20), " 
+				+ " CHANGEAMOUNT           DECIMAL(19,2), "
+				+ " CHANGEPERCENT          DECIMAL(19,2), " 
+				+ " VWAP                   DECIMAL(19,2), "
+				+ " LABEL                  VARCHAR(50),   " 
+				+ " CHANGEOVERTIME         DECIMAL(19,2), "
+				+ " UNIQUE KEY SYMBOL_DATE (SYMBOL, `DATE`), "
+				+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)"
+				+ "); ";
+		
+	String query2 = "CREATE INDEX CHART_IDX ON CHART (SYMBOL, `DATE`);";
 	
 	boolean status = false;
 	status = execStatement(query);
@@ -246,7 +246,7 @@ public class StkDbDaoImpl implements StkDbDao {
 	String query = 
 		"CREATE TABLE EARNINGS ( "
 	                + " earningsID INTEGER PRIMARY KEY AUTO_INCREMENT," 
-	                + " SYMBOL                 VARCHAR(10) NOT NULL,"
+	                + " SYMBOL                 VARCHAR(15) NOT NULL,"
 					+ " ACTUALEPS              DECIMAL(3,2), " 
 					+ " CONSENSUSEPS           DECIMAL(3,2), "
 					+ " ESTIMATEDEPS           DECIMAL(3,2), " 
@@ -264,7 +264,7 @@ public class StkDbDaoImpl implements StkDbDao {
 					+ " FOREIGN KEY(SYMBOL) REFERENCES SYMBOL(SYMBOL)"
 					+ "); ";
 	
-	String query2 = "CREATE INDEX EARNINGS_IDX ON EARNINGS (SYMBOL(10));";
+	String query2 = "CREATE INDEX EARNINGS_IDX ON EARNINGS (SYMBOL);"; 
 	
 	boolean status = false;
 	status = execStatement(query);

@@ -42,6 +42,7 @@ public class SqlDatabaseServiceImpl implements SqlDatabaseService {
         status = status && stkDbDao.createSymbolTable();
         status = status && stkDbDao.createCompanyTables();
         status = status && stkDbDao.createChartTable();
+        // status = status && stkDbDao.createEarningsTable();
         // status = status && stkDbDao.createQuoteTable();
                 
         if (status) {

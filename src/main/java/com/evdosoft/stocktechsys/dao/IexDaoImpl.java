@@ -99,8 +99,10 @@ public class IexDaoImpl implements IexDao {
 	    urlstr = parameters.getIexPrefix() + "stock/" + symbol.getSymbol() + "/company"+ parameters.getIexPublicToken();
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    Company company = null;
-
-	    count++;
+	    
+        if (!symbol.getType().contains("cs") || !symbol.getType().contains("etf") || !symbol.getType().contains("ps") ) continue;
+	    
+        count++;
 	    try {
 		company = objectMapper.readValue(new URL(urlstr), new TypeReference<Company>() {
 		});
