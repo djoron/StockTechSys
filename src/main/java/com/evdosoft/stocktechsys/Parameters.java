@@ -18,8 +18,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class Parameters {
         
     private String iexPrefix;
-    private String iexPrefixSymbolsUs;
-    private String iexPrefixSymbolsCa;
+    private String iexCountryPrefix;
+    private String iexSymbolSuffix;
+    private String[] iexCountryCodes;
     private String iexPublicToken;
     private int yearHistoryInt;
     private String yearHistoryString;
@@ -38,19 +39,25 @@ public class Parameters {
     public void setIexPrefix(String iexPrefix) {
         this.iexPrefix = iexPrefix;
     }
-    public String getIexPrefixSymbolsUs() {
-        return iexPrefixSymbolsUs;
+    public String getIexCountryPrefix() {
+        return iexCountryPrefix;
     }
-    public void setIexPrefixSymbolsUs(String iexPrefixSymbolsUs) {
-        this.iexPrefixSymbolsUs = iexPrefixSymbolsUs;
+    public void setIexCountryPrefix(String iexCountryPrefix) {
+        this.iexCountryPrefix = iexCountryPrefix;
     }
-    public String getIexPrefixSymbolsCa() {
-        return iexPrefixSymbolsCa;
+    public String getIexSymbolSuffix() {
+        return iexSymbolSuffix;
     }
-    public void setIexPrefixSymbolsCa(String iexPrefixSymbolsCa) {
-        this.iexPrefixSymbolsCa = iexPrefixSymbolsCa;
+    public void setIexSymbolSuffix(String iexSymbolSuffix) {
+        this.iexSymbolSuffix = iexSymbolSuffix;
     }
-    public String getIexPublicToken() {
+    public String[] getIexCountryCodes() {
+		return iexCountryCodes;
+	}
+	public void setIexCountryCodes(String[] iexCountryCodes) {
+		this.iexCountryCodes = iexCountryCodes;
+	}
+	public String getIexPublicToken() {
         return iexPublicToken;
     }
     public void setIexPublicToken(String iexPublicToken) {
@@ -116,5 +123,6 @@ public class Parameters {
     public void setGetMaxChartListToDownload(int getMaxChartListToDownload) {
         this.getMaxChartListToDownload = getMaxChartListToDownload;
     }
+
  
 }

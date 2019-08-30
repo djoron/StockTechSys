@@ -46,8 +46,9 @@ public class IexDaoAsyncImpl implements IexDaoAsync {
 
     @Override
     public Future<List<Company>> getCompanyList() {
-    	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbolsUs()+parameters.getIexPublicToken();	
-        int maxtoDownload = parameters.getGetMaxChartListToDownload();
+    	String urlstr = parameters.getIexPrefix();  // + parameters.getIexPrefixSymbolsUs()+parameters.getIexPublicToken();	
+        
+    	int maxtoDownload = parameters.getGetMaxChartListToDownload();
         
         LocalTime t1 = LocalTime.now();
     	WebClient client = WebClient.create(vertx);
