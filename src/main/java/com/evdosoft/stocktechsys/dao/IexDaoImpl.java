@@ -51,27 +51,43 @@ public class IexDaoImpl implements IexDao {
     @Override
     public List<Symbol> getSymbolList() throws MalformedURLException {
 
-	// https://cloud.iexapis.com/stable/ref-data/region/ca/symbols?token=pk_18d74cb6232f43f9b36fc9a09023ae84
-	String urlstr = parameters.getIexPrefix() + parameters.getIexPrefixSymbolsUs()+parameters.getIexPublicToken();	
-	List<Symbol> symbolList = new ArrayList<>();
-	logger.debug("getSymbolList - Launching Symbol download with - {}",urlstr);
+    	String[] countryCodes = parameters.getIexCountryCodes();
+    	int countryNumber = countryCodes.length;
+    	String urlstr = "";
+    	
+    	List<Symbol> symbolList = new ArrayList<>();
 
-	ObjectMapper objectMapper = new ObjectMapper();
-	try {
-	    List<SymbolResource> symbolResourceList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<SymbolResource>>() {
-	    });
-	    
-	    for(SymbolResource resource : symbolResourceList) {
-		Symbol symbol = new Symbol(resource);
-		symbolList.add(symbol);
-	    }
-	    logger.info("getSymbolList - Read {} symbols",symbolList.size());
+	    for (int i = 0; i<countryNumber; i++) {
+	    	int symbolAdded = 0;
+	    	
+	    	// example: https://cloud.iexapis.com/stable/ref-data/region/ca/symbols?token=pk_18d74cb6232f43f9b36fc9a09023ae84
+	    	urlstr = parameters.getIexPrefix() + parameters.getIexCountryPrefix() + countryCodes[i] +  "/" +
+	    					parameters.getIexSymbolSuffix()+parameters.getIexPublicToken();	
+	    	
+	    	logger.debug("getSymbolList - Launching Symbol download with - {}",urlstr);
+	    	logger.info("getSymbolList - Launching Symbol download for country: {} ",countryCodes[i]);
+	
+	    	ObjectMapper objectMapper = new ObjectMapper();
+	    	try {
+	    	    List<SymbolResource> symbolResourceList = objectMapper.readValue(new URL(urlstr), new TypeReference<List<SymbolResource>>() {
+	    	    });
 
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	return symbolList;
+
+	    	    for(SymbolResource resource : symbolResourceList) {
+	    	    	Symbol symbol = new Symbol(resource);
+	    	    	symbolList.add(symbol);
+	    	    	symbolAdded++;
+	    	    }
+		    	logger.info("getSymbolList - Read {} symbols for country: {}",symbolAdded,countryCodes[i]);
+
+	    	    
+	    	} catch (IOException e) {
+	    	    // TODO Auto-generated catch block
+	    	    e.printStackTrace();
+	    	}
+	    } // for loop
+    	logger.info("getSymbolList - Read overall {} symbols",symbolList.size());
+	    return symbolList;
     }
 
     /**
