@@ -20,6 +20,8 @@ public class Parameters {
     private String iexPrefix;
     private String iexCountryPrefix;
     private String iexSymbolSuffix;
+    private String iexStockPrefix;
+    private String iexCompanySuffix;
     private String[] iexCountryCodes;
     private String[] iexIssueType;
     private String[] iexExchanges;
@@ -53,7 +55,19 @@ public class Parameters {
     public void setIexSymbolSuffix(String iexSymbolSuffix) {
         this.iexSymbolSuffix = iexSymbolSuffix;
     }
-    public String[] getIexCountryCodes() {
+    public String getIexCompanySuffix() {
+		return iexCompanySuffix;
+	}
+	public void setIexCompanySuffix(String iexCompanySuffix) {
+		this.iexCompanySuffix = iexCompanySuffix;
+	}
+	public String getIexStockPrefix() {
+		return iexStockPrefix;
+	}
+	public void setIexStockPrefix(String iexStockPrefix) {
+		this.iexStockPrefix = iexStockPrefix;
+	}
+	public String[] getIexCountryCodes() {
 		return iexCountryCodes;
 	}
 	public void setIexCountryCodes(String[] iexCountryCodes) {
