@@ -20,7 +20,11 @@ public class Parameters {
     private String iexPrefix;
     private String iexCountryPrefix;
     private String iexSymbolSuffix;
+    private String iexStockPrefix;
+    private String iexCompanySuffix;
     private String[] iexCountryCodes;
+    private String[] iexIssueType;
+    private String[] iexExchanges;
     private String iexPublicToken;
     private int yearHistoryInt;
     private String yearHistoryString;
@@ -51,11 +55,38 @@ public class Parameters {
     public void setIexSymbolSuffix(String iexSymbolSuffix) {
         this.iexSymbolSuffix = iexSymbolSuffix;
     }
-    public String[] getIexCountryCodes() {
+    public String getIexCompanySuffix() {
+		return iexCompanySuffix;
+	}
+	public void setIexCompanySuffix(String iexCompanySuffix) {
+		this.iexCompanySuffix = iexCompanySuffix;
+	}
+	public String getIexStockPrefix() {
+		return iexStockPrefix;
+	}
+	public void setIexStockPrefix(String iexStockPrefix) {
+		this.iexStockPrefix = iexStockPrefix;
+	}
+	public String[] getIexCountryCodes() {
 		return iexCountryCodes;
 	}
 	public void setIexCountryCodes(String[] iexCountryCodes) {
 		this.iexCountryCodes = iexCountryCodes;
+	}
+	/**
+	 * @return the iexIssueType
+	 */
+	public String[] getIexIssueType() {
+		return iexIssueType;
+	}
+	public void setIexIssueType(String[] iexIssueType) {
+		this.iexIssueType = iexIssueType;
+	}
+	public String[] getIexExchanges() {
+		return iexExchanges;
+	}
+	public void setIexExchanges(String[] iexExchanges) {
+		this.iexExchanges = iexExchanges;
 	}
 	public String getIexPublicToken() {
         return iexPublicToken;

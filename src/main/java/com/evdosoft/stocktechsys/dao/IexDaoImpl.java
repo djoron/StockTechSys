@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -74,11 +75,22 @@ public class IexDaoImpl implements IexDao {
 
 
 	    	    for(SymbolResource resource : symbolResourceList) {
+
+	    	    	String[] issueTypes = parameters.getIexIssueType(); // Load up company for known types (stock, etc, etc) 
+	    	    	String[] exchangeList = parameters.getIexExchanges(); // Load up company for valid exchanges 
+	    	    	
+	    			boolean containsType     = Arrays.stream(issueTypes).anyMatch(resource.getType()::equals); // Does symbol contain proper type.
+	    			boolean containsExchange = Arrays.stream(exchangeList).anyMatch(resource.getExchange()::equals); // Does symbol contain good exchange
+	    			if (!containsType || !containsExchange) { 
+	    				logger.info("getSylbolList - Skipping type/exchange: ({})-{}/{}", resource.getSymbol(), resource.getType(), resource.getExchange());
+	    				continue; // If not, then move to next iteration.
+	    			}
+
 	    	    	Symbol symbol = new Symbol(resource);
 	    	    	symbolList.add(symbol);
 	    	    	symbolAdded++;
 	    	    }
-		    	logger.info("getSymbolList - Read {} symbols for country: {}",symbolAdded,countryCodes[i]);
+		    	logger.info("getSymbolList - Added {} symbols for country: {}",symbolAdded,countryCodes[i]);
 
 	    	    
 	    	} catch (IOException e) {
@@ -101,51 +113,67 @@ public class IexDaoImpl implements IexDao {
      */
     @Override
     public List<Company> getCompanyList(List<Symbol> symbolList) throws MalformedURLException {
-	String urlstr;
 
-	// Will contain symbol only List from Internet.
-	List<Company> companyList = new ArrayList<>();
-	int totalsize = symbolList.size();
-
-	// https://cloud.iexapis.com/stable/stock/AABA/company?token=pk_18d74cb6232f43f9b36fc9a09023ae84
-	int count = 0;
-
-	for (Symbol symbol : symbolList) {
-
-	    urlstr = parameters.getIexPrefix() + "stock/" + symbol.getSymbol() + "/company"+ parameters.getIexPublicToken();
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    Company company = null;
-	    
-        if (!symbol.getType().contains("cs") || !symbol.getType().contains("etf") || !symbol.getType().contains("ps") ) continue;
-	    
-        count++;
-	    try {
-		company = objectMapper.readValue(new URL(urlstr), new TypeReference<Company>() {
-		});
-		if (company.getCompanyName() != null) {
-		    companyList.add(company);
-		    logger.info("getCompanyList - Symbol {} of {}: ({})-{}", count, totalsize, company.getSymbol(),
-			    company.getCompanyName());
+/*    	
+    	String[] issueTypes = parameters.getIexIssueType(); // Load up company for known types (stock, etc, etc) 
+    	String[] exchangeList = parameters.getIexExchanges(); // Load up company for valid exchanges 
+    	
+    	boolean containsType = false;
+        boolean containsExchange = false;
+*/        
+        String urlstr = "";
+        
+		// Will contain symbol only List  Internet.
+		List<Company> companyList = new ArrayList<>();
+		int totalsize = symbolList.size();
+	
+		// https://cloud.iexapis.com/stable/stock/AABA/company?token=pk_18d74cb6232f43f9b36fc9a09023ae84
+		int count = 0;
+	
+		for (Symbol symbol : symbolList) {
+	
+/*			containsType     = Arrays.stream(issueTypes).anyMatch(symbol.getType()::equals); // Does symbol contain proper type.
+			containsExchange = Arrays.stream(exchangeList).anyMatch(symbol.getExchange()::equals); // Does symbol contain good exchange
+			if (!containsType && !containsExchange) { 
+				logger.info("getCompanyList - Skipping type/exchange: ({})-{}/{}", symbol.getSymbol(), symbol.getType(), symbol.getExchange());
+				continue; // If not, then move to next iteration.
+			}
+*/			
+			// https://cloud.iexapis.com/stable/stock/cae-ct/company?token=pk_18d74cb6232f43f9b36fc9a09023ae84
+		    urlstr = parameters.getIexPrefix() + parameters.getIexStockPrefix() + symbol.getSymbol() + "/"+ parameters.getIexCompanySuffix()  + 
+		    		 parameters.getIexPublicToken();
+		    
+		    ObjectMapper objectMapper = new ObjectMapper();
+		    Company company = null;
+		    
+	        count++;
+		    try {
+		    	company = objectMapper.readValue(new URL(urlstr), new TypeReference<Company>() {
+			});
+			if (company.getCompanyName() != null) {
+			    companyList.add(company);
+			    logger.info("getCompanyList - Symbol {} of {}: ({})-{}", count, totalsize, company.getSymbol(),
+				    company.getCompanyName());
+			} else {
+			    logger.info("getCompanyList - Skipping: ({})-{}", company.getSymbol(), company.getCompanyName());
+			    count--;
+			}
+	
+		    } catch (IOException e) {
+	 			logger.warn("getCompanyList - Skipping unknown symbol from API: ({})", symbol.getSymbol());
+				logger.warn("{}",e.getLocalizedMessage());
+				count--;
+		    }
+		    if (count > (parameters.getMaxStocktoProcess()-1))
+			break;
+		} // for
+	
+		if (count > 0) {
+		    logger.info("getCompanyList- Total symbols returned {} of {} ", count, totalsize);
 		} else {
-		    logger.info("getCompanyList - Skipping: ({})-{}", company.getSymbol(), company.getCompanyName());
-		    count--;
+		    logger.error("getCompanyList - No symbol returned !");
 		}
-
-	    } catch (IOException e) {
-		logger.warn("getCompanyList - Skipping unknown symbol from API: ({})", symbol.getSymbol());
-		logger.warn("{}",e.getLocalizedMessage());
-		count--;
-	    }
-	    if (count > (parameters.getMaxStocktoProcess()-1))
-		break;
-	} // for
-
-	if (count > 0) {
-	    logger.info("getCompanyList- Total symbols returned {} of {} ", count, totalsize);
-	} else {
-	    logger.error("getCompanyList - No symbol returned !");
-	}
-	return companyList;
+		return companyList;
     }
 
     /**
